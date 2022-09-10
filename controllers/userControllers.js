@@ -163,7 +163,7 @@ exports.CreateFolder = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
-  const { title, discription, category } = req.body;
+  const { title, discription } = req.body;
   const folder = await Folders.findOne({ _id: req.params.folderId });
   if (req.file.mimetype !== "image/jpeg" && req.file.mimetype !== "image/png" && req.file.mimetype !== "image/jpg" && req.file.mimetype !== "image/gif" && req.file.mimetype !== "image/svg+xml" && req.file.mimetype !== "image/webp" && req.file.mimetype !== "video/mp4" && req.file.mimetype !== "video/X-flv" && req.file.mimetype !== "application/x-mpegURL" && req.file.mimetype !== "audio/x-wav" && req.file.mimetype !== "audio/mpeg" && req.file.mimetype !== "audio/mpeg" && req.file.mimetype !== "	audio/mp4") {
     res.json({ message: "File type not supported" });
@@ -172,7 +172,6 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
     const news = new News({
       title,
       discription,
-      category,
       file: {
         data: fs.readFileSync(req.file.path),
         contentType: req.file.mimetype
@@ -197,7 +196,7 @@ exports.DeleteFolder = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("Folder not found", 404));
   }
   await folder.remove();
-  fs.unlink(`./public/folders/${req.params.folderName}`, (err) => {
+  fs.rmdir(`./public/folders/${req.params.folderName}`, (err) => {
     if (err) throw err;
   });
 
