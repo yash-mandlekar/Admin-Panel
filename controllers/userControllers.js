@@ -142,8 +142,6 @@ exports.ChangePassword = catchAsyncErrors(async (req, res, next) => {
   } catch (err) {
     res.status(500).json(err.message);
   }
-
-
 });
 
 exports.CreateFolder = catchAsyncErrors(async (req, res, next) => {
@@ -206,8 +204,6 @@ exports.DeleteFolder = catchAsyncErrors(async (req, res, next) => {
 exports.UpdateFolder = catchAsyncErrors(async (req, res, next) => {
   const folder = await Folders.findOneAndUpdate({ _id: req.params.id }, req.body);
   if (!folder) return next(new ErrorHandler("Folder not found", 404));
-  folder.folderName = req.body.folderName;
-  await folder.save();
   res.status(200).json({
     success: true,
     message: "Folder updated successfully",

@@ -21,46 +21,46 @@ const {
 const { isAuthUser } = require("../middleware/auth");
 const upload = require("../middleware/multer");
 
-// @api /user/ GET Hompage
+// @api/ GET Hompage
 router.get("/", GetHomepage);
 
-// @api /user/register POST register user
+// @api/register POST register user
 router.post("/register", PostRegisterUser);
 
-// @api /user/login POST login user
+// @api/login POST login user
 router.post("/login", PostLoginUser);
 
-// @api /user/logout POST logout user
+// @api/logout POST logout user
 router.post("/logout", LogoutUser);
 
-// @api /user/refreshtoken POST re-login user
+// @api/refreshtoken POST re-login user
 router.post("/refreshtoken", PostRefreshToken);
 
-// @api /user/forgot POST login user
+// @api/forgot POST login user
 router.post("/forgot", ForgotPassword);
 
-// @api /user/reset/:resetToken POST login user
+// @api/reset/:resetToken POST login user
 router.post("/reset/:resetToken", ResetPassword);
 
-// @api /user/news POST create news
+// @api/news POST create news
 router.post("/news/:folderId", UploadNews);
 
-// @api /user/news/:id DELETE delete news
+// @api/news/:id DELETE delete news
 router.delete("/delete/news/:id", DeleteNews);
 
-// @api /user/folder POST create folder
+// @api/folder POST create folder
 router.post("/create/folder", CreateFolder);
 
-// @api /user/folder GET get all folder
+// @api/folder GET get all folder
 router.get("/showall/folder", AllFolders);
 
-// @api /user/folder/:id DELETE delete folder
+// @api/folder/:id DELETE delete folder
 router.delete("/delete/folder/:id", DeleteFolder);
 
-// @api /user/folder/:id PUT update folder
-router.put("/update/folder/:folderName", UpdateFolder);
+// @api/folder/:id PUT update folder
+router.put("/update/folder/:id", UpdateFolder);
 
-// @api /user/folder/:id GET open folder
+// @api/folder/:id GET open folder
 router.get("/open/folder/:id", OpenFolder);
 
 module.exports = router;
