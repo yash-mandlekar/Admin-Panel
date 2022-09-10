@@ -16,6 +16,7 @@ const {
   DeleteFolder,
   UpdateFolder,
   OpenFolder,
+  DeleteNews,
 } = require("../controllers/userControllers");
 const { isAuthUser } = require("../middleware/auth");
 const upload = require("../middleware/multer");
@@ -44,8 +45,11 @@ router.post("/reset/:resetToken", ResetPassword);
 // @api /user/news POST create news
 router.post("/news/:folderId", UploadNews);
 
+// @api /user/news/:id DELETE delete news
+router.delete("/delete/news/:id", DeleteNews);
+
 // @api /user/folder POST create folder
-router.post("/create/folder",isAuthUser, CreateFolder);
+router.post("/create/folder", CreateFolder);
 
 // @api /user/folder GET get all folder
 router.get("/showall/folder", AllFolders);

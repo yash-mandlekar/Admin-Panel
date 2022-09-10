@@ -147,10 +147,10 @@ exports.ChangePassword = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.CreateFolder = catchAsyncErrors(async (req, res, next) => {
-  const { folderName } = req.body;
+  const { folderName,user_id } = req.body;
   const folder = new Folders({
     folderName,
-    author: req.user.id,
+    author: user_id,
   });
   await folder.save();
   res.status(201).json(folder);
@@ -173,6 +173,18 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
     });
     await news.save();
     res.status(201).json(news);
+  }
+});
+
+exports.DeleteNews = catchAsyncErrors(async (req, res, next) => {
+  const { newsId } = req.body;
+  const news = await News.findOneAndDelete({ _id: newsId });
+  if (!news) {
+    res.json({ message: "News not found" });
+  }
+  else {
+    await news.remove();
+    res.status(201).json({ message: "News deleted successfully" });
   }
 });
 
