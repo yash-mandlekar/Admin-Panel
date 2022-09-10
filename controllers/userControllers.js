@@ -146,14 +146,8 @@ exports.ChangePassword = catchAsyncErrors(async (req, res, next) => {
 
 });
 
-
 exports.CreateFolder = catchAsyncErrors(async (req, res, next) => {
-  console.log(req.cookies);
-  console.log(req.user);
   const { folderName } = req.body;
-  fs.mkdir(`./public/folders/${folderName}`, (err) => {
-    if (err) throw err;
-  });
   const folder = new Folders({
     folderName,
     author: req.user.id,
@@ -163,9 +157,9 @@ exports.CreateFolder = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
-  const { title, discription } = req.body;
-  const folder = await Folders.findOne({ _id: req.params.folderId });
-  if (req.file.mimetype !== "image/jpeg" && req.file.mimetype !== "image/png" && req.file.mimetype !== "image/jpg" && req.file.mimetype !== "image/gif" && req.file.mimetype !== "image/svg+xml" && req.file.mimetype !== "image/webp" && req.file.mimetype !== "video/mp4" && req.file.mimetype !== "video/X-flv" && req.file.mimetype !== "application/x-mpegURL" && req.file.mimetype !== "audio/x-wav" && req.file.mimetype !== "audio/mpeg" && req.file.mimetype !== "audio/mpeg" && req.file.mimetype !== "	audio/mp4") {
+  const { title, discription, folderId, file, filetype } = req.body;
+  const folder = await Folders.findOne({ _id: folderId });
+  if (filetype !== "image" && filetype !== "video" && filetype !== "audio") {
     res.json({ message: "File type not supported" });
   }
   else {
@@ -173,11 +167,10 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
       title,
       discription,
       file: {
-        data: fs.readFileSync(req.file.path),
-        contentType: req.file.mimetype
+        data: file,
+        contentType: filetype
       }
     });
-    console.log(req.file.path);
     await news.save();
     res.status(201).json(news);
   }
@@ -188,30 +181,19 @@ exports.AllFolders = catchAsyncErrors(async (req, res, next) => {
   res.status(200).json(folders);
 });
 
-
 exports.DeleteFolder = catchAsyncErrors(async (req, res, next) => {
 
-  const folder = await Folders.findById(req.params.id);
-  if (!folder) {
-    return next(new ErrorHandler("Folder not found", 404));
-  }
-  await folder.remove();
-  fs.rmdir(`./public/folders/${req.params.folderName}`, (err) => {
-    if (err) throw err;
-  });
-
+  const folder = await Folders.findOneAndDelete({ _id: req.params.id });
+  if (!folder) return next(new ErrorHandler("Folder not found", 404));
   res.status(200).json({
     success: true,
     message: "Folder deleted successfully",
   });
 });
 
-
 exports.UpdateFolder = catchAsyncErrors(async (req, res, next) => {
-  const folder = await Folders.findById(req.params.folderName);
-  if (!folder) {
-    return next(new ErrorHandler("Folder not found", 404));
-  }
+  const folder = await Folders.findOneAndUpdate({ _id: req.params.id }, req.body);
+  if (!folder) return next(new ErrorHandler("Folder not found", 404));
   folder.folderName = req.body.folderName;
   await folder.save();
   res.status(200).json({
@@ -222,9 +204,7 @@ exports.UpdateFolder = catchAsyncErrors(async (req, res, next) => {
 
 exports.OpenFolder = catchAsyncErrors(async (req, res, next) => {
   const folder = await Folders.findById(req.params.id).populate("news");
-  if (!folder) {
-    return next(new ErrorHandler("Folder not found", 404));
-  }
+  if (!folder) return next(new ErrorHandler("Folder not found", 404));
   res.status(200).json(folder);
 });
 

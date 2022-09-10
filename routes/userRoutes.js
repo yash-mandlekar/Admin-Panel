@@ -42,7 +42,7 @@ router.post("/forgot", ForgotPassword);
 router.post("/reset/:resetToken", ResetPassword);
 
 // @api /user/news POST create news
-router.post("/news/:folderName/:folderId",isAuthUser, upload.single("file"), UploadNews);
+router.post("/news/:folderId", UploadNews);
 
 // @api /user/folder POST create folder
 router.post("/create/folder",isAuthUser, CreateFolder);

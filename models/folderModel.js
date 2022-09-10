@@ -4,6 +4,7 @@ const folderModel = new mongoose.Schema({
     folderName: {
         type: String,
         required: [true, "Folder name is required"],
+        unique: true,
     },
     news : [{
         type: mongoose.Schema.Types.ObjectId,
