@@ -15,7 +15,6 @@ exports.GetHomepage = (req, res, next) => {
 
 exports.PostRegisterUser = catchAsyncErrors(async (req, res, next) => {
   const user = await User.create(req.body);
-
   useToken(user, 201, res);
 });
 
@@ -149,8 +148,8 @@ exports.ChangePassword = catchAsyncErrors(async (req, res, next) => {
 
 
 exports.CreateFolder = catchAsyncErrors(async (req, res, next) => {
-  console.log(req.cookies); 
-  console.log(req.user); 
+  console.log(req.cookies);
+  console.log(req.user);
   const { folderName } = req.body;
   fs.mkdir(`./public/folders/${folderName}`, (err) => {
     if (err) throw err;
@@ -174,7 +173,10 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
       title,
       discription,
       category,
-      file: req.file.path
+      file: {
+        data: fs.readFileSync(req.file.path),
+        contentType: req.file.mimetype
+      }
     });
     console.log(req.file.path);
     await news.save();
@@ -189,7 +191,7 @@ exports.AllFolders = catchAsyncErrors(async (req, res, next) => {
 
 
 exports.DeleteFolder = catchAsyncErrors(async (req, res, next) => {
-  
+
   const folder = await Folders.findById(req.params.id);
   if (!folder) {
     return next(new ErrorHandler("Folder not found", 404));

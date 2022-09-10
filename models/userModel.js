@@ -68,16 +68,16 @@ const userModel = new mongoose.Schema({
     default: Date.now,
   },
 
-  news:[
+  news: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "News",
     },
   ],
-folders : [{
+  folders: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "Folders"
-}],
+  }],
 
   resetPasswordToken: String,
   resetPasswordExpire: Date,
