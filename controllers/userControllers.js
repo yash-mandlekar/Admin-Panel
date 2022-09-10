@@ -169,6 +169,8 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
         contentType: filetype
       }
     });
+    folder.news.push(news);
+    await folder.save();
     await news.save();
     res.status(201).json(news);
   }
@@ -211,9 +213,9 @@ exports.UpdateFolder = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.OpenFolder = catchAsyncErrors(async (req, res, next) => {
-  const folder = await Folders.findById(req.params.id).populate("news");
+  const folder = await Folders.findOne({_id:req.params.id}).populate("news");
   if (!folder) return next(new ErrorHandler("Folder not found", 404));
-  res.status(200).json(folder);
+  res.status(200).json(folder.news);
 });
 
 
