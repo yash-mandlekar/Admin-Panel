@@ -13,7 +13,7 @@ const newsModel =  mongoose.Schema(
             minlength: [6, "description should have atleast 6 characters"],
         },
         file: {
-            contentType: Buffer,
+            type: String,
             default: "",
         },
         fileType: {

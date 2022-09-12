@@ -43,10 +43,10 @@ router.post("/forgot", ForgotPassword);
 router.post("/reset/:resetToken", ResetPassword);
 
 // @api/news POST create news
-router.post("/create/news", UploadNews);
+router.post("/create/news",upload.single("file"), UploadNews);
 
 // @api/news/:id DELETE delete news
-router.delete("/delete/news/:id", DeleteNews);
+router.delete("/delete/news", DeleteNews);
 
 // @api/folder POST create folder
 router.post("/create/folder", CreateFolder);

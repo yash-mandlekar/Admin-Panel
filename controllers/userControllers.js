@@ -155,20 +155,19 @@ exports.CreateFolder = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
-  const { title, description, folderId, file, filetype } = req.body;
+  const { title, description, folderId } = req.body;
   const folder = await Folders.findOne({ _id: folderId });
-  if (filetype !== "image" && filetype !== "video" && filetype !== "audio") {
+  if (req.file.mimetype !== "image/jpeg" && req.file.mimetype !== "image/png" && req.file.mimetype !== "image/jpg" && req.file.mimetype !== "image/gif" && req.file.mimetype !== "image/svg+xml" && req.file.mimetype !== "image/webp" && req.file.mimetype !== "video/mp4" && req.file.mimetype !== "video/X-flv" && req.file.mimetype !== "application/x-mpegURL" && req.file.mimetype !== "audio/x-wav" && req.file.mimetype !== "audio/mpeg" && req.file.mimetype !== "audio/mpeg" && req.file.mimetype !== "	audio/mp4") {
     res.json({ message: "File type not supported" });
   }
   else {
     const news = new News({
       title,
       description,
-      file: {
-        data: file,
-        contentType: filetype
-      }
+      file : req.file.filename,
+      fileType : req.file.mimetype,
     });
+    console.log(req.file.mimetype);
     folder.news.push(news);
     await folder.save();
     await news.save();
