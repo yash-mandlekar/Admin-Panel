@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const newsModel =  mongoose.Schema(
+const newsModel = mongoose.Schema(
     {
         title: {
             type: String,
@@ -24,14 +24,11 @@ const newsModel =  mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "User"
         },
-        category: [ {
-            _id: false,
-            categoryID: {
-                type: mongoose.Schema.Types.ObjectId,
-                required: true,
-                ref: 'Category'
-            }
-        } ],
+        category: [{
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: 'Category'
+        }],
         createdat: {
             type: Date,
             default: Date.now,
