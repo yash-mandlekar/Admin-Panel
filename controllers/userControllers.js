@@ -165,7 +165,7 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
       title,
       description,
       file: req.file.filename,
-      fileType: filetype,
+      fileType: filetype ? filetype : req.file.mimetype.split("/")[0],
     });
     console.log(req.file.mimetype);
     folder.news.push(news);
