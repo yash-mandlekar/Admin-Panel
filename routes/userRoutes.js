@@ -24,7 +24,7 @@ const upload = require("../middleware/multer");
 // @api/ GET Hompage
 router.get("/", GetHomepage);
 
-// @api/register POST register user
+// @api/register POST register admin and adminpanel users
 router.post("/register", PostRegisterUser);
 
 // @api/login POST login user

@@ -5,12 +5,10 @@ const newsModel = mongoose.Schema(
         title: {
             type: String,
             required: [true, "Title field must not be empty"],
-            minlength: [4, "Title should have atleast 4 characters"],
         },
         description: {
             type: String,
             required: [true, "description field must not be empty"],
-            minlength: [6, "description should have atleast 6 characters"],
         },
         file: {
             type: String,
