@@ -164,7 +164,7 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
     const news = new News({
       title,
       description,
-      file: req.file.filename,
+      file: `./folders/${req.file.filename}`,
       fileType: filetype ? filetype : req.file.mimetype.split("/")[0],
     });
     console.log(req.file.mimetype);
@@ -176,15 +176,14 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.DeleteNews = catchAsyncErrors(async (req, res, next) => {
-  const { newsId } = req.body;
-  const news = await News.findOneAndDelete({ _id: newsId });
-  if (!news) {
-    res.json({ message: "News not found" });
-  }
-  else {
-    await news.remove();
-    res.status(201).json({ message: "News deleted successfully" });
-  }
+  const { newsId, folderId } = req.body;
+  const folder = await Folders.findOne({ _id: folderId });
+  const news = await News.findOne({ _id: newsId });
+  const index = folder.news.indexOf(newsId);
+  folder.news.splice(index, 1);
+  await folder.save();
+  await news.remove();
+  res.status(201).json(news);
 });
 
 exports.AllFolders = catchAsyncErrors(async (req, res, next) => {
