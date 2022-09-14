@@ -78,6 +78,10 @@ const userModel = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Folders"
   }],
+  channels: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Channels"
+  }],
 
   resetPasswordToken: String,
   resetPasswordExpire: Date,
