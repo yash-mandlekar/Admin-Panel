@@ -31,30 +31,30 @@ router.post("/register", PostRegisterUser);
 router.post("/login", PostLoginUser);
 
 // @api/logout POST logout user
-router.post("/logout", LogoutUser);
+router.post("/logout",isAuthUser,LogoutUser);
 
 // @api/refreshtoken POST re-login user
-router.post("/refreshtoken", PostRefreshToken);
+router.post("/refreshtoken",isAuthUser, PostRefreshToken);
 
 // @api/forgot POST login user
-router.post("/forgot", ForgotPassword)
+router.post("/forgot",isAuthUser, ForgotPassword)
 
 // @api/reset/:resetToken POST login user
-router.post("/reset/:resetToken", ResetPassword)
+router.post("/reset/:resetToken",isAuthUser, ResetPassword)
 
 // @api/upload POST upload news
 router
-  .post("/news", upload.single("file"), UploadNews)
-  .delete("/news", DeleteNews)
+  .post("/news", upload.single("file"), isAuthUser,UploadNews)
+  .delete("/news",isAuthUser, DeleteNews)
 
 // @api/folder POST create folder
 router
-  .post("/folder", CreateFolder)
-  .get("/folder", AllFolders)
-  .delete("/folder/:id", DeleteFolder)
-  .put("/folder/:id", UpdateFolder)
+  .post("/folder",isAuthUser, CreateFolder)
+  .get("/folder",isAuthUser, AllFolders)
+  .delete("/folder",isAuthUser, DeleteFolder)
+  .put("/folder", isAuthUser,UpdateFolder)
 
 // @api/folder/:id GET open folder
-router.get("/open/folder/:id", OpenFolder)
+router.get("/open/folder/:id",isAuthUser, OpenFolder)
 
 module.exports = router;

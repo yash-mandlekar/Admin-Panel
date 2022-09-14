@@ -97,7 +97,7 @@ userModel.methods.comparePassword = async function (candidatePassword) {
 
 userModel.methods.generateToken = function () {
   const access_token = jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
-    expiresIn: "30s",
+    // expiresIn: Math.floor(Date.now() / 1000) + (60 * 60),
   });
 
   const refresh_token = jwt.sign({ id: this._id }, process.env.REFRESH_SECRET, {
