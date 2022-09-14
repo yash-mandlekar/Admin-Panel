@@ -37,30 +37,24 @@ router.post("/logout", LogoutUser);
 router.post("/refreshtoken", PostRefreshToken);
 
 // @api/forgot POST login user
-router.post("/forgot", ForgotPassword);
+router.post("/forgot", ForgotPassword)
 
 // @api/reset/:resetToken POST login user
-router.post("/reset/:resetToken", ResetPassword);
+router.post("/reset/:resetToken", ResetPassword)
 
-// @api/news POST create news
-router.post("/create/news",upload.single("file"), UploadNews);
-
-// @api/news/:id DELETE delete news
-router.delete("/delete/news", DeleteNews);
+// @api/upload POST upload news
+router
+  .post("/news", upload.single("file"), UploadNews)
+  .delete("/news", DeleteNews)
 
 // @api/folder POST create folder
-router.post("/create/folder", CreateFolder);
-
-// @api/folder GET get all folder
-router.get("/showall/folder", AllFolders);
-
-// @api/folder/:id DELETE delete folder
-router.delete("/delete/folder/:id", DeleteFolder);
-
-// @api/folder/:id PUT update folder
-router.put("/update/folder/:id", UpdateFolder);
+router
+  .post("/folder", CreateFolder)
+  .get("/folder", AllFolders)
+  .delete("/folder/:id", DeleteFolder)
+  .put("/folder/:id", UpdateFolder)
 
 // @api/folder/:id GET open folder
-router.get("/open/folder/:id", OpenFolder);
+router.get("/open/folder/:id", OpenFolder)
 
 module.exports = router;
