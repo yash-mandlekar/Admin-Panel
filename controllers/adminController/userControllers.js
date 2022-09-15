@@ -1,10 +1,10 @@
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
-const useToken = require("../utils/useToken");
-const catchAsyncErrors = require("../middleware/catchAsyncErrors");
-const User = require("../models/userModel");
+const useToken = require("../../utils/useToken");
+const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
+const User = require("../../models/userModel");
 // const fs = require("fs"); // File System
-const ErrorHandler = require("../utils/ErrorHandler");
+const ErrorHandler = require("../../utils/ErrorHandler");
 // const { constants } = require("fs/promises");
 
 exports.GetHomepage = (req, res, next) => {

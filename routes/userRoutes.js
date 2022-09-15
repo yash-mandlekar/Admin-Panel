@@ -10,7 +10,7 @@ const {
   PostRefreshToken,
   ForgotPassword,
   ResetPassword,
-} = require("../controllers/userControllers");
+} = require("../controllers/adminController/userControllers");
 
 const {
   CreateFolder,
@@ -18,13 +18,13 @@ const {
   UpdateFolder,
   DeleteFolder,
   OpenFolder,
-} = require("../controllers/folderController");
+} = require("../controllers/adminController/folderController");
 
 const {
   UploadNews,
   DeleteNews,
   UpdateNews,
-} = require("../controllers/newsController");
+} = require("../controllers/adminController/newsController");
 
 const { isAuthUser } = require("../middleware/auth");
 const upload = require("../middleware/multer");

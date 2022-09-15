@@ -1,7 +1,7 @@
-const Folders = require("../models/folderModel");
-const User = require("../models/userModel");
-const ErrorHandler = require("../utils/ErrorHandler");
-const catchAsyncErrors = require("../middleware/catchAsyncErrors");
+const Folders = require("../../models/folderModel");
+const User = require("../../models/userModel");
+const ErrorHandler = require("../../utils/ErrorHandler");
+const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 
 
 
