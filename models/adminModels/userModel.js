@@ -3,7 +3,7 @@ const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
-
+//////////////////////////////////////////////adminModel//////////////////////////////////////////////
 const userModel = new mongoose.Schema({
   username: {
     type: String,
@@ -81,6 +81,14 @@ const userModel = new mongoose.Schema({
   channels: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "Channels"
+  }],
+
+  ////////////////////////////////////////////App Users////////////////////////////////////////////
+
+
+  appUsers: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "AppUsers"
   }],
 
   resetPasswordToken: String,
