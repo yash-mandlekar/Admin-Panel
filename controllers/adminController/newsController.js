@@ -1,8 +1,8 @@
-const User = require("../models/userModel");
-const News = require("../models/newsModel");
-const Folders = require("../models/folderModel");
-const catchAsyncErrors = require("../middleware/catchAsyncErrors");
-const ErrorHandler = require("../utils/ErrorHandler");
+const User = require("../../models/adminModels/userModel");
+const News = require("../../models/adminModels/newsModel");
+const Folders = require("../../models/adminModels/folderModel");
+const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
+const ErrorHandler = require("../../utils/ErrorHandler");
 
 
 exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
@@ -28,9 +28,9 @@ exports.DeleteNews = catchAsyncErrors(async (req, res, next) => {
     const user = await User.findById(req.user.id);
     const { newsId, folderId } = req.body;
     // console.log(req.body);
-    const folder = await Folders.findOne({ _id:folderId });
+    const folder = await Folders.findOne({ _id: folderId });
     // console.log(folder);
-    const news = await News.findOne({ _id:newsId });
+    const news = await News.findOne({ _id: newsId });
     const index = folder.news.indexOf(newsId);
     folder.news.splice(index, 1);
     user.news.splice(user.news.indexOf(newsId), 1);
@@ -43,24 +43,29 @@ exports.DeleteNews = catchAsyncErrors(async (req, res, next) => {
     });
 });
 
-
-
-  exports.UpdateNews = catchAsyncErrors(async (req, res, next) => {
-      console.log("lol : ",req.body);
-      const { newsId, folderId } = req.body;
-    const user = await User.findById(req.user.id);
-
-    const folder = await Folders.findOne({ _id:folderId });
-    const news = await News.findOneAndUpdate({ _id:newsId }, req.body);
+exports.UpdateNews = catchAsyncErrors(async (req, res, next) => {
+    console.log("lol : ", req.body);
+    const { newsId, folderId } = req.body;
+    const folder = await Folders.findOne({ _id: folderId });
+    const news = await News.findOneAndUpdate({ _id: newsId }, req.body);
     // console.log(news);
     if (!news) return next(new ErrorHandler("News not found", 404));
-    user.news.push(news._id);
-    folder.news.push(news._id);
-    await user.save();
+    folder.news.push();
     await folder.save();
     res.status(200).json({
         success: true,
         message: "News updated successfully",
-        });
-    }
-    );
+    });
+}
+);
+
+exports.AllNews = catchAsyncErrors(async (req, res, next) => {
+    const news = await News.find();
+    res.status(200).json(news);
+});
+
+exports.SingleNews = catchAsyncErrors(async (req, res, next) => {
+    const news = await News.findById(req.body.newsId);
+    if (!news) return next(new ErrorHandler("News not found", 404));
+    res.status(200).json(news);
+});

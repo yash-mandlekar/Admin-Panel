@@ -36,4 +36,4 @@ const channelModel = new mongoose.Schema({
     },
 });
 
-module.exports = mongoose.model('Channel', channelModel);
+module.exports = mongoose.model('Channels', channelModel);

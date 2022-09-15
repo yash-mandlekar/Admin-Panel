@@ -10,7 +10,7 @@ const {
   PostRefreshToken,
   ForgotPassword,
   ResetPassword,
-} = require("../controllers/adminController/userControllers");
+} = require("../controllers/adminController/userController");
 
 const {
   CreateFolder,
@@ -24,7 +24,17 @@ const {
   UploadNews,
   DeleteNews,
   UpdateNews,
+  AllNews,
+  SingleNews,
 } = require("../controllers/adminController/newsController");
+
+const {
+  CreateChannel,
+  AllChannels,
+  GetChannel,
+  UpdateChannel,
+  DeleteChannel,
+} = require("../controllers/adminController/channelController");
 
 const { isAuthUser } = require("../middleware/auth");
 const upload = require("../middleware/multer");
@@ -54,7 +64,12 @@ router.post("/reset/:resetToken", isAuthUser, ResetPassword)
 router
   .post("/news", upload.single("file"), isAuthUser, UploadNews)
   .delete("/news", isAuthUser, DeleteNews)
-  .put("/news", upload.single("file"), isAuthUser, UpdateNews);
+  .put("/news", upload.single("file"), isAuthUser, UpdateNews)
+  .get("/news", isAuthUser, SingleNews)
+ 
+  // @api/GET all news
+router.get("/all/news", isAuthUser, AllNews);
+
 
 // @api/folder POST create folder
 router
@@ -65,5 +80,15 @@ router
 
 // @api/folder/:id GET open folder
 router.get("/open/folder/:id", isAuthUser, OpenFolder)
+
+// @api/channel POST create channel
+router
+.post("/channel", isAuthUser, CreateChannel)
+.get("/channel", isAuthUser, AllChannels)
+.put("/channel", isAuthUser, UpdateChannel)
+.delete("/channel", isAuthUser, DeleteChannel)
+
+// @api/channel/:id GET open channel
+router.get("/open/channel", isAuthUser, GetChannel)
 
 module.exports = router;

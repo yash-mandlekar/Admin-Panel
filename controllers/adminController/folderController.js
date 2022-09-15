@@ -1,5 +1,5 @@
-const Folders = require("../../models/folderModel");
-const User = require("../../models/userModel");
+const Folders = require("../../models/adminModels/folderModel");
+const User = require("../../models/adminModels/userModel");
 const ErrorHandler = require("../../utils/ErrorHandler");
 const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 
@@ -26,11 +26,8 @@ exports.CreateFolder = catchAsyncErrors(async (req, res, next) => {
   });
 
   exports.UpdateFolder = catchAsyncErrors(async (req, res, next) => {
-    const user = await User.findById(req.user.id);
     const folder = await Folders.findOneAndUpdate({ _id: req.body.folderId }, req.body);
     if (!folder) return next(new ErrorHandler("Folder not found", 404));
-    user.folders.push(folder._id);
-    await user.save();
     res.status(200).json({
       success: true,
       message: "Folder updated successfully",
