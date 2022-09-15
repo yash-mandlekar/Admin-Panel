@@ -2,7 +2,7 @@ require("dotenv").config({ path: "./config/.env" });
 const express = require("express");
 const app = express();
 const cookieParser = require("cookie-parser");
-
+const bodyParser = require("body-parser");
 const errormiddleware = require("./middleware/error");
 
 require("./config/database").databaseconnection();
@@ -16,7 +16,6 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use("/", userRouter);
-
 app.use(errormiddleware);
 
 app.listen(
