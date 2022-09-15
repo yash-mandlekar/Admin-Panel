@@ -39,10 +39,10 @@ router.post("/register", PostRegisterUser);
 router.post("/login", PostLoginUser);
 
 // @api/logout POST logout user
-router.post("/logout", isAuthUser, LogoutUser);
+router.post("/logout",LogoutUser);
 
 // @api/refreshtoken POST re-login user
-router.post("/refreshtoken", isAuthUser, PostRefreshToken);
+router.post("/refreshtoken", PostRefreshToken);
 
 // @api/forgot POST login user
 router.post("/forgot", isAuthUser, ForgotPassword)
