@@ -1,7 +1,9 @@
 const express = require("express")
 const router = express.Router();
+const upload = require("../middleware/multer");
 
 const {
+  GetHomepage,
   PostRegisterAppUser,
   PostLoginAppUser,
   LogoutAppUser,
@@ -9,7 +11,8 @@ const {
   ForgotPasswordApp,
   ResetPasswordApp,
   ChangePasswordApp,
-  
+  GetAppUser,
+
 } = require("../controllers/userController/appUserController");
 
 
@@ -41,6 +44,7 @@ router.post("/reset/:resetToken", isAuthUser, ResetPasswordApp)
 // @api /user/change password POST login user
 router.post("/change", isAuthUser, ChangePasswordApp)
 
-
+// @api /user/profile GET user profile
+router.get("/profile", isAuthUser, GetAppUser)
 
 module.exports = router;

@@ -36,6 +36,7 @@ const {
     UpdateChannel,
     DeleteChannel,
 } = require("../controllers/adminController/channelController");
+const { isAuthUser } = require("../middleware/auth");
 
 
 
@@ -95,3 +96,5 @@ router
 // @api/channel/:id GET open channel
 router.get("/open/channel", isAuthUser, GetChannel)
 
+
+module.exports = router;
