@@ -142,7 +142,10 @@ exports.ChangePasswordApp = catchAsyncErrors(async (req, res, next) => {
   }
 });
 
-
+exports.GetAppUser = catchAsyncErrors(async (req, res, next) => {
+  const user = await AppUser.findById(req.params.id);
+  res.status(200).json({ user });
+});
 
 
 

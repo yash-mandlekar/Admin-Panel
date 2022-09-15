@@ -7,7 +7,7 @@ const errormiddleware = require("./middleware/error");
 
 require("./config/database").databaseconnection();
 const userRouter = require("./routes/userRoutes");
-
+const adminRouter = require("./routes/adminRoutes");
 app.use(require("cors")({ credentials: true, origin: process.env.FRONTEND_URL }));
 
 app.use(express.json());
@@ -15,7 +15,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use("/", userRouter);
+app.use("/user/", userRouter);
+app.use("/", adminRouter);
 app.use(errormiddleware);
 
 app.listen(
