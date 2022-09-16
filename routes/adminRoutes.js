@@ -11,6 +11,11 @@ const {
     ForgotPassword,
     ResetPassword,
     ChangePassword,
+    GetUsers,
+    GetAdmin,
+    GetEditor,
+    GetSeniorEditor,
+    GetReporter,
 } = require("../controllers/adminController/userController");
 
 const {
@@ -64,6 +69,22 @@ router.post("/reset/:resetToken", isAuthUser, ResetPassword)
 
 // @api/change password POST login user
 router.post("/change", isAuthUser, ChangePassword)
+
+// @api/users GET all users
+router.get("/users", isAuthUser, GetUsers);
+
+// @api/editor GET user profile
+router.get("/editor", isAuthUser, GetEditor);
+
+//@api/admin GET user profile
+router.get("/admin", isAuthUser, GetAdmin);
+
+//@api/senior-editor GET user profile
+router.get("/senior-editor", isAuthUser, GetSeniorEditor);
+
+//@api/reporter GET user profile
+router.get("/reporter", isAuthUser, GetReporter);
+
 
 // @api/upload POST upload news
 router

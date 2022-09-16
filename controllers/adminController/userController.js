@@ -142,6 +142,48 @@ exports.ChangePassword = catchAsyncErrors(async (req, res, next) => {
   }
 });
 
+exports.GetUsers = catchAsyncErrors(async (req, res, next) => {
+  const users = await User.find();
+  res.status(200).json({
+    status: "success",
+    users,
+  });
+});
+
+exports.GetEditor = catchAsyncErrors(async (req, res, next) => {
+  const user = (await User.find()).filter((user) => user.role.toLowerCase() === "editor");
+  res.status(200).json({
+    status: "success",
+    data: user,
+  });
+});
+
+exports.GetAdmin = catchAsyncErrors(async (req, res, next) => {
+  const user = (await User.find()).filter((user) => user.role.toLowerCase() === "admin");
+  res.status(200).json({
+    status: "success",
+    data: user,
+  });
+});
+
+exports.GetSeniorEditor = catchAsyncErrors(async (req, res, next) => {
+  const user = (await User.find()).filter((user) => user.role.toLowerCase() === "senior editor");
+  res.status(200).json({
+    status: "success",
+    data: user,
+  });
+});
+
+exports.GetReporter = catchAsyncErrors(async (req, res, next) => {
+  const user = (await User.find()).filter((user) => user.role.toLowerCase() === "reporter");
+  res.status(200).json({
+    status: "success",
+    data: user,
+  });
+});
+
+
+
 
 
 

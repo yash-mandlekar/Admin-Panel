@@ -12,11 +12,15 @@ const {
   ResetPasswordApp,
   ChangePasswordApp,
   GetAppUser,
-
+  UpdateAppUser,
+  DeleteAppUser,
 } = require("../controllers/userController/appUserController");
 
+const {
+  CreatePost,
+} = require("../controllers/userController/postController");
 
-const { isAuthUser } = require("../middleware/auth");
+const { isLoggedin } = require("../middleware/login");
 
 
 
@@ -36,15 +40,21 @@ router.post("/logout", LogoutAppUser);
 router.post("/refreshtoken", PostRefreshAppToken);
 
 // @api /user/forgot POST login user
-router.post("/forgot", isAuthUser, ForgotPasswordApp)
+router.post("/forgot", isLoggedin, ForgotPasswordApp)
 
 // @api /user/reset/:resetToken POST login user
-router.post("/reset/:resetToken", isAuthUser, ResetPasswordApp)
+router.post("/reset/:resetToken", isLoggedin, ResetPasswordApp)
 
 // @api /user/change password POST login user
-router.post("/change", isAuthUser, ChangePasswordApp)
+router.post("/change", isLoggedin, ChangePasswordApp)
 
 // @api /user/profile GET user profile
-router.get("/profile", isAuthUser, GetAppUser)
+router
+  .get("/profile", isLoggedin, GetAppUser)
+  .put("/profile", isLoggedin, UpdateAppUser)
+  .delete("/profile", isLoggedin, DeleteAppUser);
 
+
+// @api /user/post POST create post
+router.post("/post", isLoggedin, upload.single("file"), CreatePost);
 module.exports = router;
