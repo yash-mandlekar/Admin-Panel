@@ -63,5 +63,5 @@ router
   .get("/post", isLoggedin, GetPost)
 
 // @api /user/post/:id GET post by id
-router.get("/post", isLoggedin, GetPostById)
+router.get("/all/post", isLoggedin, GetPostById)
 module.exports = router;

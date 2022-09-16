@@ -4,7 +4,7 @@ const app = express();
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const errormiddleware = require("./middleware/error");
-
+const path = require("path");
 require("./config/database").databaseconnection();
 const userRouter = require("./routes/userRoutes");
 const adminRouter = require("./routes/adminRoutes");
@@ -13,6 +13,7 @@ app.use(require("cors")({ credentials: true, origin: process.env.FRONTEND_URL })
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use("/user/", userRouter);
