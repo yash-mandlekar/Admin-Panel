@@ -37,7 +37,6 @@ exports.CreateFolder = catchAsyncErrors(async (req, res, next) => {
   exports.DeleteFolder = catchAsyncErrors(async (req, res, next) => {
     const user = await User.findById(req.user.id);
     const { folderId } = req.body;
-    // console.log(folderId);
     const folder = await Folders.findOne({ _id: folderId });
     const index = user.folders.indexOf(folderId);
     user.folders.splice(index, 1);

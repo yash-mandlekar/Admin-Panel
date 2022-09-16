@@ -30,7 +30,6 @@ exports.AllChannels = catchAsyncErrors(async (req, res, next) => {
 
 exports.GetChannel = catchAsyncErrors(async (req, res, next) => {
     const channel = await Channel.findById(req.params.channelId);
-    console.log(req.body.channelId);
     if (!channel) {
         return next(new ErrorHandler("Channel not found", 404));
     }   

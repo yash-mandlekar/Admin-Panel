@@ -29,13 +29,10 @@ exports.DeletePost = catchAsyncErrors(async (req, res, next) => {
     const user = await AppUser.findById(req.user.id);
     const { postId } = req.body;
     const post = await Post.findOne({ _id: postId });
-    // console.log(postId);
-    // console.log(post.file.split("/")[2]);
     fs.unlink(`./public/uploads/${post.file.split("/")[2]}`, (err) => {
         if (err) {
         }
     });
-    console.log(user.posts.indexOf(postId));
     const index = user.posts.indexOf(postId);
     user.posts.splice(index, 1);
     await user.save();
