@@ -47,21 +47,19 @@ exports.DeletePost = catchAsyncErrors(async (req, res, next) => {
 exports.UpdatePost = catchAsyncErrors(async (req, res, next) => {
     const { postId, location, title, description, file } = req.body;
     const post = await Post.findOne({ _id: postId });
-    if(file){
-        if (post.file.split("/")[2] !== file) {
-            fs.unlink(`./public/uploads/${post.file.split("/")[2]}`, (err) => {
-                if (err) {
-                }
-            });
-        }
-        post.file = `/uploads/${req.file.filename}`;
+    if (post.file.split("/")[2] !== file) {
+        fs.unlink(`./public/uploads/${post.file.split("/")[2]}`, (err) => {
+            if (err) {
+            }
+        });
     }
-        post.location = location;
-        post.title = title;
-        post.description = description;
-        
-        await post.save();
-        res.status(201).json({
+    post.location = location;
+    post.title = title;
+    post.file = `/uploads/${req.file.filename}`;
+    post.description = description;
+    
+    await post.save();
+    res.status(201).json({
     success: true,
     message: "post updated successfully",
     post

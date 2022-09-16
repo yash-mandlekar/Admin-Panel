@@ -4,17 +4,18 @@ const Folders = require("../../models/adminModels/folderModel");
 const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 const fs = require("fs");
 const ErrorHandler = require("../../utils/ErrorHandler");
+const { log } = require("console");
 
 
 exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
     const user = await User.findById(req.user.id);
-    const { title, description, folderId, filetype } = req.body;
+    const { title, description, folderId, fileType } = req.body;
     const folder = await Folders.findOne({ _id: folderId });
     const news = await News.create({
         title,
         description,
         file: `/folders/${req.file.filename}`,
-        fileType: filetype ? filetype : req.file.mimetype.split("/")[0],
+        fileType: fileType ? fileType : req.file.mimetype.split("/")[0],
         author: user._id,
     });
     folder.news.push(news._id);
@@ -48,21 +49,27 @@ exports.DeleteNews = catchAsyncErrors(async (req, res, next) => {
 
 
 exports.UpdateNews = catchAsyncErrors(async (req, res, next) => {
-    const { newsId, folderId } = req.body;
-    const folder = await Folders.findOne({ _id: folderId });
-    const news = await News.findOneAndUpdate({ _id: newsId }, {
-        title: req.body.title,
-        description: req.body.description,        
-    });
-    if (!news) return next(new ErrorHandler("News not found", 404));
-    folder.news.push();
-    await folder.save();
+    const { newsId, title, description, file } = req.body;
+    const news = await News.findOne({ _id: newsId });
+    console.log(news);
+    
+        if (news.file.split("/")[2] !== file) {
+            fs.unlink(`./public/folders/${news.file.split("/")[2]}`, (err) => {
+                if (err) {
+                }
+            });
+        }
+        news.file = `/folders/${req.file.filename}`;
+
+    news.title = title;
+    news.description = description;
+    await news.save();
     res.status(200).json({
         success: true,
         message: "News updated successfully",
+        news,
     });
-}
-);
+});
 
 exports.AllNews = catchAsyncErrors(async (req, res, next) => {
     const news = await News.find();
