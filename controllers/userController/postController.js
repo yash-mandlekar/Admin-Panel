@@ -4,6 +4,7 @@ const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 const ErrorHandler = require("../../utils/ErrorHandler");
 const { post } = require("../../routes/userRoutes");
 const fs = require("fs");
+const { log } = require("console");
 
 exports.CreatePost = catchAsyncErrors(async (req, res, next) => {
     const user = await AppUser.findById(req.user.id);
@@ -44,16 +45,28 @@ exports.DeletePost = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.UpdatePost = catchAsyncErrors(async (req, res, next) => {
-    const { postId, location, title, description } = req.body;
+    const { postId, location, title, description, file } = req.body;
     const post = await Post.findOne({ _id: postId });
-    post.location = location;
-    post.title = title;
-    post.description = description;
-    await post.save();
+    if (post.file.split("/")[2] !== file) {
+        fs.unlink(`./public/uploads/${post.file.split("/")[2]}`, (err) => {
+            if (err) {
+            }
+        });
+    }
+    else {
+        post.location = location;
+        post.title = title;
+        post.file = `./uploads/${req.file.filename}`;
+        post.description = description;
+        await post.save();
+    
+    }
+    
     res.status(201).json({
-        success: true,
-        message: "post updated successfully",
-    });
+    success: true,
+    message: "post updated successfully",
+    post
+});
 });
 
 exports.GetPost = catchAsyncErrors(async (req, res, next) => {

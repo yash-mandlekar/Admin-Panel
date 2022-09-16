@@ -92,7 +92,7 @@ router
     .post("/news", upload.single("file"), isAuthUser, UploadNews)
     .delete("/news", isAuthUser, DeleteNews)
     .put("/news", upload.single("file"), isAuthUser, UpdateNews)
-    .get("/news", isAuthUser, SingleNews)
+    .get("/news/:id", isAuthUser, SingleNews)
 
 // @api/GET all news
 router.get("/all/news", isAuthUser, AllNews)

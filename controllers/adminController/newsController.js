@@ -70,7 +70,7 @@ exports.AllNews = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.SingleNews = catchAsyncErrors(async (req, res, next) => {
-    const news = await News.findById(req.body.newsId);
+    const news = await News.findById(req.params.id);
     if (!news) return next(new ErrorHandler("News not found", 404));
     res.status(200).json(news);
 });
