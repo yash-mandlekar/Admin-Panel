@@ -13,7 +13,7 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
     const news = await News.create({
         title,
         description,
-        file: `./folders/${req.file.filename}`,
+        file: `/folders/${req.file.filename}`,
         fileType: filetype ? filetype : req.file.mimetype.split("/")[0],
         author: user._id,
     });
