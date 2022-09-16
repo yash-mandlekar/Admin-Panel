@@ -23,7 +23,15 @@ exports.CreatePost = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.GetPost = catchAsyncErrors(async (req, res, next) => {
-    const post = await Post.findById(req.params.id);
+    const post = await Post.find();
+    res.status(200).json({
+        status: "success",
+        post,
+    });
+});
+
+exports.GetPostById = catchAsyncErrors(async (req, res, next) => {
+    const post = await Post.findById(req.body.id);
     res.status(200).json({
         status: "success",
         post,

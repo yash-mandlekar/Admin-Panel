@@ -18,6 +18,8 @@ const {
 
 const {
   CreatePost,
+  GetPost,
+  GetPostById,
 } = require("../controllers/userController/postController");
 
 const { isLoggedin } = require("../middleware/login");
@@ -56,5 +58,10 @@ router
 
 
 // @api /user/post POST create post
-router.post("/post", isLoggedin, upload.single("file"), CreatePost);
+router
+  .post("/post", isLoggedin, upload.single("file"), CreatePost)
+  .get("/post", isLoggedin, GetPost)
+
+// @api /user/post/:id GET post by id
+router.get("/post", isLoggedin, GetPostById)
 module.exports = router;
