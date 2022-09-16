@@ -18,7 +18,7 @@ const channelModel = new mongoose.Schema({
         type: String,
         required: [true, "Layout is required"],
     },
-    titleposition: {
+    titlePosition: {
         type: String,
         required: [true, "Title position is required"],
     },

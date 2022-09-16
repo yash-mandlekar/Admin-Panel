@@ -1,6 +1,6 @@
 const express = require("express")
 const router = express.Router();
-const upload = require("../middleware/multer");
+const upload = require("../middleware/userMulter");
 
 const {
   GetHomepage,
@@ -20,6 +20,8 @@ const {
   CreatePost,
   GetPost,
   GetPostById,
+  DeletePost,
+  UpdatePost,
 } = require("../controllers/userController/postController");
 
 const { isLoggedin } = require("../middleware/login");
@@ -61,7 +63,11 @@ router
 router
   .post("/post", isLoggedin, upload.single("file"), CreatePost)
   .get("/post", isLoggedin, GetPost)
+  .delete("/post", isLoggedin, DeletePost)
+  .put("/post", isLoggedin,upload.single("file"), UpdatePost);
+
 
 // @api /user/post/:id GET post by id
 router.get("/all/post", isLoggedin, GetPostById)
+  
 module.exports = router;

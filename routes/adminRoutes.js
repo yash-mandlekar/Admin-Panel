@@ -1,6 +1,6 @@
 const express = require("express")
 const router = express.Router();
-const upload = require("../middleware/multer");
+const upload = require("../middleware/adminMulter");
 
 const {
     GetHomepage,
@@ -32,6 +32,7 @@ const {
     UpdateNews,
     AllNews,
     SingleNews,
+   
 } = require("../controllers/adminController/newsController");
 
 const {
@@ -94,7 +95,7 @@ router
     .get("/news", isAuthUser, SingleNews)
 
 // @api/GET all news
-router.get("/all/news", isAuthUser, AllNews);
+router.get("/all/news", isAuthUser, AllNews)
 
 
 // @api/folder POST create folder
@@ -115,7 +116,7 @@ router
     .delete("/channel", isAuthUser, DeleteChannel)
 
 // @api/channel/:id GET open channel
-router.get("/open/channel", isAuthUser, GetChannel)
+router.get("/open/channel/:id", isAuthUser, GetChannel)
 
 
 module.exports = router;

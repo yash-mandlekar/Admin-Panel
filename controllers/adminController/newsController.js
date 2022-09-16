@@ -2,6 +2,7 @@ const User = require("../../models/adminModels/userModel");
 const News = require("../../models/adminModels/newsModel");
 const Folders = require("../../models/adminModels/folderModel");
 const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
+const fs = require("fs");
 const ErrorHandler = require("../../utils/ErrorHandler");
 
 
@@ -27,10 +28,13 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
 exports.DeleteNews = catchAsyncErrors(async (req, res, next) => {
     const user = await User.findById(req.user.id);
     const { newsId, folderId } = req.body;
-    // console.log(req.body);
     const folder = await Folders.findOne({ _id: folderId });
-    // console.log(folder);
     const news = await News.findOne({ _id: newsId });
+    console.log(news.file.split("/")[2]);
+    fs.unlink(`./public/folders/${news.file.split("/")[2]}`, (err) => {
+        if (err) {
+        }
+    });
     const index = folder.news.indexOf(newsId);
     folder.news.splice(index, 1);
     user.news.splice(user.news.indexOf(newsId), 1);
@@ -43,12 +47,14 @@ exports.DeleteNews = catchAsyncErrors(async (req, res, next) => {
     });
 });
 
+
 exports.UpdateNews = catchAsyncErrors(async (req, res, next) => {
-    console.log("lol : ", req.body);
     const { newsId, folderId } = req.body;
     const folder = await Folders.findOne({ _id: folderId });
-    const news = await News.findOneAndUpdate({ _id: newsId }, req.body);
-    // console.log(news);
+    const news = await News.findOneAndUpdate({ _id: newsId }, {
+        title: req.body.title,
+        description: req.body.description,        
+    });
     if (!news) return next(new ErrorHandler("News not found", 404));
     folder.news.push();
     await folder.save();

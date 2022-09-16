@@ -29,7 +29,7 @@ exports.AllChannels = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.GetChannel = catchAsyncErrors(async (req, res, next) => {
-    const channel = await Channel.findById(req.body.channelId);
+    const channel = await Channel.findById(req.params.channelId);
     console.log(req.body.channelId);
     if (!channel) {
         return next(new ErrorHandler("Channel not found", 404));
@@ -56,6 +56,8 @@ exports.UpdateChannel = catchAsyncErrors(async (req, res, next) => {
         channel,
     });
 });
+
+
 
 exports.DeleteChannel = catchAsyncErrors(async (req, res, next) => {
     const user = await User.findById(req.user.id);
