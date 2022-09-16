@@ -10,7 +10,7 @@ exports.CreateChannel = catchAsyncErrors(async (req, res, next) => {
         description: req.body.description,
         type: req.body.type,
         layout: req.body.layout,
-        titleposition: req.body.titleposition,
+        titlePosition: req.body.titlePosition,
         top: req.body.top,
         play: req.body.play,
         partition: req.body.partition,
@@ -45,7 +45,7 @@ exports.UpdateChannel = catchAsyncErrors(async (req, res, next) => {
     channel.description = req.body.description;
     channel.type = req.body.type;
     channel.layout = req.body.layout;
-    channel.titleposition = req.body.titleposition;
+    channel.titlePosition = req.body.titlePosition;
     channel.top = req.body.top;
     channel.play = req.body.play;
     channel.partition = req.body.partition;
