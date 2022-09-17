@@ -70,7 +70,7 @@ router.post("/refreshtoken", PostRefreshToken);
 router.post("/forgot", isAuthUser, ForgotPassword)
 
 // @api/reset/:resetToken POST login user
-router.post("/reset/:resetToken", isAuthUser, ResetPassword)
+router.post("/reset/:resetToken", ResetPassword)
 
 // @api/change password POST login user
 router.post("/change", isAuthUser, ChangePassword)

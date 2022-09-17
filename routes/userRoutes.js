@@ -29,6 +29,7 @@ const {
 } = require("../controllers/userController/postController");
 
 const { isLoggedin } = require("../middleware/login");
+const { isAuthUser } = require("../middleware/auth");
 
 
 
@@ -36,7 +37,7 @@ const { isLoggedin } = require("../middleware/login");
 router.get("/", GetHomepage);
 
 // @api /user/register POST register admin and adminpanel users
-router.post("/register", PostRegisterAppUser);
+router.post("/register",isAuthUser, PostRegisterAppUser);
 
 // @api /user/login POST login user
 router.post("/login", PostLoginAppUser);

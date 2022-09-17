@@ -13,6 +13,16 @@ exports.GetHomepage = (req, res, next) => {
 
 exports.PostRegisterUser = catchAsyncErrors(async (req, res, next) => {
   const user = await User.create(req.body);
+  if(user.role.toLowerCase() === "senior editor"){
+    admin.child.push(user._id);
+    await admin.save();
+  }else{
+    const parent = await User.findById(req.body.parentId);
+    parent.child.push(user._id);
+    await parent.save();
+  }
+
+
 res.json({ message: "User created successfully", user });
 });
 
@@ -208,7 +218,7 @@ exports.UpdateProfilePic = catchAsyncErrors(async (req, res, next) => {
 
 exports.RemoveUser = catchAsyncErrors(async (req, res, next) => {
  const user = await User.findById(req.user.id);
- if(user.role.toLowerCase!=="admin"){
+ if(user.role.toLowerCase() !=="admin"){
    return next(new ErrorHandler("You are not authorized to perform this action", 401));
  }
   const user2 = await User.findById(req.body.user2);

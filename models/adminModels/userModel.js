@@ -69,6 +69,10 @@ const userModel = new mongoose.Schema({
 
   parent: {
     type: mongoose.Schema.Types.ObjectId,
+    default: "none",
+  },
+  child: {
+    type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
 
