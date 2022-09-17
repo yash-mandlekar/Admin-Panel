@@ -18,6 +18,7 @@ const {
     GetEditor,
     GetSeniorEditor,
     GetReporter,
+    UpdateProfilePic
 } = require("../controllers/adminController/userController");
 
 const {
@@ -90,7 +91,7 @@ router.get("/reporter", isAuthUser, GetReporter);
 
 
 // @api /admin/profile/pic POST user profile pic
-router.post("/profile/pic", isLoggedin, uploadDp.single("profilePic"), UpdateProfilePic);
+router.post("/profile/pic", isAuthUser, uploadDp.single("profilePic"), UpdateProfilePic);
 
 
 

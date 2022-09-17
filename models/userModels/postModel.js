@@ -29,10 +29,6 @@ const postModel = mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:'users'
     }],
-    dislikes:[{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'users'
-    }],
     comments:[{
         user:{
             type:mongoose.Schema.Types.ObjectId,

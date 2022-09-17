@@ -24,6 +24,8 @@ const {
   GetPostById,
   DeletePost,
   UpdatePost,
+  PostLikes,
+  PostComments,
 } = require("../controllers/userController/postController");
 
 const { isLoggedin } = require("../middleware/login");
@@ -75,5 +77,13 @@ router
 
 // @api /user/post/:id GET post by id
 router.get("/all/post", isLoggedin, GetPostById)
-  
+
+// @api /user/post/likes 
+router.post("/post/likes", isLoggedin, PostLikes)
+
+// @api /user/post/comment
+router.post("/post/comment", isLoggedin, PostComments)
+
+
+
 module.exports = router;
