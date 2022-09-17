@@ -18,7 +18,8 @@ const {
     GetEditor,
     GetSeniorEditor,
     GetReporter,
-    UpdateProfilePic
+    UpdateProfilePic,
+    RemoveUser,
 } = require("../controllers/adminController/userController");
 
 const {
@@ -76,6 +77,9 @@ router.post("/change", isAuthUser, ChangePassword)
 
 // @api/users GET all users
 router.get("/users", isAuthUser, GetUsers);
+
+// @api/admin Delete user
+router.delete("/users/delete", isAuthUser, RemoveUser);
 
 // @api/editor GET user profile
 router.get("/editor", isAuthUser, GetEditor);
