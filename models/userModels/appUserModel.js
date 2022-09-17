@@ -35,8 +35,12 @@ const appUserModel = mongoose.Schema({
     },
     profileImage: {
         type: String,
-        default: "default.jpg",
+        default: "avtar.jpg",
     },
+    fileType: {
+      type: String,
+      default: "",
+  },
     createdAt: {
         type: Date,
         default: Date.now,

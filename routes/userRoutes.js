@@ -13,6 +13,7 @@ const {
   ChangePasswordApp,
   GetAppUser,
   UpdateAppUser,
+  UpdateProfilePic,
   DeleteAppUser,
 } = require("../controllers/userController/appUserController");
 
@@ -57,6 +58,10 @@ router
   .get("/profile", isLoggedin, GetAppUser)
   .put("/profile", isLoggedin, UpdateAppUser)
   .delete("/profile", isLoggedin, DeleteAppUser);
+
+
+// @api /user/profile/pic POST user profile pic
+router.post("/profile/pic", isLoggedin, upload.single("profilePic"), UpdateProfilePic);
 
 
 // @api /user/post POST create post

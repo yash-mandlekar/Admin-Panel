@@ -49,7 +49,7 @@ exports.DeleteNews = catchAsyncErrors(async (req, res, next) => {
 
 
 exports.UpdateNews = catchAsyncErrors(async (req, res, next) => {
-    const { newsId, title, description, file } = req.body;
+    const { newsId, title, description, file, fileType } = req.body;
     const news = await News.findOne({ _id: newsId });
     console.log(news);
     
@@ -63,6 +63,7 @@ exports.UpdateNews = catchAsyncErrors(async (req, res, next) => {
 
     news.title = title;
     news.description = description;
+    news.fileType= fileType ? fileType : req.file.mimetype.split("/")[0];
     await news.save();
     res.status(200).json({
         success: true,

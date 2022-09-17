@@ -45,7 +45,7 @@ exports.DeletePost = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.UpdatePost = catchAsyncErrors(async (req, res, next) => {
-    const { postId, location, title, description, file } = req.body;
+    const { postId, location, title, description, file, fileType } = req.body;
     const post = await Post.findOne({ _id: postId });
     if (post.file.split("/")[2] !== file) {
         fs.unlink(`./public/uploads/${post.file.split("/")[2]}`, (err) => {
@@ -57,7 +57,7 @@ exports.UpdatePost = catchAsyncErrors(async (req, res, next) => {
     post.title = title;
     post.file = `/uploads/${req.file.filename}`;
     post.description = description;
-    
+    post.fileType= fileType ? fileType : req.file.mimetype.split("/")[0];
     await post.save();
     res.status(201).json({
     success: true,

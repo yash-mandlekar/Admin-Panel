@@ -18,7 +18,7 @@ const upload = multer({ storage: storage , fileFilter: function (req, file, call
   var ext = path.extname(file.originalname);
   // image only 
   if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg' && ext !== '.svg' && ext !== '.webp' && ext !== '.mp4' && ext !== '.flv' && ext !== '.m3u8' && ext !== '.wav' && ext !== '.mp3' && ext !== '.mp4' && ext !== '.m4a' && ext !== '.aac' ) {
-    return callback(new Error('Only images are allowed'))
+    return callback(new Error('Only images,videos and audios are allowed'))
   }
   callback(null, true)
 }}) 

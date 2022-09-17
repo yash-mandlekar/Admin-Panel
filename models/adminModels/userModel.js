@@ -83,13 +83,8 @@ const userModel = new mongoose.Schema({
     ref: "Channels"
   }],
 
-  ////////////////////////////////////////////App Users////////////////////////////////////////////
 
 
-  appUsers: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "AppUsers"
-  }],
 
   resetPasswordToken: String,
   resetPasswordExpire: Date,
