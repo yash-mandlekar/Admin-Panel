@@ -67,6 +67,11 @@ const userModel = new mongoose.Schema({
     default: Date.now,
   },
 
+  parent: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+
   news: [
     {
       type: mongoose.Schema.Types.ObjectId,
