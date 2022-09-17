@@ -59,9 +59,9 @@ const userModel = new mongoose.Schema({
     minlength: [8, "Password must be at least 8 characters long"],
     select: false,
   },
-  profilePic: {
+  profileImage: {
     type: String,
-    default: "avtar.jpg",
+    default: "/images/avtar.jpg",
   },
   createdAt: {
     type: Date,

@@ -1,6 +1,7 @@
 const express = require("express")
 const router = express.Router();
 const upload = require("../middleware/userMulter");
+const uploadDp = require("../middleware/dpMulter");
 
 const {
   GetHomepage,
@@ -61,7 +62,7 @@ router
 
 
 // @api /user/profile/pic POST user profile pic
-router.post("/profile/pic", isLoggedin, upload.single("profilePic"), UpdateProfilePic);
+router.post("/profile/pic", isLoggedin, uploadDp.single("profilePic"), UpdateProfilePic);
 
 
 // @api /user/post POST create post

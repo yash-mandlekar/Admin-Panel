@@ -177,13 +177,13 @@ exports.UpdateProfilePic = catchAsyncErrors(async (req, res, next) => {
     const {profileImage,userId, fileType } = req.body;
     const user = await AppUser.findOne({ _id: userId });
     if (user.profileImage.split("/")[2] !== profileImage) {
-        fs.unlink(`./public/uploads/${user.profileImage.split("/")[2]}`, (err) => {
+        fs.unlink(`./public/profilePics/${user.profileImage.split("/")[2]}`, (err) => {
             if (err) {
             }
         });
     }
-    user. profileImage = `/uploads/${req.file.filename}`;
-    console.log(`/uploads/${req.file.filename}`);
+    user. profileImage = `/profilePics/${req.file.filename}`;
+    console.log(`/profilePics/${req.file.filename}`);
     user.fileType= fileType ? fileType : req.file.mimetype.split("/")[0];
     await user.save();
     res.status(201).json({

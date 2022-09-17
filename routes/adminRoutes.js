@@ -1,6 +1,8 @@
 const express = require("express")
 const router = express.Router();
 const upload = require("../middleware/adminMulter");
+const uploadDp = require("../middleware/dpMulter");
+
 
 const {
     GetHomepage,
@@ -85,6 +87,11 @@ router.get("/senior-editor", isAuthUser, GetSeniorEditor);
 
 //@api/reporter GET user profile
 router.get("/reporter", isAuthUser, GetReporter);
+
+
+// @api /admin/profile/pic POST user profile pic
+router.post("/profile/pic", isLoggedin, uploadDp.single("profilePic"), UpdateProfilePic);
+
 
 
 // @api/upload POST upload news
