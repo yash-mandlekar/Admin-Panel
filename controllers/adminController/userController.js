@@ -13,7 +13,7 @@ exports.GetHomepage = (req, res, next) => {
 
 exports.PostRegisterUser = catchAsyncErrors(async (req, res, next) => {
   const user = await User.create(req.body);
-  useToken(user, 201, res);
+res.json({ message: "User created successfully", user });
 });
 
 exports.PostLoginUser = catchAsyncErrors(async (req, res, next) => {
