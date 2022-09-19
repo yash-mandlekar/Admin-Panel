@@ -16,6 +16,7 @@ const {
   UpdateAppUser,
   UpdateProfilePic,
   DeleteAppUser,
+  FollowUnfollow,
 } = require("../controllers/userController/appUserController");
 
 const {
@@ -66,6 +67,10 @@ router
 
 // @api /user/profile/pic POST user profile pic
 router.post("/profile/pic", isLoggedin, uploadDp.single("profilePic"), UpdateProfilePic);
+
+
+// @api /user/followUnfollow POST follow user
+router.post("/followUnfollow", isLoggedin, FollowUnfollow);
 
 
 // @api /user/post POST create post

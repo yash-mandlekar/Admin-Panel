@@ -174,8 +174,8 @@ exports.DeleteAppUser = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.UpdateProfilePic = catchAsyncErrors(async (req, res, next) => {
-    const {profileImage,userId, fileType } = req.body;
-    const user = await AppUser.findOne({ _id: userId });
+    const user = await AppUser.findById(req.user.id);
+    const {profileImage, fileType } = req.body;
     if (user.profileImage.split("/")[2] !== profileImage) {
         fs.unlink(`./public/profilePics/${user.profileImage.split("/")[2]}`, (err) => {
             if (err) {
@@ -194,6 +194,30 @@ exports.UpdateProfilePic = catchAsyncErrors(async (req, res, next) => {
 
 
 });
+
+exports.FollowUnfollow = catchAsyncErrors(async (req, res, next) => {
+    const user = await AppUser.findById(req.user.id);
+    const { followId } = req.body;
+    const followUser = await AppUser.findById(followId);
+    if (!followUser) {
+        return next(new ErrorHandler("User not found", 404));
+    }
+    if (user.following.includes(followId)) {
+        user.following = user.following.filter((item) => item != followId);
+        followUser.followers = followUser.followers.filter((item) => item != user.id);
+    } else {
+        user.following.push(followId);
+        followUser.followers.push(user.id);
+    }
+    await user.save();
+    await followUser.save();
+    res.status(200).json({
+        status: "success",
+        user,
+    });
+});
+
+
 
 
 
