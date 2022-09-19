@@ -48,10 +48,12 @@ const userModel = new mongoose.Schema({
     type: String,
     default: "repoter",
   },
-  requests: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Post"
-  }],
+  requests: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Post",
+    },
+  ],
   password: {
     type: String,
     required: [true, "Password is required"],
@@ -69,12 +71,15 @@ const userModel = new mongoose.Schema({
 
   parent: {
     type: mongoose.Schema.Types.ObjectId,
-    default: "none",
-  },
-  child: {
-    type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
+  child: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: [],
+    },
+  ],
 
   news: [
     {
@@ -82,17 +87,18 @@ const userModel = new mongoose.Schema({
       ref: "News",
     },
   ],
-  folders: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Folders"
-  }],
-  channels: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Channels"
-  }],
-
-
-
+  folders: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Folders",
+    },
+  ],
+  channels: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Channels",
+    },
+  ],
 
   resetPasswordToken: String,
   resetPasswordExpire: Date,
@@ -135,7 +141,5 @@ userModel.methods.createPasswordToken = function () {
 
   return resetToken;
 };
-
-
 
 module.exports = mongoose.model("User", userModel);

@@ -11,19 +11,36 @@ exports.GetHomepage = (req, res, next) => {
   res.status(200).json({ message: "Welcome to the homepage" });
 };
 
-exports.PostRegisterUser = catchAsyncErrors(async (req, res, next) => {
+exports.PostRegisterAdmin = catchAsyncErrors(async (req, res, next) => {
   const user = await User.create(req.body);
-  if(user.role.toLowerCase() === "senior editor"){
-    admin.child.push(user._id);
-    await admin.save();
-  }else{
-    const parent = await User.findById(req.body.parentId);
-    parent.child.push(user._id);
-    await parent.save();
+  res.status(200).json({
+    success: true,
+    message: "Admin created successfully",
+    user,
+  });
+});
+
+exports.PostRegisterUser = catchAsyncErrors(async (req, res, next) => {
+  try {
+    const user = await User.create(req.body);
+    if (user.role.toLowerCase() === "senior editor") {
+      const admin = await User.findById(req.user.id);
+      console.log(admin);
+      admin.child.push(user._id);
+      await admin.save(); 
+      user.parent = admin._id;
+      await user.save();
+    } else {
+      const parent = await User.findById(req.body.parentId);
+      parent.child.push(user._id);
+      await parent.save();
+      user.parent = parent._id;
+      await user.save();
+    }
+    res.json({ message: "User created successfully", user });
+  } catch (error) {
+    next(error);
   }
-
-
-res.json({ message: "User created successfully", user });
 });
 
 exports.PostLoginUser = catchAsyncErrors(async (req, res, next) => {
@@ -161,7 +178,9 @@ exports.GetUsers = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.GetEditor = catchAsyncErrors(async (req, res, next) => {
-  const user = (await User.find()).filter((user) => user.role.toLowerCase() === "editor");
+  const user = (await User.find()).filter(
+    (user) => user.role.toLowerCase() === "editor"
+  );
   res.status(200).json({
     status: "success",
     data: user,
@@ -169,7 +188,9 @@ exports.GetEditor = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.GetAdmin = catchAsyncErrors(async (req, res, next) => {
-  const user = (await User.find()).filter((user) => user.role.toLowerCase() === "admin");
+  const user = (await User.find()).filter(
+    (user) => user.role.toLowerCase() === "admin"
+  );
   res.status(200).json({
     status: "success",
     data: user,
@@ -177,7 +198,9 @@ exports.GetAdmin = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.GetSeniorEditor = catchAsyncErrors(async (req, res, next) => {
-  const user = (await User.find()).filter((user) => user.role.toLowerCase() === "senior editor");
+  const user = (await User.find()).filter(
+    (user) => user.role.toLowerCase() === "senior editor"
+  );
   res.status(200).json({
     status: "success",
     data: user,
@@ -185,42 +208,45 @@ exports.GetSeniorEditor = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.GetReporter = catchAsyncErrors(async (req, res, next) => {
-  const user = (await User.find()).filter((user) => user.role.toLowerCase() === "reporter");
+  const user = (await User.find()).filter(
+    (user) => user.role.toLowerCase() === "reporter"
+  );
   res.status(200).json({
     status: "success",
     data: user,
   });
 });
 
-
 exports.UpdateProfilePic = catchAsyncErrors(async (req, res, next) => {
-  const {profileImage,userId, fileType } = req.body;
+  const { profileImage, userId, fileType } = req.body;
   const user = await AppUser.findOne({ _id: userId });
   if (user.profileImage.split("/")[2] !== profileImage) {
-      fs.unlink(`./public/profilePics/${user.profileImage.split("/")[2]}`, (err) => {
-          if (err) {
-          }
-      });
+    fs.unlink(
+      `./public/profilePics/${user.profileImage.split("/")[2]}`,
+      (err) => {
+        if (err) {
+        }
+      }
+    );
   }
-  user. profileImage = `/profilePics/${req.file.filename}`;
+  user.profileImage = `/profilePics/${req.file.filename}`;
   console.log(`/profilePics/${req.file.filename}`);
-  user.fileType= fileType ? fileType : req.file.mimetype.split("/")[0];
+  user.fileType = fileType ? fileType : req.file.mimetype.split("/")[0];
   await user.save();
   res.status(201).json({
-  success: true,
-  message: "Image updated successfully",
-  user
+    success: true,
+    message: "Image updated successfully",
+    user,
+  });
 });
-
-
-});
-
 
 exports.RemoveUser = catchAsyncErrors(async (req, res, next) => {
- const user = await User.findById(req.user.id);
- if(user.role.toLowerCase() !=="admin"){
-   return next(new ErrorHandler("You are not authorized to perform this action", 401));
- }
+  const user = await User.findById(req.user.id);
+  if (user.role.toLowerCase() !== "admin") {
+    return next(
+      new ErrorHandler("You are not authorized to perform this action", 401)
+    );
+  }
   const user2 = await User.findById(req.body.user2);
   if (!user2) {
     return next(new ErrorHandler("User not found", 404));
@@ -230,31 +256,4 @@ exports.RemoveUser = catchAsyncErrors(async (req, res, next) => {
     status: "success",
     message: "User deleted successfully",
   });
-}); 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+});

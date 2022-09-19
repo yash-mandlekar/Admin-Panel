@@ -20,6 +20,7 @@ const {
     GetReporter,
     UpdateProfilePic,
     RemoveUser,
+    PostRegisterAdmin,
 } = require("../controllers/adminController/userController");
 
 const {
@@ -55,7 +56,10 @@ const { isAuthUser } = require("../middleware/auth");
 router.get("/", GetHomepage);
 
 // @api/register POST register admin and adminpanel users
-router.post("/register", PostRegisterUser);
+router.post("/register", isAuthUser, PostRegisterUser);
+
+// @api/login POST login admin and adminpanel users
+router.post("/register/admin", PostRegisterAdmin);
 
 // @api/login POST login user
 router.post("/login", PostLoginUser);
