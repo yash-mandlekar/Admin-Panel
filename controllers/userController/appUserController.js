@@ -165,7 +165,7 @@ exports.UpdateAppUser = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.DeleteAppUser = catchAsyncErrors(async (req, res, next) => {
-    const user = await AppUser.findByIdAndDelete(req.body.id);
+    const user = await AppUser.findById(req.user.id);
 
     res.status(200).json({
         status: "success",
