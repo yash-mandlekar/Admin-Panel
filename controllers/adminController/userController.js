@@ -257,3 +257,33 @@ exports.RemoveUser = catchAsyncErrors(async (req, res, next) => {
     message: "User deleted successfully",
   });
 });
+
+exports.BlockUser = catchAsyncErrors(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+  if (user.role.toLowerCase() !== "admin") {
+    return next(
+      new ErrorHandler("You are not authorized to perform this action", 401)
+    );
+  }
+  const user2 = await User.findById(req.body.user2);
+  if (!user2) {
+    return next(new ErrorHandler("User not found", 404));
+  }
+ else{
+    user2.isBlocked = true;
+    await user2.save();
+    res.status(200).json({
+      status: "success",
+      message: "User blocked successfully",
+    });
+  if(user2.isBlocked){
+    user2.isBlocked = false;
+    await user2.save();
+    res.status(200).json({
+      status: "success",
+      message: "User unblocked successfully",
+    });
+  }
+
+ }
+});

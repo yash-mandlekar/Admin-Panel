@@ -69,10 +69,16 @@ const userModel = new mongoose.Schema({
     default: Date.now,
   },
 
+  block: {
+    type: Boolean,
+    default: false,
+  },
+
   parent: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
+
   child: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -87,12 +93,14 @@ const userModel = new mongoose.Schema({
       ref: "News",
     },
   ],
+
   folders: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Folders",
     },
   ],
+
   channels: [
     {
       type: mongoose.Schema.Types.ObjectId,

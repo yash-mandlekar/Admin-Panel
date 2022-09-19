@@ -21,6 +21,7 @@ const {
     UpdateProfilePic,
     RemoveUser,
     PostRegisterAdmin,
+    BlockUser,
 } = require("../controllers/adminController/userController");
 
 const {
@@ -96,6 +97,9 @@ router.get("/senior-editor", isAuthUser, GetSeniorEditor);
 
 //@api/reporter GET user profile
 router.get("/reporter", isAuthUser, GetReporter);
+
+//@api/block-user POST block user
+router.post("/block-user", isAuthUser, BlockUser);
 
 
 // @api /admin/profile/pic POST user profile pic

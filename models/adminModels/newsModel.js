@@ -22,10 +22,9 @@ const newsModel = mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "User"
         },
-        category: [{
+        channels: [{
             type: mongoose.Schema.Types.ObjectId,
-            required: true,
-            ref: 'Category'
+            ref: 'Channels'
         }],
         createdat: {
             type: Date,

@@ -9,11 +9,12 @@ const { log } = require("console");
 
 exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
     const user = await User.findById(req.user.id);
-    const { title, description, folderId, fileType } = req.body;
+    const { title, description, folderId, fileType, channels } = req.body;
     const folder = await Folders.findOne({ _id: folderId });
     const news = await News.create({
         title,
         description,
+        channels,
         file: `/folders/${req.file.filename}`,
         fileType: fileType ? fileType : req.file.mimetype.split("/")[0],
         author: user._id,
@@ -49,7 +50,7 @@ exports.DeleteNews = catchAsyncErrors(async (req, res, next) => {
 
 
 exports.UpdateNews = catchAsyncErrors(async (req, res, next) => {
-    const { newsId, title, description, file, fileType } = req.body;
+    const { newsId, title, description, file, fileType,channels } = req.body;
     const news = await News.findOne({ _id: newsId });
     console.log(news);
     
@@ -63,6 +64,7 @@ exports.UpdateNews = catchAsyncErrors(async (req, res, next) => {
 
     news.title = title;
     news.description = description;
+    news.channels = channels;
     news.fileType= fileType ? fileType : req.file.mimetype.split("/")[0];
     await news.save();
     res.status(200).json({
