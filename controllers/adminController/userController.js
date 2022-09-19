@@ -27,7 +27,7 @@ exports.PostRegisterUser = catchAsyncErrors(async (req, res, next) => {
       const admin = await User.findById(req.user.id);
       console.log(admin);
       admin.child.push(user._id);
-      await admin.save(); 
+      await admin.save();
       user.parent = admin._id;
       await user.save();
     } else {
@@ -55,6 +55,10 @@ exports.PostLoginUser = catchAsyncErrors(async (req, res, next) => {
 
   if (!user) {
     return next(new ErrorHandler("User does not exist", 400));
+  }
+
+  if(user.isBlocked === true){
+    return next(new ErrorHandler("User is blocked kindly contact with admin", 400));
   }
 
   const isPasswordMatching = await usercomp.comparePassword(password);
@@ -269,21 +273,13 @@ exports.BlockUser = catchAsyncErrors(async (req, res, next) => {
   if (!user2) {
     return next(new ErrorHandler("User not found", 404));
   }
- else{
-    user2.isBlocked = true;
-    await user2.save();
-    res.status(200).json({
-      status: "success",
-      message: "User blocked successfully",
-    });
   if(user2.isBlocked){
     user2.isBlocked = false;
-    await user2.save();
-    res.status(200).json({
-      status: "success",
-      message: "User unblocked successfully",
-    });
+  }else{
+    user2.isBlocked = true;
   }
-
- }
+  await user2.save();
+  res.status(200).json({
+    status: "success",
+  });
 });

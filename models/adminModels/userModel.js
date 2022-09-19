@@ -69,7 +69,7 @@ const userModel = new mongoose.Schema({
     default: Date.now,
   },
 
-  block: {
+  isBlocked: {
     type: Boolean,
     default: false,
   },
