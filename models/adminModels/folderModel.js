@@ -10,6 +10,10 @@ const folderModel = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "News"
     }],
+    channels : [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Channel"
+    }],
     author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",

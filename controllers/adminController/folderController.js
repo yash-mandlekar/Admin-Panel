@@ -46,7 +46,7 @@ exports.CreateFolder = catchAsyncErrors(async (req, res, next) => {
   });
 
   exports.OpenFolder = catchAsyncErrors(async (req, res, next) => {
-    const folder = await Folders.findOne({ _id: req.params.id }).populate("news");
+    const folder = await Folders.findOne({ _id: req.params.id }).populate({news,channels});
     if (!folder) return next(new ErrorHandler("Folder not found", 404));
     res.status(200).json(folder.news);
   });
