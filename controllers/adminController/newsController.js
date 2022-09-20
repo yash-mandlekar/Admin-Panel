@@ -4,7 +4,6 @@ const Folders = require("../../models/adminModels/folderModel");
 const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 const fs = require("fs");
 const ErrorHandler = require("../../utils/ErrorHandler");
-const { log } = require("console");
 
 
 exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
@@ -64,7 +63,7 @@ exports.UpdateNews = catchAsyncErrors(async (req, res, next) => {
 
     news.title = title;
     news.description = description;
-    channels:channels.length > 27 ? channels.split(",") : channels,
+    news.channels = channels.length > 27 ? channels.split(",") : channels;
     news.fileType= fileType ? fileType : req.file.mimetype.split("/")[0];
     await news.save();
     res.status(200).json({
