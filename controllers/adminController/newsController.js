@@ -14,7 +14,7 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
     const news = await News.create({
         title,
         description,
-        channels,
+        channels:channels.length > 27 ? channels.split(",") : channels,
         file: `/folders/${req.file.filename}`,
         fileType: fileType ? fileType : req.file.mimetype.split("/")[0],
         author: user._id,
@@ -64,7 +64,7 @@ exports.UpdateNews = catchAsyncErrors(async (req, res, next) => {
 
     news.title = title;
     news.description = description;
-    news.channels = channels;
+    channels:channels.length > 27 ? channels.split(",") : channels,
     news.fileType= fileType ? fileType : req.file.mimetype.split("/")[0];
     await news.save();
     res.status(200).json({
