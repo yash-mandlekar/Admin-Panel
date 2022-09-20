@@ -25,7 +25,6 @@ exports.PostRegisterUser = catchAsyncErrors(async (req, res, next) => {
     const user = await User.create(req.body);
     if (user.role.toLowerCase() === "senior editor") {
       const admin = await User.findById(req.user.id);
-      console.log(admin);
       admin.child.push(user._id);
       await admin.save();
       user.parent = admin._id;
