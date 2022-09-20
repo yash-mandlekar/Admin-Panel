@@ -7,6 +7,7 @@ const ErrorHandler = require("../../utils/ErrorHandler");
 
 
 exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
+    try{
     const user = await User.findById(req.user.id);
     const { title, description, folderId, fileType, channels } = req.body;
     const folder = await Folders.findOne({ _id: folderId });
@@ -23,7 +24,10 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
     user.news.push(news._id);
     await user.save();
     res.status(201).json(news);
-
+    }catch(err){
+        fs.unlinkSync(req.file.path);
+        next(err);
+    }
 });
 
 exports.DeleteNews = catchAsyncErrors(async (req, res, next) => {

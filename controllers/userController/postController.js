@@ -7,6 +7,8 @@ const fs = require("fs");
 const { log } = require("console");
 
 exports.CreatePost = catchAsyncErrors(async (req, res, next) => {
+    try{
+
     const user = await AppUser.findById(req.user.id);
     const { location, title, description, file, fileType } = req.body;
     const post = await Post.create({
@@ -23,6 +25,10 @@ exports.CreatePost = catchAsyncErrors(async (req, res, next) => {
         status: "success",
         post,
     });
+}catch(err){
+    fs.unlinkSync(req.file.path);
+    next(err);
+}
 });
 
 
