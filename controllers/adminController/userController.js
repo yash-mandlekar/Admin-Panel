@@ -160,16 +160,15 @@ exports.ResetPassword = catchAsyncErrors(async (req, res, next) => {
 exports.ChangePassword = catchAsyncErrors(async (req, res, next) => {
   try {
     const { password, newPassword } = req.body;
-    const user = await User.findById(req.user.id).select("+password").exec();
-    if (!user) return res.status(401).send("User not found.");
-    const matchpassword = comparepassword(password, user.password);
-    if (!matchpassword) return res.status(401).send("Incorrect Password.");
-
-    User.password = hashPassword(newPassword);
+    const user = await User.findById(req.user.id).select("+password");
+    if(!(await user.comparePassword(password))){
+      return next(new ErrorHandler("Old password is incorrect", 400));
+    }
+    user.password = newPassword;
     await user.save();
-    res.status(201).json({ ok: true });
-  } catch (err) {
-    res.status(500).json(err.message);
+    useToken(user, 200, res);
+  } catch (error) {
+    next(error);
   }
 });
 
