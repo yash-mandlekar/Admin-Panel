@@ -283,4 +283,14 @@ exports.BlockUser = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-exports
+exports.UpdateUser = catchAsyncErrors(async (req, res, next) => {
+  const user = await User.findOneAndUpdate({ _id: req.user._id }, req.body, {
+    new: true,
+    runValidators: true,
+    useFindAndModify: false,
+  });
+  res.status(200).json({
+    status: "success",
+    user,
+  });
+});

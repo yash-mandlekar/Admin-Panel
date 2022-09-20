@@ -22,6 +22,7 @@ const {
     RemoveUser,
     PostRegisterAdmin,
     BlockUser,
+    UpdateUser,
 } = require("../controllers/adminController/userController");
 
 const {
@@ -105,6 +106,8 @@ router.post("/block-user", isAuthUser, BlockUser);
 // @api /admin/profile/pic POST user profile pic
 router.post("/profile/pic", isAuthUser, uploadDp.single("profilePic"), UpdateProfilePic);
 
+// @api/admin post update user profile
+router.post("/update/profile", isAuthUser, UpdateUser);
 
 
 // @api/upload POST upload news
