@@ -23,6 +23,7 @@ const {
     PostRegisterAdmin,
     BlockUser,
     UpdateUser,
+    SingleUser,
 } = require("../controllers/adminController/userController");
 
 const {
@@ -83,6 +84,11 @@ router.post("/change", isAuthUser, ChangePassword)
 
 // @api/users GET all users
 router.get("/users", isAuthUser, GetUsers);
+
+// @api/users GET SingleUser
+router.get("/users/:id", isAuthUser, SingleUser);
+
+
 
 // @api/admin Delete user
 router.delete("/users/delete", isAuthUser, RemoveUser);

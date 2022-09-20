@@ -110,6 +110,7 @@ exports.ForgotPassword = catchAsyncErrors(async (req, res, next) => {
 
   const resetPasswordUrl = `http://localhost:4000/user/reset/${resetToken}`;
 
+  
   const message = `Password reset token is ${resetPasswordUrl}`;
 
   try {
@@ -179,6 +180,19 @@ exports.GetUsers = catchAsyncErrors(async (req, res, next) => {
     users,
   });
 });
+
+
+exports.SingleUser = catchAsyncErrors(async (req, res, next) => {
+  const user = await User.findById(req.params.id);
+  if (!user) {
+    return next(new ErrorHandler("User not found", 404));
+  }
+  res.status(200).json({
+    status: "success",
+    user,
+  });
+});
+
 
 exports.GetEditor = catchAsyncErrors(async (req, res, next) => {
   const user = (await User.find()).filter(
