@@ -12,7 +12,7 @@ const folderModel = new mongoose.Schema({
     }],
     channels : [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Channel"
+        ref: "Channels"
     }],
     author: {
         type: mongoose.Schema.Types.ObjectId,
