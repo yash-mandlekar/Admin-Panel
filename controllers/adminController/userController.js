@@ -160,13 +160,13 @@ exports.ResetPassword = catchAsyncErrors(async (req, res, next) => {
 exports.ChangePassword = catchAsyncErrors(async (req, res, next) => {
   try {
     const { password, newPassword } = req.body;
-    const User = await User.findById(req.user.id).select("+password").exec();
-    if (!User) return res.status(401).send("User not found.");
-    const matchpassword = comparepassword(password, User.password);
+    const user = await User.findById(req.user.id).select("+password").exec();
+    if (!user) return res.status(401).send("User not found.");
+    const matchpassword = comparepassword(password, user.password);
     if (!matchpassword) return res.status(401).send("Incorrect Password.");
 
     User.password = hashPassword(newPassword);
-    await User.save();
+    await user.save();
     res.status(201).json({ ok: true });
   } catch (err) {
     res.status(500).json(err.message);
