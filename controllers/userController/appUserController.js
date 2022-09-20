@@ -152,7 +152,7 @@ exports.GetAppUser = catchAsyncErrors(async (req, res, next) => {
 );
 
 exports.UpdateAppUser = catchAsyncErrors(async (req, res, next) => {
-    const user = await AppUser.findByIdAndUpdate(req.body.id, req.body, {
+    const user = await AppUser.findByIdAndUpdate(req.user.id, req.body, {
         new: true,
         runValidators: true,
         useFindAndModify: false,
