@@ -182,7 +182,7 @@ exports.GetUsers = catchAsyncErrors(async (req, res, next) => {
 
 
 exports.SingleUser = catchAsyncErrors(async (req, res, next) => {
-  const user = await User.findById(req.params.id);
+  const user = await User.findById(req.params.id).populate("child");
   if (!user) {
     return next(new ErrorHandler("User not found", 404));
   }
