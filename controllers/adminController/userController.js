@@ -3,7 +3,7 @@ const crypto = require("crypto");
 const useToken = require("../../utils/useToken");
 const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 const User = require("../../models/adminModels/userModel");
-// const fs = require("fs"); // File System
+const fs = require("fs"); // File System
 const ErrorHandler = require("../../utils/ErrorHandler");
 // const { constants } = require("fs/promises");
 
