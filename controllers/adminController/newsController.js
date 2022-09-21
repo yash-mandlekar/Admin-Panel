@@ -78,7 +78,7 @@ exports.UpdateNews = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.AllNews = catchAsyncErrors(async (req, res, next) => {
-    const news = await News.find().populate("channels");
+    const news = await News.find().populate("channels author" );
     res.status(200).json(news);
 });
 
