@@ -26,10 +26,10 @@ const newsModel = mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Channels'
         }],
-        folders: [{
+        folderId:{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Folders'
-        }],
+        },
         createdat: {
             type: Date,
             default: Date.now,
