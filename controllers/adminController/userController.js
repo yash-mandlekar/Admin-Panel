@@ -6,6 +6,14 @@ const User = require("../../models/adminModels/userModel");
 // const fs = require("fs"); // File System
 const ErrorHandler = require("../../utils/ErrorHandler");
 // const { constants } = require("fs/promises");
+const cloudinary = require("cloudinary");
+const formidable = require("formidable");
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET,
+  secure: true,
+});
 
 exports.GetHomepage = (req, res, next) => {
   res.status(200).json({ message: "Welcome to the homepage" });
@@ -56,8 +64,10 @@ exports.PostLoginUser = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("User does not exist", 400));
   }
 
-  if(user.isBlocked === true){
-    return next(new ErrorHandler("User is blocked kindly contact with admin", 400));
+  if (user.isBlocked === true) {
+    return next(
+      new ErrorHandler("User is blocked kindly contact with admin", 400)
+    );
   }
 
   const isPasswordMatching = await usercomp.comparePassword(password);
@@ -110,7 +120,6 @@ exports.ForgotPassword = catchAsyncErrors(async (req, res, next) => {
 
   const resetPasswordUrl = `http://localhost:4000/user/reset/${resetToken}`;
 
-  
   const message = `Password reset token is ${resetPasswordUrl}`;
 
   try {
@@ -161,7 +170,7 @@ exports.ChangePassword = catchAsyncErrors(async (req, res, next) => {
   try {
     const { password, newPassword } = req.body;
     const user = await User.findById(req.user.id).select("+password");
-    if(!(await user.comparePassword(password))){
+    if (!(await user.comparePassword(password))) {
       return next(new ErrorHandler("Old password is incorrect", 400));
     }
     user.password = newPassword;
@@ -180,7 +189,6 @@ exports.GetUsers = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-
 exports.SingleUser = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findById(req.params.id).populate("child");
   if (!user) {
@@ -191,7 +199,6 @@ exports.SingleUser = catchAsyncErrors(async (req, res, next) => {
     user,
   });
 });
-
 
 exports.GetEditor = catchAsyncErrors(async (req, res, next) => {
   const user = (await User.find()).filter(
@@ -234,8 +241,8 @@ exports.GetReporter = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.UpdateProfilePic = catchAsyncErrors(async (req, res, next) => {
-  const { profileImage, userId, fileType } = req.body;
-  const user = await AppUser.findOne({ _id: userId });
+  const user = await User.findById(req.user.id);
+  const { profileImage, fileType } = req.body;
   if (user.profileImage.split("/")[2] !== profileImage) {
     fs.unlink(
       `./public/profilePics/${user.profileImage.split("/")[2]}`,
@@ -246,7 +253,6 @@ exports.UpdateProfilePic = catchAsyncErrors(async (req, res, next) => {
     );
   }
   user.profileImage = `/profilePics/${req.file.filename}`;
-  console.log(`/profilePics/${req.file.filename}`);
   user.fileType = fileType ? fileType : req.file.mimetype.split("/")[0];
   await user.save();
   res.status(201).json({
@@ -285,9 +291,9 @@ exports.BlockUser = catchAsyncErrors(async (req, res, next) => {
   if (!user2) {
     return next(new ErrorHandler("User not found", 404));
   }
-  if(user2.isBlocked){
+  if (user2.isBlocked) {
     user2.isBlocked = false;
-  }else{
+  } else {
     user2.isBlocked = true;
   }
   await user2.save();

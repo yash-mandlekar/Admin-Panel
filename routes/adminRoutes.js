@@ -118,7 +118,7 @@ router.post("/update/profile", isAuthUser, UpdateUser);
 
 // @api/upload POST upload news
 router
-    .post("/news", upload.single("file"), isAuthUser, UploadNews)
+    .post("/news", isAuthUser, UploadNews)
     .delete("/news", isAuthUser, DeleteNews)
     .put("/news", upload.single("file"), isAuthUser, UpdateNews)
     .get("/news/:id", isAuthUser, SingleNews)
