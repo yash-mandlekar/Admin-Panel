@@ -34,6 +34,10 @@ const channelModel = new mongoose.Schema({
         type: Number,
         required: [true, "Partition is required"],
     },
+    author: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+    },
 });
 
 module.exports = mongoose.model('Channels', channelModel);

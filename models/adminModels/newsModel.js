@@ -30,6 +30,10 @@ const newsModel = mongoose.Schema(
             type: Date,
             default: Date.now,
         },
+        approved: {
+            type: Boolean,
+            default: false,
+        },
     },
     { timestamps: true }
 );
