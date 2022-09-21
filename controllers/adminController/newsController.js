@@ -35,6 +35,7 @@ exports.DeleteNews = catchAsyncErrors(async (req, res, next) => {
     const { newsId, folderId } = req.body;
     const folder = await Folders.findOne({ _id: folderId });
     const news = await News.findOne({ _id: newsId });
+    console.log(news);
     fs.unlink(`./public/folders/${news.file.split("/")[2]}`, (err) => {
         if (err) {
         }
