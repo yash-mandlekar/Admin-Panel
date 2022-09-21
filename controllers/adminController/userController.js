@@ -6,14 +6,6 @@ const User = require("../../models/adminModels/userModel");
 // const fs = require("fs"); // File System
 const ErrorHandler = require("../../utils/ErrorHandler");
 // const { constants } = require("fs/promises");
-const cloudinary = require("cloudinary");
-const formidable = require("formidable");
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.CLOUD_API_KEY,
-  api_secret: process.env.CLOUD_API_SECRET,
-  secure: true,
-});
 
 exports.GetHomepage = (req, res, next) => {
   res.status(200).json({ message: "Welcome to the homepage" });

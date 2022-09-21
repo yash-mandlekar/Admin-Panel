@@ -15,7 +15,7 @@ exports.CreateChannel = catchAsyncErrors(async (req, res, next) => {
         play: req.body.play,
         partition: req.body.partition,
     });
-    user.channels.push();
+    user.channels.push(channel._id);
     await user.save();
     res.status(201).json({
         status: "success",
