@@ -18,6 +18,7 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
         file: `/folders/${req.file.filename}`,
         fileType: fileType ? fileType : req.file.mimetype.split("/")[0],
         author: user._id,
+        folderId: folder._id,
     });
     folder.news.push(news._id);
     await folder.save();
