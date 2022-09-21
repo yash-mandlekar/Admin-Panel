@@ -20,10 +20,7 @@ exports.CreateFolder = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.AllFolders = catchAsyncErrors(async (req, res, next) => {
-  const folders = await Folders.find().populate({
-    path: "news",
-    populate: { path: "channels", select: "channelName" },
-  });
+  const folders = await Folders.find().populate("author");
   res.status(200).json(folders);
 });
 
@@ -43,8 +40,14 @@ exports.DeleteFolder = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findById(req.user.id);
   const { folderId } = req.body;
   const folder = await Folders.findOne({ _id: folderId });
-  const news = await News.deleteMany({ _id: { $in: folder.news } });
- 
+  const news = await News.find({ _id: { $in: folder.news } });
+  await News.deleteMany({ _id: { $in: folder.news } });
+  news.forEach((item) => {
+    fs.unlink(`./public/folders/${item.file.split("/")[2]}`, (err) => {
+      if (err) {
+      }
+    });
+  });
   const index = user.folders.indexOf(folderId);
   user.folders.splice(index, 1);
 
@@ -57,7 +60,8 @@ exports.OpenFolder = catchAsyncErrors(async (req, res, next) => {
   const folder = await Folders.findOne({ _id: req.params.id }).populate({
     path: "news",
     populate: { path: "channels", select: "channelName" },
+    populate: { path: "author", select: "username" },
   });
   if (!folder) return next(new ErrorHandler("Folder not found", 404));
-  res.status(200).json(folder.news);
+  res.status(200).json(folder);
 });
