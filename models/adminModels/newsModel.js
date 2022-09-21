@@ -18,6 +18,11 @@ const newsModel = mongoose.Schema(
             type: String,
             default: "",
         },
+        category: {
+            type: String,
+            default: "News",
+        },
+
         author: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User"
