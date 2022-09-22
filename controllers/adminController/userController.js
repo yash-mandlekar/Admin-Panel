@@ -5,6 +5,7 @@ const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 const User = require("../../models/adminModels/userModel");
 const fs = require("fs"); // File System
 const ErrorHandler = require("../../utils/ErrorHandler");
+const { populate } = require("../../models/adminModels/channelModel");
 // const { constants } = require("fs/promises");
 
 exports.GetHomepage = (req, res, next) => {
@@ -82,7 +83,10 @@ exports.PostRefreshToken = catchAsyncErrors(async (req, res, next) => {
     if (err) {
       return next(new ErrorHandler("Your are not authenticated", 401));
     }
-    const refresh_user = await User.findById(user.id);
+    const refresh_user = await User.findOne({ _id: user.id }).populate({
+      path: "requests",
+      populate: [{ path: "channels" }, { path: "author" }],
+    });
     useToken(refresh_user, 200, res);
   });
 });

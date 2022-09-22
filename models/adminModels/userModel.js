@@ -51,7 +51,7 @@ const userModel = new mongoose.Schema({
   requests: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Post",
+      ref: "News",
     },
   ],
   password: {

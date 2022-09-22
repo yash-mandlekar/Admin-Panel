@@ -59,7 +59,10 @@ exports.DeleteFolder = catchAsyncErrors(async (req, res, next) => {
 exports.OpenFolder = catchAsyncErrors(async (req, res, next) => {
   const folder = await Folders.findOne({ _id: req.params.id }).populate({
     path: "news",
-    populate: [{ path: "author", select: "username"},{ path: "channels", select: "channelName" },]
+    populate: [
+      { path: "author", select: "username" },
+      { path: "channels", select: "channelName" },
+    ],
   });
   if (!folder) return next(new ErrorHandler("Folder not found", 404));
   res.status(200).json(folder);
