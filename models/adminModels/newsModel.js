@@ -18,10 +18,10 @@ const newsModel = mongoose.Schema(
             type: String,
             default: "",
         },
-        category:[{
+        category:{
             type: mongoose.Schema.Types.ObjectId,
             ref: "Category",
-        }],
+        },
 
         author: {
             type: mongoose.Schema.Types.ObjectId,

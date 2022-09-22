@@ -128,7 +128,7 @@ router
 router.get("/all/news", isAuthUser, AllNews)
 
 // @api/approve-news POST approve news
-router.post("/approve-news", isAuthUser, ApproveNews)
+router.post("/approve-news/:id", isAuthUser, ApproveNews)
 
 
 // @api/folder POST create folder

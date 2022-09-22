@@ -103,14 +103,16 @@ exports.ApproveNews = catchAsyncErrors(async (req, res, next) => {
    const user = await User.findById(req.user.id);
     const news = await News.findById(req.params.id);
     if (!news) return next(new ErrorHandler("News not found", 404));
+    console.log(user);
     if (user.role !== "admin") {
         user.requests.splice(user.requests.indexOf(news._id), 1);
         await user.save();
         user.parent.requests.push(news._id);
         await user.parent.save();
+    }else{
+        news.approved = true;
+        await news.save();
     }
-    news.approved = true;
-    await news.save();
     res.status(200).json({
         success: true,
         message: "News approved successfully",
