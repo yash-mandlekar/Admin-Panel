@@ -53,7 +53,14 @@ const {
 } = require("../controllers/adminController/channelController");
 const { isAuthUser } = require("../middleware/auth");
 
-
+const {
+    CreateCategory,
+    AllCategories,
+    GetCategory,
+    UpdateCategory,
+    DeleteCategory,
+    GetCategoryByName,
+}= require("../controllers/adminController/categoryController");
 
 
 // @api/ GET Hompage
@@ -151,5 +158,19 @@ router
 // @api/channel/:id GET open channel
 router.get("/open/channel/:id", isAuthUser, GetChannel)
 
+
+// @api/category POST create category
+router
+.post("/category", isAuthUser, CreateCategory)
+.get("/category", isAuthUser, AllCategories)
+.put("/category/:id", isAuthUser, UpdateCategory)
+.delete("/category/:id", isAuthUser, DeleteCategory)
+
+// @api/category/:id GET open category
+router.get("/category/:id", isAuthUser, GetCategory)
+
+
+// @api/category/:name GET open category
+router.get("/category/name/:name", isAuthUser, GetCategoryByName)
 
 module.exports = router;
