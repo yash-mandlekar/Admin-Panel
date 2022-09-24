@@ -18,9 +18,10 @@ const newsModel = mongoose.Schema(
       type: String,
       default: "",
     },
-    category: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Category",
+
+    uploadDate: {
+      type: Date,
+      default: Date.now,
     },
 
     author: {
@@ -33,6 +34,14 @@ const newsModel = mongoose.Schema(
         ref: "Channels",
       },
     ],
+
+    category: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Category",
+      },
+    ],
+
     folderId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Folders",

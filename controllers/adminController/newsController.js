@@ -1,6 +1,7 @@
 const User = require("../../models/adminModels/userModel");
 const News = require("../../models/adminModels/newsModel");
 const Folders = require("../../models/adminModels/folderModel");
+const Category = require("../../models/adminModels/categoryModel");
 const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 const fs = require("fs");
 const ErrorHandler = require("../../utils/ErrorHandler");
@@ -8,23 +9,28 @@ const ErrorHandler = require("../../utils/ErrorHandler");
 exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id).populate("parent");
-    console.log(user);
-    const { title, description, folderId, fileType, channels, category } =
+    const { title, description, folderId, fileType, channels, categoryIds,uploadDate } =
       req.body;
-    const folder = await Folders.findOne({ _id: folderId });
-    const news = await News.create({
-      title,
-      description,
-      category,
-      channels: channels.length > 27 ? channels.split(",") : channels,
-      file: `/folders/${req.file.filename}`,
-      fileType: fileType ? fileType : req.file.mimetype.split("/")[0],
-      author: user._id,
-      folderId: folder._id,
-      approved: user.role === "admin" ? true : false,
+      const folder = await Folders.findOne({ _id: folderId });
+      const news = await News.create({
+        title,
+        description,
+        category: categoryIds,
+        date: uploadDate,
+        channels: channels.length > 27 ? channels.split(",") : channels,
+        file: `/folders/${req.file.filename}`,
+        fileType: fileType ? fileType : req.file.mimetype.split("/")[0],
+        author: user._id,
+        folderId: folder._id,
+        approved: user.role === "admin" ? true : false,
+      });
+      
+    categoryIds.forEach(async (item) => {
+      const category = await Category.findById(item);
+      category.news.push(news._id);
+      await category.save();
     });
     if (user.role !== "admin") {
-      console.log(news._id);
       user.parent.requests.push(news._id);
       await user.parent.save();
     }
@@ -64,7 +70,6 @@ exports.UpdateNews = catchAsyncErrors(async (req, res, next) => {
   const { newsId, title, description, file, fileType, channels, category } =
     req.body;
   const news = await News.findOne({ _id: newsId });
-  console.log(news);
 
   if (news.file.split("/")[2] !== file) {
     fs.unlink(`./public/folders/${news.file.split("/")[2]}`, (err) => {
@@ -105,7 +110,6 @@ exports.ApproveNews = catchAsyncErrors(async (req, res, next) => {
   ]);
   const news = await News.findById(req.params.id);
   if (!news) return next(new ErrorHandler("News not found", 404));
-  console.log(user);
   if (user.role !== "admin") {
     user.requests.splice(user.requests.indexOf(news._id), 1);
     await user.save();

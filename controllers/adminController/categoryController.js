@@ -1,5 +1,6 @@
 const Category = require("../../models/adminModels/categoryModel");
 const ErrorHandler = require("../../utils/ErrorHandler");
+const News = require("../../models/adminModels/newsModel");
 const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 
 
@@ -17,7 +18,8 @@ exports.AllCategories = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.GetCategory = catchAsyncErrors(async (req, res, next) => {
-    const category = await Category.findById(req.params.id);
+    const category = await Category.findOne({_id:req.params.id});
+    console.log(category);
     if (!category) {
         return next(new ErrorHandler("Category not found", 404));
     }   
@@ -53,7 +55,7 @@ exports.DeleteCategory = catchAsyncErrors(async (req, res, next) => {
     }
     await category.remove();
     res.status(200).json({
-        status: "success",
+        status: "success", 
         message: "Category deleted successfully",
     });
 });
