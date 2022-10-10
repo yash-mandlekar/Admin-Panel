@@ -9,14 +9,13 @@ const ErrorHandler = require("../../utils/ErrorHandler");
 exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id).populate("parent");
-    const { title, description, folderId, fileType, channels, categoryIds,uploadDate } =
+    const { title, description, folderId, fileType, channels, categoryIds } =
       req.body;
       const folder = await Folders.findOne({ _id: folderId });
       const news = await News.create({
         title,
         description,
         category: categoryIds,
-        date: uploadDate,
         channels: channels.length > 27 ? channels.split(",") : channels,
         file: `/folders/${req.file.filename}`,
         fileType: fileType ? fileType : req.file.mimetype.split("/")[0],
