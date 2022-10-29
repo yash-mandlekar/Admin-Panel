@@ -17,14 +17,14 @@ exports.PostRegisterAppUser = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.PostLoginAppUser = catchAsyncErrors(async (req, res, next) => {
-  const { email, password } = req.body;
+  const { phone, password } = req.body;
 
-  if (!email || !password) {
-    return next(new ErrorHandler("Please provide email and password", 400));
+  if (!phone || !password) {
+    return next(new ErrorHandler("Please provide phone and password", 400));
   }
 
-  const usercomp = await AppUser.findOne({ email }).select("+password");
-  const user = await AppUser.findOne({ email });
+  const usercomp = await AppUser.findOne({ phone }).select("+password");
+  const user = await AppUser.findOne({ phone });
 
   if (!user) {
     return next(new ErrorHandler("User does not exist", 400));
@@ -33,7 +33,7 @@ exports.PostLoginAppUser = catchAsyncErrors(async (req, res, next) => {
   const isPasswordMatching = await usercomp.comparePassword(password);
 
   if (!isPasswordMatching) {
-    return next(new ErrorHandler("Incorrect email or password", 400));
+    return next(new ErrorHandler("Incorrect phone or password", 400));
   }
 
   useToken(user, 200, res);
@@ -68,7 +68,7 @@ exports.LogoutAppUser = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.ForgotPasswordApp = catchAsyncErrors(async (req, res, next) => {
-  const user = await AppUser.findOne({ email: req.body.email });
+  const user = await AppUser.findOne({ phone: req.body.phone });
 
   if (!user) {
     return next(new ErrorHandler("User does not exist", 400));
@@ -83,7 +83,7 @@ exports.ForgotPasswordApp = catchAsyncErrors(async (req, res, next) => {
   const message = `Password reset token is ${resetPasswordUrl}`;
 
   try {
-    // email sending logic goes here
+    // phone sending logic goes here
     res.status(200).json({
       status: "success",
       message,
@@ -128,7 +128,7 @@ exports.ResetPasswordApp = catchAsyncErrors(async (req, res, next) => {
 
 exports.ChangePasswordApp = catchAsyncErrors(async (req, res, next) => {
   try {
-    const { password, newPassword, email } = req.body;
+    const { password, newPassword, phone } = req.body;
     const user = await appUserModel
       .findById(req.user.id)
       .select("+password")

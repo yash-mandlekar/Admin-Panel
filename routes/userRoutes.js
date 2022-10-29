@@ -38,7 +38,7 @@ const { isAuthUser } = require("../middleware/auth");
 router.get("/", GetHomepage);
 
 // @api /user/register POST register admin and adminpanel users
-router.post("/register",isAuthUser, PostRegisterAppUser);
+router.post("/register", PostRegisterAppUser);
 
 // @api /user/login POST login user
 router.post("/login", PostLoginAppUser);
