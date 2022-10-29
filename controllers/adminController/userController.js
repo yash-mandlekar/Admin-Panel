@@ -77,7 +77,7 @@ exports.PostRefreshToken = catchAsyncErrors(async (req, res, next) => {
 
   if (!token) {
     return next(new ErrorHandler("Your are not authenticated", 401));
-  }
+  } 
 
   jwt.verify(token, process.env.REFRESH_SECRET, async (err, user) => {
     if (err) {
@@ -307,5 +307,15 @@ exports.UpdateUser = catchAsyncErrors(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     user,
+  });
+});
+
+
+exports.GetLive = catchAsyncErrors(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+  const live = await post.find();
+  res.status(200).json({
+    status: "success",
+    live,
   });
 });

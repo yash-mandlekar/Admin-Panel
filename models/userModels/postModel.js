@@ -21,6 +21,10 @@ const postModel = mongoose.Schema({
         type: String,
         default: "",
     },
+    live: {
+        type: Boolean,
+        default: false,
+    },
     name:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'users'
