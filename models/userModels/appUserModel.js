@@ -21,6 +21,7 @@ const appUserModel = mongoose.Schema({
     },
     phone: {
         type: String,
+        unique: true,
         // required: [true, "Phone field must not be empty"],
     },
     gender: {
