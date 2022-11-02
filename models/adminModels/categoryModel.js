@@ -20,7 +20,7 @@ const categoryModel = mongoose.Schema({
   },
   englishName: {
     type: String,
-    required: [true, "English name is required"],
+    required: [true, "English name is required"], 
   },
   hindiName: {
     type: String,

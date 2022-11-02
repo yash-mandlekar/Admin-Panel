@@ -63,6 +63,15 @@ const {
 }= require("../controllers/adminController/categoryController");
 
 
+const {
+    CreateBreakingNews,
+    AllBreakingNews,
+    GetBreakingNews,
+    UpdateBreakingNews,
+    DeleteBreakingNews,
+} = require("../controllers/adminController/breakingNewsController");
+
+
 // @api/ GET Hompage
 router.get("/", GetHomepage);
 
@@ -172,5 +181,17 @@ router.get("/category/:id", isAuthUser, GetCategory)
 
 // @api/category/:name GET open category
 router.get("/category/name/:name", isAuthUser, GetCategoryByName)
+
+
+// @api/breaking-news POST create breaking news
+router
+.post("/breaking-news", isAuthUser, CreateBreakingNews)
+.get("/breaking-news", isAuthUser, AllBreakingNews)
+.put("/breaking-news/:id", isAuthUser, UpdateBreakingNews)
+.delete("/breaking-news/:id", isAuthUser, DeleteBreakingNews)
+
+// @api/breaking-news/:id GET open breaking news
+router.get("/breaking-news/:id", isAuthUser, GetBreakingNews)
+
 
 module.exports = router;
