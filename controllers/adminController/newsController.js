@@ -23,12 +23,14 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
         folderId: folder._id,
         approved: user.role === "admin" ? true : false,
       });
-      
-    categoryIds.forEach(async (item) => {
-      const category = await Category.findById(item);
-      category.news.push(news._id);
-      await category.save();
-    });
+
+      Array.isArray(categoryIds) &&
+        categoryIds.map(async (categoryId) => {
+          const category = await Category.findById(categoryId);
+          category.news.push(news._id);
+          await category.save();
+        });
+   
     if (user.role !== "admin") {
       user.parent.requests.push(news._id);
       await user.parent.save();
