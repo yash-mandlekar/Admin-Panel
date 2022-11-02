@@ -10,11 +10,11 @@ const categoryModel = mongoose.Schema({
     required: [true, "Sort order is required"],
   },
   showInMenu: {
-    type: Boolean,
+    type: String,
     default: false,
   },
   showInChild: {
-    type: Boolean,
+    type: String,
     default: false,
   },
   englishName: {
