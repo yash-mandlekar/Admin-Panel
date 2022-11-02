@@ -4,6 +4,7 @@ const categoryModel = mongoose.Schema({
   parentCategory: {
     type: String,
     default: "",
+    unique: true,
   },
   sortOrder: {
     type: Number,

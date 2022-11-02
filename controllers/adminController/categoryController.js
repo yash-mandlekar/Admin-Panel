@@ -5,7 +5,31 @@ const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 
 
 exports.CreateCategory = catchAsyncErrors(async (req, res, next) => {
-    const category = await Category.create(req.body);
+const {
+    parentCategory,
+    sortOrder,
+    showInMenu,
+    showInChild,
+    englishName,
+    hindiName,
+    startingAlphabet,
+    categoryUrl,
+    metaTitle,
+    metaDescription,
+} = req.body;
+
+    const category = await Category.create({
+        parentCategory,
+        sortOrder,
+        showInMenu,
+        showInChild,
+        englishName,
+        hindiName,
+        startingAlphabet,
+        categoryUrl,
+        metaTitle,
+        metaDescription,
+    });
     res.status(200).json({
         status: "success",
         category,
