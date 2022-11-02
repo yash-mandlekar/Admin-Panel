@@ -4,7 +4,6 @@ const categoryModel = mongoose.Schema({
   parentCategory: {
     type: String,
     default: "",
-    required: [true, "Category name is required"],
   },
   sortOrder: {
     type: Number,
