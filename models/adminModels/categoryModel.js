@@ -4,7 +4,7 @@ const categoryModel = mongoose.Schema({
   parentCategory: {
     type: String,
     default: "",
-    unique: true,
+    // unique: true,
   },
   sortOrder: {
     type: Number,
@@ -38,12 +38,10 @@ const categoryModel = mongoose.Schema({
 
   news: [
     {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "News",
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "News",
     },
-    ],
-    
-
+  ],
 });
 
 module.exports = mongoose.model("Category", categoryModel);
