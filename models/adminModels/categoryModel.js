@@ -4,21 +4,19 @@ const categoryModel = mongoose.Schema({
   parentCategory: {
     type: String,
     default: "",
-    unique: true,
   },
   sortOrder: {
     type: Number,
   },
   showInMenu: {
     type: String,
-    default: false,
   },
   showInChild: {
     type: String,
-    default: false,
   },
   englishName: {
     type: String,
+    unique: true,
   },
   hindiName: {
     type: String,
@@ -43,6 +41,14 @@ const categoryModel = mongoose.Schema({
     },
     ],
     
+    child: [
+      {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Category",
+      },
+      ],
+      
+      
 
 });
 
