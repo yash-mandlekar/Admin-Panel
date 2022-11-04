@@ -18,7 +18,7 @@ exports.CreateCategory = catchAsyncErrors(async (req, res, next) => {
   } = req.body;
 
   const category = await Category.create({
-    parentCategory,
+    parentCategory: parentCategory.length > 0 ? parentCategory : null,
     sortOrder,
     showInMenu,
     showInChild,
@@ -30,7 +30,7 @@ exports.CreateCategory = catchAsyncErrors(async (req, res, next) => {
     metaDescription,
   });
   if (parentCategory.length > 0) {
-    const parent = await Category.findOne({ englishName: parentCategory });
+    const parent = await Category.findOne({ _id: parentCategory });
     parent.child.push(category._id);
     await parent.save();
   }
@@ -77,6 +77,12 @@ exports.UpdateCategory = catchAsyncErrors(async (req, res, next) => {
   category.metaTitle = req.body.metaTitle;
   category.metaDescription = req.body.metaDescription;
   await category.save();
+console.log(category);
+  // category.child = req.body.child;
+  await category.save();
+  
+
+
   res.status(200).json({
     status: "success",
     category,

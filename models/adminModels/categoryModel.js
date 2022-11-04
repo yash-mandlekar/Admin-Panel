@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 
 const categoryModel = mongoose.Schema({
   parentCategory: {
-    type: String,
-    default: "",
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
   },
   sortOrder: {
     type: Number,
@@ -36,20 +36,17 @@ const categoryModel = mongoose.Schema({
 
   news: [
     {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "News",
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "News",
     },
-    ],
-    
-    child: [
-      {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Category",
-      },
-      ],
-      
-      
+  ],
 
+  child: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+    },
+  ],
 });
 
 module.exports = mongoose.model("Category", categoryModel);
