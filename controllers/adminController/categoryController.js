@@ -4,7 +4,6 @@ const News = require("../../models/adminModels/newsModel");
 const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 
 
-exports.CreateCategory = catchAsyncErrors(async (req, res, next) => {
     exports.CreateCategory = catchAsyncErrors(async (req, res, next) => {
         const {
           parentCategory,
@@ -43,7 +42,6 @@ exports.CreateCategory = catchAsyncErrors(async (req, res, next) => {
           category,
         });
       });
-});
 
 exports.AllCategories = catchAsyncErrors(async (req, res, next) => {
     const categories = await Category.find().populate("parentCategory");
