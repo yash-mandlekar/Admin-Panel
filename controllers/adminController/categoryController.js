@@ -37,7 +37,7 @@ const {
 });
 
 exports.AllCategories = catchAsyncErrors(async (req, res, next) => {
-    const categories = await Category.find();
+    const categories = await Category.find().populate("parentCategory");
     res.status(200).json(categories);
 });
 
