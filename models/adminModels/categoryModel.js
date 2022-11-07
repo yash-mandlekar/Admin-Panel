@@ -10,13 +10,14 @@ const categoryModel = mongoose.Schema({
   },
   showInMenu: {
     type: String,
+    default: false,
   },
   showInChild: {
     type: String,
+    default: false,
   },
   englishName: {
     type: String,
-    unique: true,
   },
   hindiName: {
     type: String,
