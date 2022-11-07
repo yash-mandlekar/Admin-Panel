@@ -26,6 +26,7 @@ const categoryModel = mongoose.Schema({
   },
   categoryUrl: {
     type: String,
+    unique: true,
   },
   metaTitle: {
     type: String,

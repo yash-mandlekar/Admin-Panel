@@ -18,7 +18,7 @@ exports.CreateCategory = catchAsyncErrors(async (req, res, next) => {
           metaTitle,
           metaDescription,
         } = req.body;
-      
+        
         const category = await Category.create({
           parentCategory: parentCategory.length > 0 ? parentCategory : null,
           sortOrder,
@@ -31,6 +31,7 @@ exports.CreateCategory = catchAsyncErrors(async (req, res, next) => {
           metaTitle,
           metaDescription,
         });
+        
         if (parentCategory.length > 0) {
           const parent = await Category.findOne({ _id: parentCategory });
           parent.child.push(category._id);
