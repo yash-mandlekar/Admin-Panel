@@ -5,35 +5,43 @@ const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 
 
 exports.CreateCategory = catchAsyncErrors(async (req, res, next) => {
-const {
-    parentCategory,
-    sortOrder,
-    showInMenu,
-    showInChild,
-    englishName,
-    hindiName,
-    startingAlphabet,
-    categoryUrl,
-    metaTitle,
-    metaDescription,
-} = req.body;
-
-    const category = await Category.create({
-        parentCategory,
-        sortOrder,
-        showInMenu,
-        showInChild,
-        englishName,
-        hindiName,
-        startingAlphabet,
-        categoryUrl,
-        metaTitle,
-        metaDescription,
-    });
-    res.status(200).json({
-        status: "success",
-        category,
-    });
+    exports.CreateCategory = catchAsyncErrors(async (req, res, next) => {
+        const {
+          parentCategory,
+          sortOrder,
+          showInMenu,
+          showInChild,
+          englishName,
+          hindiName,
+          startingAlphabet,
+          categoryUrl,
+          metaTitle,
+          metaDescription,
+        } = req.body;
+      
+        const category = await Category.create({
+          parentCategory: parentCategory.length > 0 ? parentCategory : null,
+          sortOrder,
+          showInMenu,
+          showInChild,
+          englishName,
+          hindiName,
+          startingAlphabet,
+          categoryUrl,
+          metaTitle,
+          metaDescription,
+        });
+        if (parentCategory.length > 0) {
+          const parent = await Category.findOne({ _id: parentCategory });
+          parent.child.push(category._id);
+          await parent.save();
+        }
+      
+        res.status(200).json({
+          status: "success",
+          category,
+        });
+      });
 });
 
 exports.AllCategories = catchAsyncErrors(async (req, res, next) => {

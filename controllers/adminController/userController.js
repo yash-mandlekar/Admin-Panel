@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
+const nodemailer = require("nodemailer");
 const useToken = require("../../utils/useToken");
 const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 const User = require("../../models/adminModels/userModel");
@@ -105,6 +106,14 @@ exports.LogoutUser = catchAsyncErrors(async (req, res, next) => {
 
 exports.ForgotPassword = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL,
+      pass: process.env.PASSWORD,
+    },
+  });
+
 
   if (!user) {
     return next(new ErrorHandler("User does not exist", 400));
@@ -120,10 +129,13 @@ exports.ForgotPassword = catchAsyncErrors(async (req, res, next) => {
 
   try {
     // email sending logic goes here
-    res.status(200).json({
-      status: "success",
-      message,
+    await transporter.sendMail({
+      from: process.env.EMAIL,
+      to: user.email,
+      subject: "Password reset token",
+      text: message,
     });
+    
   } catch (error) {
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
