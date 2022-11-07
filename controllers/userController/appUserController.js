@@ -1,8 +1,12 @@
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
+const bcrypt = require("bcryptjs");
+const _ = require("lodash");
+const axios = require("axios");
 const useToken = require("../../utils/useToken");
 const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 const AppUser = require("../../models/userModels/appUserModel");
+const Otp = require("../../models/userModels/otpModel");
 const fs = require("fs"); // File System
 const ErrorHandler = require("../../utils/ErrorHandler");
 // const { constants } = require("fs/promises");
@@ -17,25 +21,64 @@ exports.PostRegisterAppUser = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.PostLoginAppUser = catchAsyncErrors(async (req, res, next) => {
-  const { phone, password } = req.body;
+  const apiKey = process.env.API_Key;
+  const phone = req.body.phone;
+  const message = "Your One Time Password (OTP) for online class is ";
+  var val = Math.floor(1000 + Math.random() * 9000);
+  const otp = val.toString();
+  const otpData = new Otp({
+    phone: phone,
+    otp: otp,
+  });
+  axios.post(
+    `http://msg.websoftvalley.com/V2/http-api.php?apikey=${apiKey}number=${phone}&message=${message}${otp}.&format=json`
+  );
 
-  if (!phone || !password) {
-    return next(new ErrorHandler("Please provide phone and password", 400));
+  // bcrypt otp and save to database
+  const salt = await bcrypt.genSalt(10); //bcrypt is used to hash the password
+  otpData.otp = await bcrypt.hash(otpData.otp, salt); //hashing the password
+  otpData.save().then((result) => {
+    // console.log(result);
+    res.status(200).json({
+      message: "OTP sent successfully",
+    });
+  });
+});
+
+exports.postVerifyOtp = catchAsyncErrors(async (req, res, next) => {
+  // verify otp and register user if user does not exist in database else login user and generate token
+  console.log(process.env.JWT_EXPIRES_IN);
+
+  const phone = req.body.phone;
+  const otp = req.body.otp;
+  const user = await AppUser.findOne({ phone: phone });
+  if (user) {
+    // compare otp with otp in database and login user
+    const otpData = await Otp.findOne({ phone: phone });
+    const isMatch = await bcrypt.compare(otp, otpData.otp);
+    if (!isMatch) {
+      return next(new ErrorHandler("Invalid OTP", 401));
+    }
+    // generate token
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRES_IN,
+    });
+  } else {
+    // register user and generate token
+    const otpData = await Otp.findOne({ phone: phone });
+    const isMatch = await bcrypt.compare(otp, otpData.otp);
+    if (!isMatch) {
+      return next(new ErrorHandler("Invalid OTP", 401));
+    }
+    const newUser = await AppUser.create({
+      phone: phone,
+    });
+    // generate token
+    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRES_IN,
+    });
+    
   }
-
-  const usercomp = await AppUser.findOne({ phone }).select("+password");
-  const user = await AppUser.findOne({ phone });
-
-  if (!user) {
-    return next(new ErrorHandler("User does not exist", 400));
-  }
-
-  const isPasswordMatching = await usercomp.comparePassword(password);
-
-  if (!isPasswordMatching) {
-    return next(new ErrorHandler("Incorrect phone or password", 400));
-  }
-
   useToken(user, 200, res);
 });
 
@@ -113,7 +156,7 @@ exports.ResetPasswordApp = catchAsyncErrors(async (req, res, next) => {
     );
   }
 
-  if (req.body.password !== req.body.confirmPassword){
+  if (req.body.password !== req.body.confirmPassword) {
     return next(new ErrorHandler("Password does not match", 400));
   }
 
