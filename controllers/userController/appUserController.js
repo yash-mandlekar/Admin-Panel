@@ -24,7 +24,7 @@ exports.PostLoginAppUser = catchAsyncErrors(async (req, res, next) => {
   const apiKey = process.env.API_Key;
   const phone = req.body.phone;
   const message = "Your One Time Password (OTP) for online class is ";
-  var val = Math.floor(1000 + Math.random() * 9000);
+  var val = Math.floor(1000 + Math.random() * 900000);
   const otp = val.toString();
   const otpData = new Otp({
     phone: phone,
