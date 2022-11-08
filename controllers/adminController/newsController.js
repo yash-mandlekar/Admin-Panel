@@ -9,13 +9,13 @@ const ErrorHandler = require("../../utils/ErrorHandler");
 exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id).populate("parent");
-    const { title, description, folderId, fileType, channels, categoryIds } =
+    const { title, description, folderId, fileType, channels, category } =
       req.body;
       const folder = await Folders.findOne({ _id: folderId });
       const news = await News.create({
         title,
         description,
-        category: categoryIds,
+        category: category,
         channels: channels.length > 27 ? channels.split(",") : channels,
         file: `/folders/${req.file.filename}`,
         fileType: fileType ? fileType : req.file.mimetype.split("/")[0],
@@ -23,14 +23,13 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
         folderId: folder._id,
         approved: user.role === "admin" ? true : false,
       });
+      
+        const foundCategory = await Category.findById(category);
+        foundCategory.news.push(news._id);
+        await foundCategory.save();
 
-      Array.isArray(categoryIds) &&
-        categoryIds.map(async (categoryId) => {
-          const category = await Category.findById(categoryId);
-          category.news.push(news._id);
-          await category.save();
-        });
-   
+
+
     if (user.role !== "admin") {
       user.parent.requests.push(news._id);
       await user.parent.save();
@@ -103,6 +102,16 @@ exports.SingleNews = catchAsyncErrors(async (req, res, next) => {
   if (!news) return next(new ErrorHandler("News not found", 404));
   res.status(200).json(news);
 });
+
+// find news by categoryUrl 
+exports.NewsByCategory = catchAsyncErrors(async (req, res, next) => {
+  const category = await Category.findOne({ url: req.params.url });
+  const news = await News.find({ category: category._id }).populate(
+    "channels author"
+  );
+  res.status(200).json(news);
+});
+
 
 exports.ApproveNews = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findOne({ _id: req.user.id }).populate([

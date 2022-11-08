@@ -31,7 +31,6 @@ const {
 } = require("../controllers/userController/postController");
 
 const { isLoggedin } = require("../middleware/login");
-const { isAuthUser } = require("../middleware/auth");
 
 // @api /user/ GET Hompage
 router.get("/", GetHomepage);
@@ -80,12 +79,12 @@ router.post("/followUnfollow", isLoggedin, FollowUnfollow);
 // @api /user/post POST create post
 router
   .post("/post", isLoggedin, upload.single("file"), CreatePost)
-  .get("/post", isLoggedin, GetPost)
+  .get("/post",  GetPost)
   .delete("/post", isLoggedin, DeletePost)
   .put("/post", isLoggedin, upload.single("file"), UpdatePost);
 
 // @api /user/post/:id GET post by id
-router.get("/all/post", isLoggedin, GetPostById);
+router.get("/all/post", GetPostById);
 
 // @api /user/post/likes
 router.post("/post/likes", isLoggedin, PostLikes);

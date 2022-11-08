@@ -8,6 +8,7 @@ const fs = require("fs"); // File System
 const ErrorHandler = require("../../utils/ErrorHandler");
 const { populate } = require("../../models/adminModels/channelModel");
 // const { constants } = require("fs/promises");
+const { mailer } = require("../../middleware/nodeMailer");
 
 exports.GetHomepage = (req, res, next) => {
   res.status(200).json({ message: "Welcome to the homepage" });
@@ -78,7 +79,7 @@ exports.PostRefreshToken = catchAsyncErrors(async (req, res, next) => {
 
   if (!token) {
     return next(new ErrorHandler("Your are not authenticated", 401));
-  } 
+  }
 
   jwt.verify(token, process.env.REFRESH_SECRET, async (err, user) => {
     if (err) {
@@ -106,21 +107,11 @@ exports.LogoutUser = catchAsyncErrors(async (req, res, next) => {
 
 exports.ForgotPassword = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL,
-      pass: process.env.PASSWORD,
-    },
-  });
-
-
   if (!user) {
     return next(new ErrorHandler("User does not exist", 400));
   }
 
   const resetToken = user.createPasswordToken();
-
   await user.save({ validateBeforeSave: false });
 
   const resetPasswordUrl = `http://localhost:4000/user/reset/${resetToken}`;
@@ -128,19 +119,34 @@ exports.ForgotPassword = catchAsyncErrors(async (req, res, next) => {
   const message = `Password reset token is ${resetPasswordUrl}`;
 
   try {
-    // email sending logic goes here
-    await transporter.sendMail({
-      from: process.env.EMAIL,
-      to: user.email,
-      subject: "Password reset token",
-      text: message,
+    // const ACCESS_TOKEN = await authClient.getAccessToken();
+
+    // const transport = nodemailer.createTransport({
+    //   service: "gmail",
+    //   auth: {
+    //     type: "OAuth2",
+    //     user: "lokdeshtv@gmail.com",
+    //     clientId: CLIENT_ID,
+    //     clientSecret: CLIENT_SECRET,
+    //     refreshToken: REFRESH_TOKEN,
+    //     accessToken: ACCESS_TOKEN,
+    //   },
+    // });
+
+    const details = {
+      email: user.email,
+      subject: "Password Reset",
+      message: message,
+    };
+
+    await mailer(details);
+
+    res.status(200).json({
+      status: "success",
+      message: "Token sent to email",
     });
-    
-  } catch (error) {
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpire = undefined;
-    await user.save({ validateBeforeSave: false });
-    return next(new ErrorHandler("Error in reset token", 500));
+  } catch (err) {
+    return err;
   }
 });
 
@@ -321,7 +327,6 @@ exports.UpdateUser = catchAsyncErrors(async (req, res, next) => {
     user,
   });
 });
-
 
 exports.GetLive = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findById(req.user.id);

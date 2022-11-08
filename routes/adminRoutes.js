@@ -40,6 +40,7 @@ const {
     UpdateNews,
     AllNews,
     SingleNews,
+    NewsByCategory,
     ApproveNews
    
 } = require("../controllers/adminController/newsController");
@@ -143,6 +144,11 @@ router
 
 // @api/GET all news
 router.get("/all/news", isAuthUser, AllNews)
+
+
+// @api/GET news by categoryUrl
+router.get("/news/category/:categoryUrl", isAuthUser, NewsByCategory)
+
 
 // @api/approve-news POST approve news
 router.post("/approve-news/:id", isAuthUser, ApproveNews)
