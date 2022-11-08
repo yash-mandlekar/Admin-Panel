@@ -6,6 +6,10 @@ const newsModel = mongoose.Schema(
       type: String,
       required: [true, "Title field must not be empty"],
     },
+    subtitle: {
+      type: String,
+    },
+    
     description: {
       type: String,
       required: [true, "description field must not be empty"],
