@@ -9,12 +9,13 @@ const ErrorHandler = require("../../utils/ErrorHandler");
 exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id).populate("parent");
-    const { title, description, folderId, fileType, channels, category } =
+    const { title, description, location, folderId, fileType, channels, category } =
       req.body;
       const folder = await Folders.findOne({ _id: folderId });
       const news = await News.create({
         title,
         description,
+        location,
         category: category,
         channels: channels.length > 27 ? channels.split(",") : channels,
         file: `/folders/${req.file.filename}`,
@@ -67,7 +68,7 @@ exports.DeleteNews = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.UpdateNews = catchAsyncErrors(async (req, res, next) => {
-  const { newsId, title, description, file, fileType, channels, category } =
+  const { newsId, title, description,location , file, fileType, channels, category } =
     req.body;
   const news = await News.findOne({ _id: newsId });
 
@@ -81,6 +82,7 @@ exports.UpdateNews = catchAsyncErrors(async (req, res, next) => {
 
   news.title = title;
   news.description = description;
+  news.location = location;
   news.category = category;
   news.channels = channels.length > 27 ? channels.split(",") : channels;
   news.fileType = fileType ? fileType : req.file.mimetype.split("/")[0];

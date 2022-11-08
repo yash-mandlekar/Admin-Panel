@@ -19,6 +19,11 @@ const newsModel = mongoose.Schema(
       default: "",
     },
 
+    location: {
+      type: String,
+      default: "",
+    },
+
     uploadDate: {
       type: Date,
       default: Date.now,

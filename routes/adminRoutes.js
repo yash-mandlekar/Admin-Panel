@@ -94,7 +94,6 @@ router.post("/refreshtoken", PostRefreshToken);
 // @api/forgot POST login user
 router.post("/forgot", isAuthUser, ForgotPassword)
 
-
 // @api/reset/:resetToken POST login user
 router.post("/reset/:resetToken", ResetPassword)
 
@@ -106,8 +105,6 @@ router.get("/users", isAuthUser, GetUsers);
 
 // @api/users GET SingleUser
 router.get("/users/:id", isAuthUser, SingleUser);
-
-
 
 // @api/admin Delete user
 router.delete("/users/delete", isAuthUser, RemoveUser);
