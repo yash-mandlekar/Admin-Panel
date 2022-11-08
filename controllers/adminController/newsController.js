@@ -23,7 +23,7 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
         fileType: fileType ? fileType : req.file.mimetype.split("/")[0],
         author: user._id,
         folderId: folder._id,
-        approved: user.role === "admin" ? true : false,
+        approved: user.role.toLowerCase() === "admin" ? true : false,
       });
       
         const foundCategory = await Category.findById(category);
@@ -32,7 +32,7 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
 
 
 
-    if (user.role !== "admin") {
+    if (user.role.toLowerCase() !== "admin") {
       user.parent.requests.push(news._id);
       await user.parent.save();
     }
@@ -124,7 +124,7 @@ exports.ApproveNews = catchAsyncErrors(async (req, res, next) => {
   ]);
   const news = await News.findById(req.params.id);
   if (!news) return next(new ErrorHandler("News not found", 404));
-  if (user.role !== "admin") {
+  if (user.role.toLowerCase() !== "admin") {
     user.requests.splice(user.requests.indexOf(news._id), 1);
     await user.save();
     user.parent.requests.push(news._id);
