@@ -119,19 +119,6 @@ exports.ForgotPassword = catchAsyncErrors(async (req, res, next) => {
   const message = `Password reset token is ${resetPasswordUrl}`;
 
   try {
-    // const ACCESS_TOKEN = await authClient.getAccessToken();
-
-    // const transport = nodemailer.createTransport({
-    //   service: "gmail",
-    //   auth: {
-    //     type: "OAuth2",
-    //     user: "lokdeshtv@gmail.com",
-    //     clientId: CLIENT_ID,
-    //     clientSecret: CLIENT_SECRET,
-    //     refreshToken: REFRESH_TOKEN,
-    //     accessToken: ACCESS_TOKEN,
-    //   },
-    // });
 
     const details = {
       email: user.email,
