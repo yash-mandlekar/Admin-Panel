@@ -2,23 +2,24 @@ const Category = require("../../models/adminModels/categoryModel");
 const ErrorHandler = require("../../utils/ErrorHandler");
 const News = require("../../models/adminModels/newsModel");
 const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
+const { PostLoginUser } = require("./userController");
 
 
-    exports.CreateCategory = catchAsyncErrors(async (req, res, next) => {
-        const {
-          parentCategory,
-          sortOrder,
-          showInMenu,
-          showInChild,
-          englishName,
-          hindiName,
-          startingAlphabet,
-          categoryUrl,
-          metaTitle,
-          metaDescription,
-        } = req.body;
-        
-        const category = await Category.create({
+exports.CreateCategory = catchAsyncErrors(async (req, res, next) => {
+    const {
+        parentCategory,
+        sortOrder,
+        showInMenu,
+        showInChild,
+        englishName,
+        hindiName,
+        startingAlphabet,
+        categoryUrl ,
+        metaTitle,
+        metaDescription,
+    } = req.body;
+    
+    const category = await Category.create({
           parentCategory: parentCategory.length > 0 ? parentCategory : null,
           sortOrder,
           showInMenu,
@@ -30,6 +31,7 @@ const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
           metaTitle,
           metaDescription,
         });
+   
         
         if (parentCategory.length > 0) {
           const parent = await Category.findOne({ _id: parentCategory });
