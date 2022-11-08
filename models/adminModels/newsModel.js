@@ -28,18 +28,18 @@ const newsModel = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-    channels: 
+    channels: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Channels",
       },
+    ],
 
-    category: [
+    category:
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Category",
       },
-    ],
 
     folderId: {
       type: mongoose.Schema.Types.ObjectId,
