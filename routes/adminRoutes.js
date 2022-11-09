@@ -101,25 +101,25 @@ router.post("/reset/:resetToken", ResetPassword)
 router.post("/change", isAuthUser, ChangePassword)
 
 // @api/users GET all users
-router.get("/users", isAuthUser, GetUsers);
+router.get("/users", GetUsers);
 
 // @api/users GET SingleUser
-router.get("/users/:id", isAuthUser, SingleUser);
+router.get("/users/:id", SingleUser);
 
 // @api/admin Delete user
 router.delete("/users/delete", isAuthUser, RemoveUser);
 
 // @api/editor GET user profile
-router.get("/editor", isAuthUser, GetEditor);
+router.get("/editor", GetEditor);
 
 //@api/admin GET user profile
-router.get("/admin", isAuthUser, GetAdmin);
+router.get("/admin", GetAdmin);
 
 //@api/senior-editor GET user profile
-router.get("/senior-editor", isAuthUser, GetSeniorEditor);
+router.get("/senior-editor", GetSeniorEditor);
 
 //@api/reporter GET user profile
-router.get("/reporter", isAuthUser, GetReporter);
+router.get("/reporter", GetReporter);
 
 //@api/block-user POST block user
 router.post("/block-user", isAuthUser, BlockUser);
@@ -137,14 +137,14 @@ router
     .post("/news", upload.single("file"), isAuthUser, UploadNews)
     .delete("/news", isAuthUser, DeleteNews)
     .put("/news", upload.single("file"), isAuthUser, UpdateNews)
-    .get("/news/:id", isAuthUser, SingleNews)
+    .get("/news/:id", SingleNews)
 
 // @api/GET all news
-router.get("/all/news", isAuthUser, AllNews)
+router.get("/all/news", AllNews)
 
 
 // @api/GET news by categoryUrl
-router.get("/news/category/:categoryUrl", isAuthUser, NewsByCategory)
+router.get("/news/category/:categoryUrl", NewsByCategory)
 
 
 // @api/approve-news POST approve news
@@ -154,48 +154,48 @@ router.post("/approve-news/:id", isAuthUser, ApproveNews)
 // @api/folder POST create folder
 router
     .post("/folder", isAuthUser, CreateFolder)
-    .get("/folder", isAuthUser, AllFolders)
+    .get("/folder", AllFolders)
     .delete("/folder", isAuthUser, DeleteFolder)
     .put("/folder", isAuthUser, UpdateFolder)
 
 // @api/folder/:id GET open folder
-router.get("/open/folder/:id", isAuthUser, OpenFolder)
+router.get("/open/folder/:id", OpenFolder)
 
 // @api/channel POST create channel
 router
     .post("/channel", isAuthUser, CreateChannel)
-    .get("/channel", isAuthUser, AllChannels)
+    .get("/channel", AllChannels)
     .put("/channel", isAuthUser, UpdateChannel)
     .delete("/channel", isAuthUser, DeleteChannel)
 
 // @api/channel/:id GET open channel
-router.get("/open/channel/:id", isAuthUser, GetChannel)
+router.get("/open/channel/:id", GetChannel)
 
 
 // @api/category POST create category
 router
 .post("/category", isAuthUser, CreateCategory)
-.get("/category", isAuthUser, AllCategories)
+.get("/category", AllCategories)
 .put("/category/:id", isAuthUser, UpdateCategory)
 .delete("/category/:id", isAuthUser, DeleteCategory)
 
 // @api/category/:id GET open category
-router.get("/category/:id", isAuthUser, GetCategory)
+router.get("/category/:id", GetCategory)
 
 
 // @api/category/:name GET open category
-router.get("/category/name/:name", isAuthUser, GetCategoryByName)
+router.get("/category/name/:name", GetCategoryByName)
 
 
 // @api/breaking-news POST create breaking news
 router
 .post("/breaking-news", isAuthUser, CreateBreakingNews)
-.get("/breaking-news", isAuthUser, AllBreakingNews)
+.get("/breaking-news", AllBreakingNews)
 .put("/breaking-news/:id", isAuthUser, UpdateBreakingNews)
 .delete("/breaking-news/:id", isAuthUser, DeleteBreakingNews)
 
 // @api/breaking-news/:id GET open breaking news
-router.get("/breaking-news/:id", isAuthUser, GetBreakingNews)
+router.get("/breaking-news/:id", GetBreakingNews)
 
 
 module.exports = router;
