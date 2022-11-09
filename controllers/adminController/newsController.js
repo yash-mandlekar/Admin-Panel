@@ -25,11 +25,10 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
         folderId: folder._id,
         approved: user.role.toLowerCase() === "admin" ? true : false,
       });
-      
-        const foundCategory = await Category.findById(category);
-        foundCategory.news.push(news._id);
-        await foundCategory.save();
-
+      // find category and add news to it 
+      const foundCategory = await Category.findOne({ _id: category });
+      foundCategory.news.push(news._id);
+      await foundCategory.save();
 
 
     if (user.role.toLowerCase() !== "admin") {
