@@ -1,6 +1,9 @@
 require("dotenv").config({ path: "./config/.env" });
 const express = require("express");
+const mongoose = require('mongoose');
 const app = express();
+
+// Connect to MongoDB Atlas
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const errormiddleware = require("./middleware/error");

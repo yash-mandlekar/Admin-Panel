@@ -47,7 +47,6 @@ exports.PostLoginAppUser = catchAsyncErrors(async (req, res, next) => {
 
 exports.postVerifyOtp = catchAsyncErrors(async (req, res, next) => {
   // verify otp and register user if user does not exist in database else login user and generate token
-  console.log(process.env.JWT_EXPIRES_IN);
 
   const phone = req.body.phone;
   const otp = req.body.otp;
