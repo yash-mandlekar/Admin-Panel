@@ -97,12 +97,12 @@ exports.UpdateNews = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.AllNews = catchAsyncErrors(async (req, res, next) => {
-  const news = await News.find().populate("channels author");
+  const news = await News.find().populate("channels author category");
   res.status(200).json(news);
 });
 
 exports.SingleNews = catchAsyncErrors(async (req, res, next) => {
-  const news = await News.findById(req.params.id).populate("channels");
+  const news = await News.findById(req.params.id).populate("channels category");
   if (!news) return next(new ErrorHandler("News not found", 404));
   res.status(200).json(news);
 });
