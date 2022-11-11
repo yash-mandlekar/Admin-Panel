@@ -14,7 +14,12 @@ const storage = multer.diskStorage({
     cb(null, uniqueSuffix + '-' + file.originalname)
   }
 });
-const upload = multer({ storage: storage , fileFilter: function (req, file, callback) {
+
+const limits = {
+  fileSize: 1024 * 1024 * 5
+};
+
+const upload = multer({ storage: storage,limits:limits, fileFilter: function (req, file, callback) {
   var ext = path.extname(file.originalname);
   // image only 
   if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg' && ext !== '.svg' && ext !== '.webp' && ext !== '.mp4' && ext !== '.flv' && ext !== '.m3u8' && ext !== '.wav' && ext !== '.mp3' && ext !== '.mp4' && ext !== '.m4a' && ext !== '.aac' ) {

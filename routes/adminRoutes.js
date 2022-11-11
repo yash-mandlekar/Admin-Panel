@@ -35,15 +35,14 @@ const {
 } = require("../controllers/adminController/folderController");
 
 const {
-    UploadNews,
-    DeleteNews,
-    UpdateNews,
-    AllNews,
-    SingleNews,
-    NewsByCategory,
-    ApproveNews
+    UploadShorts,
+    DeleteShorts,
+    UpdateShorts,
+    AllShorts,
+    SingleShorts,
+    ApproveShorts
    
-} = require("../controllers/adminController/newsController");
+} = require("../controllers/adminController/shortsController");
 
 const {
     CreateChannel,
@@ -134,21 +133,16 @@ router.post("/update/profile", isAuthUser, UpdateUser);
 
 // @api/upload POST upload news
 router
-    .post("/news", upload.single("file"), isAuthUser, UploadNews)
-    .delete("/news", isAuthUser, DeleteNews)
-    .put("/news", upload.single("file"), isAuthUser, UpdateNews)
-    .get("/news/:id", SingleNews)
+    .post("/shorts", upload.single("file"), isAuthUser, UploadShorts)
+    .delete("/shorts", isAuthUser, DeleteShorts)
+    .put("/shorts", upload.single("file"), isAuthUser, UpdateShorts)
+    .get("/shorts/:id", SingleShorts)
 
-// @api/GET all news
-router.get("/all/news", AllNews)
+// @api/GET all Shorts
+router.get("/all/shorts", AllShorts)
 
-
-// @api/GET news by categoryUrl
-router.get("/news/category/:categoryUrl", NewsByCategory)
-
-
-// @api/approve-news POST approve news
-router.post("/approve-news/:id", isAuthUser, ApproveNews)
+// @api/approve-Shorts POST approve Shorts
+router.post("/approve-shorts/:id", isAuthUser, ApproveShorts)
 
 
 // @api/folder POST create folder

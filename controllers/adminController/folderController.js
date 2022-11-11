@@ -1,6 +1,6 @@
 const Folders = require("../../models/adminModels/folderModel");
 const User = require("../../models/adminModels/userModel");
-const News = require("../../models/adminModels/newsModel");
+const News = require("../../models/adminModels/shortsModel");
 const ErrorHandler = require("../../utils/ErrorHandler");
 const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 const fs = require("fs");

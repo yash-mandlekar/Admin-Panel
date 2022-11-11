@@ -1,6 +1,6 @@
 const Category = require("../../models/adminModels/categoryModel");
 const ErrorHandler = require("../../utils/ErrorHandler");
-const News = require("../../models/adminModels/newsModel");
+const News = require("../../models/adminModels/shortsModel");
 const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 const { PostLoginUser } = require("./userController");
 

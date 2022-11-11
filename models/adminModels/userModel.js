@@ -51,7 +51,7 @@ const userModel = new mongoose.Schema({
   requests: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "News",
+      ref: "Shorts",
     },
   ],
   password: {
@@ -87,10 +87,10 @@ const userModel = new mongoose.Schema({
     },
   ],
 
-  news: [
+  shorts: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "News",
+      ref: "Shorts",
     },
   ],
 

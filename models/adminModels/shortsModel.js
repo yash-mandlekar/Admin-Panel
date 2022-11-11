@@ -1,18 +1,10 @@
 const mongoose = require("mongoose");
 
-const newsModel = mongoose.Schema(
+const shortsModel = mongoose.Schema(
   {
     title: {
       type: String,
       required: [true, "Title field must not be empty"],
-    },
-    subTitle: {
-      type: String,
-    },
-    
-    description: {
-      type: String,
-      required: [true, "description field must not be empty"],
     },
     file: {
       type: Buffer,
@@ -22,12 +14,6 @@ const newsModel = mongoose.Schema(
       type: String,
       default: "",
     },
-
-    location: {
-      type: String,
-      default: "",
-    },
-
     uploadDate: {
       type: Date,
       default: Date.now,
@@ -43,12 +29,6 @@ const newsModel = mongoose.Schema(
         ref: "Channels",
       },
     ],
-
-    category:
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Category",
-      },
 
     folderId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -66,4 +46,4 @@ const newsModel = mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("News", newsModel);
+module.exports = mongoose.model("Shorts", shortsModel);

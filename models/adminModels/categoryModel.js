@@ -39,10 +39,10 @@ const categoryModel = mongoose.Schema({
     type: String,
   },
 
-  news: [
+  shorts: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "News",
+      ref: "Shorts",
     },
   ],
 

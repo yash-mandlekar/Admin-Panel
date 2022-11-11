@@ -6,9 +6,9 @@ const folderModel = new mongoose.Schema({
         required: [true, "Folder name is required"],
         unique: true,
     },
-    news : [{
+    shorts : [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "News"
+        ref: "Shorts"
     }],
     channels : [{
         type: mongoose.Schema.Types.ObjectId,
