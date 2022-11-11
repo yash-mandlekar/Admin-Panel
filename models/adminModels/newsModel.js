@@ -15,7 +15,7 @@ const newsModel = mongoose.Schema(
       required: [true, "description field must not be empty"],
     },
     file: {
-      type: String,
+      type: Buffer,
       default: "",
     },
     fileType: {

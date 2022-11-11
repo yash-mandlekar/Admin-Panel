@@ -1,4 +1,3 @@
-const cloudinary = require("../../middleware/cloudinary");
 const User = require("../../models/adminModels/userModel");
 const News = require("../../models/adminModels/newsModel");
 const Folders = require("../../models/adminModels/folderModel");
@@ -7,35 +6,25 @@ const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 const fs = require("fs");
 const ErrorHandler = require("../../utils/ErrorHandler");
 
-
 exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id).populate("parent");
     const { title, subTitle, description, location, folderId, fileType, channels, category } =
-    req.body;
-    const folder = await Folders.findOne({ _id: folderId });
-    const news = await News.create({
-      title,
-      subTitle,
-      description,
-      location,
-      category: category,
-      channels: channels.length > 27 ? channels.split(",") : channels,
-      // file: `/folders/${req.file.filename}`,
-      fileType: fileType ? fileType : req.file.mimetype.split("/")[0],
-      author: user._id,
-      folderId: folder._id,
-      approved: user.role.toLowerCase() === "admin" ? true : false,
-    });
-    // upload files to cloudinary and save the url to the database 
-    const result = await cloudinary.uploader.upload(req.file.path, {
-      folder: `news/${folder.folderName}`, fetch_format: "webp", quality: "30",
-    });
-    news.file = result.secure_url;
-    
-    await news.save();
-
-
+      req.body;
+      const folder = await Folders.findOne({ _id: folderId });
+      const news = await News.create({
+        title,
+        subTitle,
+        description,
+        location,
+        category: category,
+        channels: channels.length > 27 ? channels.split(",") : channels,
+        file: `/folders/${req.file.filename}`,
+        fileType: fileType ? fileType : req.file.mimetype.split("/")[0],
+        author: user._id,
+        folderId: folder._id,
+        approved: user.role.toLowerCase() === "admin" ? true : false,
+      });
       // find category and add news to it 
       const foundCategory = await Category.findOne({ _id: category });
       foundCategory.news.push(news._id);
@@ -57,23 +46,15 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
   }
 });
 
-
 exports.DeleteNews = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findById(req.user.id);
   const { newsId, folderId } = req.body;
   const folder = await Folders.findOne({ _id: folderId });
   const news = await News.findOne({ _id: newsId });
-
-  // delete news from cloudinary 
-  const publicId = news.file.split("/").slice(7).join("/").split(".")[0];
-  await cloudinary.uploader.destroy(publicId, { invalidate: true });
-
-  
   fs.unlink(`./public/folders/${news.file.split("/")[2]}`, (err) => {
     if (err) {
     }
   });
-  // await Cloudinary.uploader.destroy(news.file.split("/")[4].split(".")[0]);
   const index = folder.news.indexOf(newsId);
   folder.news.splice(index, 1);
   user.news.splice(user.news.indexOf(newsId), 1);
@@ -87,17 +68,9 @@ exports.DeleteNews = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.UpdateNews = catchAsyncErrors(async (req, res, next) => {
-  const { newsId, title, subTitle, description,location ,folderId, file, fileType, channels, category } =
+  const { newsId, title, subTitle, description,location , file, fileType, channels, category } =
     req.body;
   const news = await News.findOne({ _id: newsId });
-  const folder = await Folders.findOne({ _id: folderId });
-  //update file in cloudinary 
-  const publicId = cloudinary.image(news);
-  await cloudinary.uploader.destroy(publicId, { invalidate: true });
-  const result = await cloudinary.uploader.upload(req.file.path, {
-    folder: `news/first`, fetch_format: "webp", quality: "30",
-  });
-  news.file = result.secure_url;
 
   if (news.file.split("/")[2] !== file) {
     fs.unlink(`./public/folders/${news.file.split("/")[2]}`, (err) => {
