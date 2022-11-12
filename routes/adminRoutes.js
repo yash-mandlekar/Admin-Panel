@@ -45,6 +45,20 @@ const {
 } = require("../controllers/adminController/shortsController");
 
 const {
+    UploadNews,
+    DeleteNews,
+    UpdateNews,
+    AllNews,
+    SingleNews,
+    ApproveNews,
+    GetNewsByCategory,
+    GetNewsByAuthor,
+    GetNewsByDate,
+    GetNewsByLocation,
+    GetNewsByHashTag,
+} = require("../controllers/adminController/newsController");
+
+const {
     CreateChannel,
     AllChannels,
     GetChannel,
@@ -59,9 +73,16 @@ const {
     GetCategory,
     UpdateCategory,
     DeleteCategory,
-    GetCategoryByName,
 }= require("../controllers/adminController/categoryController");
 
+
+const {
+    CreateNewsCategory,
+    AllNewsCategories,
+    GetNewsCategory,
+    UpdateNewsCategory,
+    DeleteNewsCategory,
+}= require("../controllers/adminController/newsCategoryController");
 
 const {
     CreateBreakingNews,
@@ -144,6 +165,33 @@ router.get("/all/shorts", AllShorts)
 // @api/approve-Shorts POST approve Shorts
 router.post("/approve-shorts/:id", isAuthUser, ApproveShorts)
 
+// @api/upload POST upload news
+router
+    .post("/news", upload.single("file"), isAuthUser, UploadNews)
+    .delete("/news/:id", isAuthUser, DeleteNews)
+    .put("/news", upload.single("file"), isAuthUser, UpdateNews)
+    .get("/news/:id", SingleNews)
+
+// @api/GET all news
+router.get("/all/news", AllNews)
+
+// @api/approve-news POST approve news
+router.post("/approve-news/:id", isAuthUser, ApproveNews)
+
+// @api/news/category GET news by category
+router.get("/news/category/:id", GetNewsByCategory)
+
+// @api/news/author GET news by author
+router.get("/news/author/:id", GetNewsByAuthor)
+
+// @api/news/date GET news by date
+router.get("/news/date/:date", GetNewsByDate)
+
+// @api/news/location GET news by location
+router.get("/news/location/:location", GetNewsByLocation)
+
+// @api/news/hashtag GET news by hashtag
+router.get("/news/hashtag/:hashtag", GetNewsByHashTag)
 
 // @api/folder POST create folder
 router
@@ -177,8 +225,16 @@ router
 router.get("/category/:id", GetCategory)
 
 
-// @api/category/:name GET open category
-router.get("/category/name/:name", GetCategoryByName)
+// @api/news-category POST create news category
+router
+.post("/news-category", isAuthUser, CreateNewsCategory)
+.get("/news-category", AllNewsCategories)
+.put("/news-category/:id", isAuthUser, UpdateNewsCategory)
+.delete("/news-category/:id", isAuthUser, DeleteNewsCategory)
+
+// @api/news-category/:id GET open news category
+router.get("/news-category/:id", GetNewsCategory)
+
 
 
 // @api/breaking-news POST create breaking news

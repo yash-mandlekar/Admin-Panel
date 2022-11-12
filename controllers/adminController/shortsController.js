@@ -1,4 +1,3 @@
-const sharp = require("sharp");
 const User = require("../../models/adminModels/userModel");
 const Shorts = require("../../models/adminModels/shortsModel");
 const Folders = require("../../models/adminModels/folderModel");
@@ -10,22 +9,23 @@ const ErrorHandler = require("../../utils/ErrorHandler");
 exports.UploadShorts = catchAsyncErrors(async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id).populate("parent");
-    const { title,folderId, fileType, channels } =
+    const { title,folderId, fileType, channels,category } =
       req.body;
       const folder = await Folders.findOne({ _id: folderId });
       const shorts = await Shorts.create({
         title,
         channels: channels.length > 27 ? channels.split(",") : channels,
+        category: category.length > 27 ? category.split(",") : category,
         file: `/folders/${req.file.filename}`,
         fileType: fileType ? fileType : req.file.mimetype.split("/")[0],
         author: user._id,
         folderId: folder._id,
         approved: user.role.toLowerCase() === "admin" ? true : false,
       });
-    if (user.role.toLowerCase() !== "admin") {
-      user.parent.requests.push(shorts._id);
-      await user.parent.save();
-    }
+      if (user.role.toLowerCase() !== "admin") {
+        user.parent.requests.push(shorts._id);
+        await user.parent.save();
+      }
     folder.shorts.push(shorts._id);
     await folder.save();
     user.shorts.push(shorts._id);
@@ -42,10 +42,6 @@ exports.DeleteShorts = catchAsyncErrors(async (req, res, next) => {
   const { shortsId, folderId } = req.body;
   const folder = await Folders.findOne({ _id: folderId });
   const shorts = await Shorts.findOne({ _id: shortsId });
-  fs.unlink(`./public/folders/${shorts.file}`, (err) => {
-    if (err) {
-    }
-  });
   const index = folder.shorts.indexOf(shortsId);
   folder.shorts.splice(index, 1);
   user.shorts.splice(user.shorts.indexOf(shortsId), 1);
@@ -59,20 +55,14 @@ exports.DeleteShorts = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.UpdateShorts = catchAsyncErrors(async (req, res, next) => {
-  const { shortsId, title,file, fileType, channels } =
+  const { shortsId, title,file, fileType, channels, category } =
     req.body;
   const shorts = await Shorts.findOne({ _id: shortsId });
-  
-  if (shorts.file !== file) {
-    fs.unlink(`./public/folders/${shorts.file}`, (err) => {
-      if (err) {
-      }
-    });
-  }
   shorts.file = `/folders/${req.file.filename}`;
 
   shorts.title = title;
   shorts.channels = channels.length > 27 ? channels.split(",") : channels;
+  shorts.category = category.length > 27 ? category.split(",") : category;
   shorts.fileType = fileType ? fileType : req.file.mimetype.split("/")[0];
   await shorts.save();
   res.status(200).json({
@@ -83,12 +73,12 @@ exports.UpdateShorts = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.AllShorts = catchAsyncErrors(async (req, res, next) => {
-  const shorts = await Shorts.find().populate("channels author");
+  const shorts = await Shorts.find().populate("channels author category");
   res.status(200).json(shorts);
 });
 
 exports.SingleShorts = catchAsyncErrors(async (req, res, next) => {
-  const shorts = await Shorts.findById(req.params.id).populate("channels");
+  const shorts = await Shorts.findById(req.params.id).populate("channels category");
   if (!shorts) return next(new ErrorHandler("Shorts not found", 404));
   res.status(200).json(shorts);
 });

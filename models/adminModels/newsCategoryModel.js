@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const categoryModel = mongoose.Schema({
+const newsCategoryModel = mongoose.Schema({
   parentCategory: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Category",
@@ -39,10 +39,10 @@ const categoryModel = mongoose.Schema({
     type: String,
   },
 
-  shorts: [
+  news: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Shorts",
+      ref: "News",
     },
   ],
 
@@ -54,4 +54,4 @@ const categoryModel = mongoose.Schema({
   ],
 });
 
-module.exports = mongoose.model("Category", categoryModel);
+module.exports = mongoose.model("NewsCategory", newsCategoryModel);

@@ -86,7 +86,13 @@ const userModel = new mongoose.Schema({
       default: [],
     },
   ],
-
+   
+  news: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "News",
+    }
+  ],
   shorts: [
     {
       type: mongoose.Schema.Types.ObjectId,

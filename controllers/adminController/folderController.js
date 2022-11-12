@@ -1,6 +1,6 @@
 const Folders = require("../../models/adminModels/folderModel");
 const User = require("../../models/adminModels/userModel");
-const News = require("../../models/adminModels/shortsModel");
+const Shorts = require("../../models/adminModels/shortsModel");
 const ErrorHandler = require("../../utils/ErrorHandler");
 const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 const fs = require("fs");
@@ -40,9 +40,9 @@ exports.DeleteFolder = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findById(req.user.id);
   const { folderId } = req.body;
   const folder = await Folders.findOne({ _id: folderId });
-  const news = await News.find({ _id: { $in: folder.news } });
-  await News.deleteMany({ _id: { $in: folder.news } });
-  news.forEach((item) => {
+  const shorts = await Shorts.find({ _id: { $in: folder.shorts } });
+  await Shorts.deleteMany({ _id: { $in: folder.shorts } });
+  shorts.forEach((item) => {
     fs.unlink(`./public/folders/${item.file.split("/")[2]}`, (err) => {
       if (err) {
       }
@@ -58,7 +58,7 @@ exports.DeleteFolder = catchAsyncErrors(async (req, res, next) => {
 
 exports.OpenFolder = catchAsyncErrors(async (req, res, next) => {
   const folder = await Folders.findOne({ _id: req.params.id }).populate({
-    path: "news",
+    path: "shorts",
     populate: [
       { path: "author", select: "username" },
       { path: "channels", select: "channelName" },
