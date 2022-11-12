@@ -51,15 +51,27 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
       user.parent.requests.push(news._id);
       await user.parent.save();
     }
-    user.news.push(news._id);
-    await user.save();
-    category.news.push(news._id);
-    await category.save();
-    res.status(201).json(news);
-    } catch (err) {
-        next(err);
+    // upload news when news.publishDate and time is equal to current date and time 
+    if (news.publishDate === new Date().toDateString()) {
+      news.status = "published";
+      await news.save();
+      user.news.push(news._id);
+      await user.save();
+      category.news.push(news._id);
+      await category.save();
+      res.status(201).json(news);
+
     }
+    res.status(200).json({
+      status: "success",
+      news,
+    });
+  } catch (error) {
+    console.log(error);
+    return next(new ErrorHandler(error.message, 500));
+  }
 });
+
 
 exports.UpdateNews = catchAsyncErrors(async (req, res, next) => {
   const {
