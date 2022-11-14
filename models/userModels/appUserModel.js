@@ -22,6 +22,7 @@ const appUserModel = mongoose.Schema({
     phone: {
         type: String,
         unique: true,
+        minlength: [10, "Phone number must be at least 10 characters long."],
         // required: [true, "Phone field must not be empty"],
     },
     gender: {
