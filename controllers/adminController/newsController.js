@@ -72,7 +72,6 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
   }
 });
 
-
 exports.UpdateNews = catchAsyncErrors(async (req, res, next) => {
   const {
     newsId,
@@ -151,7 +150,6 @@ exports.DeleteNews = catchAsyncErrors(async (req, res, next) => {
   res.status(200).json({ success: true });
 });
 
-
 exports.SingleNews = catchAsyncErrors(async (req, res, next) => {
   const news = await News.findById(req.params.id).populate("categories");
   if (!news) {
@@ -159,7 +157,6 @@ exports.SingleNews = catchAsyncErrors(async (req, res, next) => {
   }
   res.status(200).json(news);
 });
-
 
 exports.AllNews = catchAsyncErrors(async (req, res, next) => {
   const news = await News.find().populate("categories");
