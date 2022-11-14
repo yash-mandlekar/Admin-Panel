@@ -23,7 +23,7 @@ exports.CreateCategory = catchAsyncErrors(async (req, res, next) => {
     const category = await Category.create({
           parentCategory: parentCategory.length > 0 ? parentCategory : null,
           sortOrder,
-          icon: icon ? icon : null,
+          icon: `folders/${req.file.filename}`,
           showInMenu,
           showInChild,
           englishName,
@@ -66,7 +66,7 @@ exports.UpdateCategory = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler("Category not found", 404));
     }
     category.parentCategory = req.body.parentCategory;
-    category.icon = req.body.icon;
+    category.icon = `folders/${req.file.filename}`;
     category.sortOrder = req.body.sortOrder;
     category.showInMenu = req.body.showInMenu;
     category.showInChild = req.body.showInChild;

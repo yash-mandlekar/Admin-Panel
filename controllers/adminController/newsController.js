@@ -4,9 +4,11 @@ const Categories = require("../../models/adminModels/newsCategoryModel");
 const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 const ErrorHandler = require("../../utils/ErrorHandler");
 
+
+// upload news and find category with array of category id and push news id in category news array and save category and news and return news
 exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
-  try {
-    const user = await User.findById(req.user.id).populate("parent");
+try{
+  const user = await User.findById(req.user.id).populate("parent");
     const {
       metaTitle,
       shortDescription,
@@ -25,50 +27,38 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
       hashTags,
       fileType,
     } = req.body;
-    
-    const category = await Categories.findOne({ _id: categories });
     const news = await News.create({
-        metaTitle,
-        shortDescription,
-        metaDescription,
-        description,
-        location,
-        showInSlider,
-        sliderPrority,
-        publishDate,
-        latestNews,
-        latestNewsPriority,
-        author: user._id,
-        aboutImage,
-        imageSource,
-        newsUrl,
-        categories: category._id,
-        hashTags: hashTags.length > 27 ? hashTags.split(",") : hashTags,
-        file: `/folders/${req.file.filename}`,
-        fileType: fileType ? fileType : req.file.mimetype.split("/")[0],
-    });
-    if (user.role.toLowerCase() !== "admin") {
-      user.parent.requests.push(news._id);
-      await user.parent.save();
-    }
-    // upload news when news.publishDate and time is equal to current date and time 
-    if (news.publishDate === new Date().toDateString()) {
-      news.status = "published";
-      await news.save();
-      user.news.push(news._id);
-      await user.save();
-      category.news.push(news._id);
-      await category.save();
-      res.status(201).json(news);
+      metaTitle,
+      shortDescription,
+      metaDescription,
+      description,
+      location,
+      showInSlider,
 
-    }
+      sliderPrority,
+      publishDate,
+      latestNews,
+      latestNewsPriority,
+      aboutImage,
+      imageSource,
+      newsUrl,
+      categories,
+      hashTags,
+      fileType,
+    });
+    const category = await Categories.find({ _id: { $in: categories } });
+    category.forEach((cat) => {
+      cat.news.push(news._id);
+      cat.save();
+    });
+    news.author = user._id;
+    news.save();
     res.status(200).json({
-      status: "success",
+      success: true,
       news,
     });
-  } catch (error) {
-    console.log(error);
-    return next(new ErrorHandler(error.message, 500));
+  }catch(err){
+    next(err);
   }
 });
 
@@ -169,7 +159,7 @@ exports.ApproveNews = catchAsyncErrors(async (req, res, next) => {
   if (!news) {
     return next(new ErrorHandler("News not found", 404));
   }
-  // if user role is admin then set news.approved to true and save it and return news object to client side else if user role is not admin then remove news._id from user.parent.requests and add news._id to user.parent.news and save it and return news object to client side else return error to client side with status code 401 and message "You are not authorized to approve news" and error name "Unauthorized" and error code 401 
+  // if user role is admin then set news.approved to true and save it and return news object to client side else if user role is not admin then remove news._id from user.parent.requests and add news._id to user.parent.news and save it and return news object to client side else return error to client side with status code 401 and message "You are not authorized to approve news" and error name "Unauthorized" and error code 401
   if (user.role.toLowerCase() === "admin") {
     news.approved = true;
     await news.save();

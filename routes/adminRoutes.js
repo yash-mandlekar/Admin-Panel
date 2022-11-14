@@ -216,9 +216,9 @@ router.get("/open/channel/:id", GetChannel)
 
 // @api/category POST create category
 router
-.post("/category", isAuthUser, CreateCategory)
+.post("/category",upload.single("icon"), isAuthUser, CreateCategory)
 .get("/category", AllCategories)
-.put("/category/:id", isAuthUser, UpdateCategory)
+.put("/category/:id",upload.single("icon"), isAuthUser, UpdateCategory)
 .delete("/category/:id", isAuthUser, DeleteCategory)
 
 // @api/category/:id GET open category
@@ -227,9 +227,9 @@ router.get("/category/:id", GetCategory)
 
 // @api/news-category POST create news category
 router
-.post("/news-category", isAuthUser, CreateNewsCategory)
+.post("/news-category",upload.single("icon") , isAuthUser, CreateNewsCategory)
 .get("/news-category", AllNewsCategories)
-.put("/news-category/:id", isAuthUser, UpdateNewsCategory)
+.put("/news-category/:id",upload.single("icon"), isAuthUser, UpdateNewsCategory)
 .delete("/news-category/:id", isAuthUser, DeleteNewsCategory)
 
 // @api/news-category/:id GET open news category
