@@ -37,7 +37,7 @@ const newsModel = mongoose.Schema(
     },
 
     showInSlider: {
-      type: Boolean,
+      type: String,
       default: false,
     },
 
@@ -52,7 +52,7 @@ const newsModel = mongoose.Schema(
     },
 
     latestNews: {
-      type: Boolean,
+      type: String,
       default: false,
     },
 
@@ -100,7 +100,7 @@ const newsModel = mongoose.Schema(
     },
 
     approved: {
-      type: Boolean,
+      type: String,
       default: false,
     },
   },
