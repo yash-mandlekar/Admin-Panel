@@ -4,11 +4,10 @@ const Categories = require("../../models/adminModels/newsCategoryModel");
 const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 const ErrorHandler = require("../../utils/ErrorHandler");
 
-
 // upload news and find category with array of category id and push news id in category news array and save category and news and return news
 exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
-try{
-  const user = await User.findById(req.user.id).populate("parent");
+  try {
+    const user = await User.findById(req.user.id).populate("parent");
     const {
       metaTitle,
       shortDescription,
@@ -34,7 +33,6 @@ try{
       description,
       location,
       showInSlider,
-
       sliderPrority,
       publishDate,
       latestNews,
@@ -57,7 +55,7 @@ try{
       success: true,
       news,
     });
-  }catch(err){
+  } catch (err) {
     next(err);
   }
 });

@@ -78,7 +78,7 @@ exports.AllShorts = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.SingleShorts = catchAsyncErrors(async (req, res, next) => {
-  const shorts = await Shorts.findById(req.params.id).populate("channels category");
+  const shorts = await Shorts.findById(req.params.id).populate("channels category author");
   if (!shorts) return next(new ErrorHandler("Shorts not found", 404));
   res.status(200).json(shorts);
 });
