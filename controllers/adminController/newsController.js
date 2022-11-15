@@ -94,7 +94,7 @@ exports.UpdateNews = catchAsyncErrors(async (req, res, next) => {
     await oldCategory.save();
     await newCategory.save();
   }
-  news.file = `/folders/${req.file.filename}`;
+  news.file = `/folders/${req.file}`;
   news.metaTitle = metaTitle;
   news.shortDescription = shortDescription;
   news.metaDescription = metaDescription;

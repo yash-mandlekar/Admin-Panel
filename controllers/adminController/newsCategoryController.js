@@ -1,11 +1,11 @@
 const NewsCategory = require("../../models/adminModels/newsCategoryModel");
 const ErrorHandler = require("../../utils/ErrorHandler");
 const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
+var fs = require("fs");
 
 exports.CreateNewsCategory = catchAsyncErrors(async (req, res, next) => {
   const {
     parentCategory,
-    icon,
     sortOrder,
     showInMenu,
     showInChild,
@@ -16,10 +16,18 @@ exports.CreateNewsCategory = catchAsyncErrors(async (req, res, next) => {
     metaTitle,
     metaDescription,
   } = req.body;
+
+  function base64_encode(file) {
+    var bitmap = fs.readFileSync(file);
+    return Buffer.from(bitmap).toString("base64");
+  }
+
+  const icon = base64_encode(req.file.path);
   const newsCategory = await NewsCategory.create({
-    parentCategory: parentCategory.length > 0 ? parentCategory : null,
+    parentCategory:
+      parentCategory && parentCategory.length > 0 ? parentCategory : null,
     sortOrder,
-    icon: `folders/${req.file.filename}`,
+    icon: icon,
     showInMenu,
     showInChild,
     englishName,
@@ -29,11 +37,9 @@ exports.CreateNewsCategory = catchAsyncErrors(async (req, res, next) => {
     metaTitle,
     metaDescription,
   });
-  console.log(req.file.filename);
-
-  if (parentCategory.length > 0) {
+  if (parentCategory && parentCategory.length > 0) {
     const parent = await NewsCategory.findOne({ _id: parentCategory });
-    parent.child.push(newsCategory._id); 
+    parent.child.push(newsCategory._id);
     await parent.save();
   }
 
@@ -61,8 +67,16 @@ exports.UpdateNewsCategory = catchAsyncErrors(async (req, res, next) => {
   if (!newsCategory) {
     return next(new ErrorHandler("NewsCategory not found", 404));
   }
+
+  function base64_encode(file) {
+    var bitmap = fs.readFileSync(file);
+    return Buffer.from(bitmap).toString("base64");
+  }
+
+  const icon = base64_encode(req.file.path);
+  
   newsCategory.parentCategory = req.body.parentCategory;
-  newsCategory.icon = `folders/${req.file.filename}`;
+  newsCategory.icon = icon;
   newsCategory.sortOrder = req.body.sortOrder;
   newsCategory.showInMenu = req.body.showInMenu;
   newsCategory.showInChild = req.body.showInChild;
