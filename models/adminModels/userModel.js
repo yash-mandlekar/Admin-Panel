@@ -114,6 +114,21 @@ const userModel = new mongoose.Schema({
     },
   ],
 
+  categories: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Categories",
+    },
+  ],
+
+  newsCategories: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "NewsCategories",
+    },
+  ],
+  
+
   resetPasswordToken: String,
   resetPasswordExpire: Date,
   refreshToken: String,

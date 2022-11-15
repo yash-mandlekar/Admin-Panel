@@ -26,6 +26,7 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
       hashTags,
       fileType,
     } = req.body;
+    console.log(req.body);
     const news = await News.create({
       metaTitle,
       shortDescription,
@@ -36,6 +37,7 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
       sliderPrority,
       publishDate,
       latestNews,
+      file : `/news/${req.file.filename}`,
       latestNewsPriority,
       aboutImage,
       imageSource,
