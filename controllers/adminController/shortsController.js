@@ -12,6 +12,7 @@ exports.UploadShorts = catchAsyncErrors(async (req, res, next) => {
     const { title,folderId, fileType, channels,category } =
       req.body;
       const folder = await Folders.findOne({ _id: folderId });
+      
       function base64_encode(file) {
         var bitmap = fs.readFileSync(file);
         return Buffer.from(bitmap).toString("base64");
@@ -85,7 +86,7 @@ exports.UpdateShorts = catchAsyncErrors(async (req, res, next) => {
     folder.shorts.push(shorts._id);
     await folder.save();
   }
-  
+
 
   function base64_encode(file) {
     var bitmap = fs.readFileSync(file);
