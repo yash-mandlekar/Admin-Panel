@@ -7,7 +7,7 @@ const shortsModel = mongoose.Schema(
       required: [true, "Title field must not be empty"],
     },
     file: {
-      type: Buffer,
+      type: String,
       default: "",
     },
     fileType: {

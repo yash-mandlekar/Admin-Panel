@@ -9,7 +9,7 @@ const categoryModel = mongoose.Schema({
     type: Number,
   },
   icon:{
-    type: Buffer,
+    type: String,
     default: "",
   },
   showInMenu: {

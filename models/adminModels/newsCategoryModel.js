@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const newsCategoryModel = mongoose.Schema({
   parentCategory: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Category",
+    ref: "NewsCategory",
   },                        
   sortOrder: {
     type: Number,
@@ -49,7 +49,7 @@ const newsCategoryModel = mongoose.Schema({
   child: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Category",
+      ref: "NewsCategory",
     },
   ],
 });

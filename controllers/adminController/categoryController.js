@@ -8,7 +8,6 @@ const { PostLoginUser } = require("./userController");
 exports.CreateCategory = catchAsyncErrors(async (req, res, next) => {
     const {
         parentCategory,
-        icon,
         sortOrder,
         showInMenu,
         showInChild,
@@ -19,11 +18,18 @@ exports.CreateCategory = catchAsyncErrors(async (req, res, next) => {
         metaTitle,
         metaDescription,
     } = req.body;
+
+    function base64_encode(file) {
+        var bitmap = fs.readFileSync(file);
+        return Buffer.from(bitmap).toString("base64");
+      }
+    
+      const icon = base64_encode(req.file.path);
     
     const category = await Category.create({
           parentCategory: parentCategory.length > 0 ? parentCategory : null,
           sortOrder,
-          icon: `folders/${req.file.filename}`,
+          icon: icon,
           showInMenu,
           showInChild,
           englishName,
@@ -65,8 +71,16 @@ exports.UpdateCategory = catchAsyncErrors(async (req, res, next) => {
     if (!category) {
         return next(new ErrorHandler("Category not found", 404));
     }
+
+    function base64_encode(file) {
+        var bitmap = fs.readFileSync(file);
+        return Buffer.from(bitmap).toString("base64");
+      }
+    
+      const icon = base64_encode(req.file.path);
+
     category.parentCategory = req.body.parentCategory;
-    category.icon = `folders/${req.file.filename}`;
+    category.icon = icon;
     category.sortOrder = req.body.sortOrder;
     category.showInMenu = req.body.showInMenu;
     category.showInChild = req.body.showInChild;

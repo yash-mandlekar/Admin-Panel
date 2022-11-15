@@ -3,6 +3,8 @@ const News = require("../../models/adminModels/newsModel");
 const Categories = require("../../models/adminModels/newsCategoryModel");
 const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 const ErrorHandler = require("../../utils/ErrorHandler");
+const { file } = require("googleapis/build/src/apis/file");
+const fs = require("fs");
 
 // upload news and find category with array of category id and push news id in category news array and save category and news and return news
 exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
@@ -26,7 +28,14 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
       hashTags,
       fileType,
     } = req.body;
-    console.log(req.body);
+
+    function base64_encode(file) {
+      var bitmap = fs.readFileSync(file);
+      return Buffer.from(bitmap).toString("base64");
+    }
+  
+    const file = base64_encode(req.file.path);
+
     const news = await News.create({
       metaTitle,
       shortDescription,
@@ -37,7 +46,7 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
       sliderPrority,
       publishDate,
       latestNews,
-      file : `/news/${req.file.filename}`,
+      file : file,
       latestNewsPriority,
       aboutImage,
       imageSource,
@@ -63,57 +72,46 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.UpdateNews = catchAsyncErrors(async (req, res, next) => {
-  const {
-    newsId,
-    metaTitle,
-    shortDescription,
-    metaDescription,
-    description,
-    location,
-    showInSlider,
-    sliderPrority,
-    publishDate,
-    latestNews,
-    latestNewsPriority,
-    aboutImage,
-    imageSource,
-    newsUrl,
-    categories,
-    hashTags,
-    fileType,
-  } = req.body;
-  const news = await News.findOne({ _id: newsId });
-  // if news.categories is not equal to categories then remove news._id from news.categories.news and add news._id to categories.news
-  if (news.categories.toString() !== categories) {
-    const oldCategory = await Categories.findOne({ _id: news.categories });
-    const newCategory = await Categories.findOne({ _id: categories });
-    oldCategory.news = oldCategory.news.filter(
-      (item) => item.toString() !== news._id.toString()
-    );
-    newCategory.news.push(news._id);
-    await oldCategory.save();
-    await newCategory.save();
+  const news = await News.findOne({ _id: req.params.id });
+  if (!news) {
+    return next(new ErrorHandler("News not found", 404));
   }
-  news.file = `/folders/${req.file}`;
-  news.metaTitle = metaTitle;
-  news.shortDescription = shortDescription;
-  news.metaDescription = metaDescription;
-  news.description = description;
-  news.location = location;
-  news.showInSlider = showInSlider;
-  news.sliderPrority = sliderPrority;
-  news.publishDate = publishDate;
-  news.latestNews = latestNews;
-  news.latestNewsPriority = latestNewsPriority;
-  news.aboutImage = aboutImage;
-  news.imageSource = imageSource;
-  news.newsUrl = newsUrl;
-  news.categories = categories;
-  news.hashTags = hashTags.length > 27 ? hashTags.split(",") : hashTags;
-  news.fileType = fileType ? fileType : req.file.mimetype.split("/")[0];
-  await news.save();
-  res.status(200).json(news);
+  if(news.categories.toString() !== req.body.categories.toString()){
+    const categories = await Categories.findOne
+    ({ _id: req.body.categories });
+    categories.news.push(news._id);
+    await categories.save();
+  }
+  function base64_encode(file) {
+    var bitmap = fs.readFileSync(file);
+    return Buffer.from(bitmap).toString("base64");
+  }
+  const file = base64_encode(req.file.path);
+
+  news.metaTitle = req.body.metaTitle;
+  news.shortDescription = req.body.shortDescription;
+  news.metaDescription = req.body.metaDescription;
+  news.description = req.body.description;
+  news.location = req.body.location;
+  news.showInSlider = req.body.showInSlider;
+  news.sliderPrority = req.body.sliderPrority;
+  news.publishDate = req.body.publishDate;
+  news.latestNews = req.body.latestNews;
+  news.latestNewsPriority = req.body.latestNewsPriority;
+  news.aboutImage = req.body.aboutImage;
+  news.imageSource = req.body.imageSource;
+  news.newsUrl = req.body.newsUrl;
+  news.categories = req.body.categories;
+  news.hashTags = req.body.hashTags;
+  news.fileType = req.body.fileType;
+  news.file = file;
+  news.save();
+  res.status(200).json({
+    success: true,
+    news,
+  });
 });
+
 
 exports.DeleteNews = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findById(req.user.id).populate("parent");

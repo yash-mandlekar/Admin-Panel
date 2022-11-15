@@ -22,7 +22,7 @@ const newsModel = mongoose.Schema(
     },
 
     file: {
-      type: Buffer,
+      type: String,
       default: "",
     },
 

@@ -156,7 +156,7 @@ router.post("/update/profile", isAuthUser, UpdateUser);
 router
     .post("/shorts", upload.single("file"), isAuthUser, UploadShorts)
     .delete("/shorts", isAuthUser, DeleteShorts)
-    .put("/shorts", upload.single("file"), isAuthUser, UpdateShorts)
+    .put("/shorts/:id", upload.single("file"), isAuthUser, UpdateShorts)
     .get("/shorts/:id", SingleShorts)
 
 // @api/GET all Shorts
@@ -169,7 +169,7 @@ router.post("/approve-shorts/:id", isAuthUser, ApproveShorts)
 router
     .post("/news", upload.single("file"), isAuthUser, UploadNews)
     .delete("/news/:id", isAuthUser, DeleteNews)
-    .put("/news", upload.single("file"), isAuthUser, UpdateNews)
+    .put("/news/:id", upload.single("file"), isAuthUser, UpdateNews)
     .get("/news/:id", SingleNews)
 
 // @api/GET all news
