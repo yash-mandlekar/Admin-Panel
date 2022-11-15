@@ -33,7 +33,7 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
       var bitmap = fs.readFileSync(file);
       return Buffer.from(bitmap).toString("base64");
     }
-  
+
     const file = base64_encode(req.file.path);
 
     const news = await News.create({
@@ -46,7 +46,7 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
       sliderPrority,
       publishDate,
       latestNews,
-      file : file,
+      file: file,
       latestNewsPriority,
       aboutImage,
       imageSource,
@@ -76,9 +76,8 @@ exports.UpdateNews = catchAsyncErrors(async (req, res, next) => {
   if (!news) {
     return next(new ErrorHandler("News not found", 404));
   }
-  if(news.categories.toString() !== req.body.categories.toString()){
-    const categories = await Categories.findOne
-    ({ _id: req.body.categories });
+  if (news.categories.toString() !== req.body.categories.toString()) {
+    const categories = await Categories.findOne({ _id: req.body.categories });
     categories.news.push(news._id);
     await categories.save();
   }
@@ -111,7 +110,6 @@ exports.UpdateNews = catchAsyncErrors(async (req, res, next) => {
     news,
   });
 });
-
 
 exports.DeleteNews = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findById(req.user.id).populate("parent");
