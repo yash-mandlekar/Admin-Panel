@@ -139,7 +139,7 @@ exports.DeleteNews = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.SingleNews = catchAsyncErrors(async (req, res, next) => {
-  const news = await News.findById(req.params.id).populate("categories");
+  const news = await News.findById(req.params.id).populate("categories author");
   if (!news) {
     return next(new ErrorHandler("News not found", 404));
   }
@@ -147,7 +147,7 @@ exports.SingleNews = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.AllNews = catchAsyncErrors(async (req, res, next) => {
-  const news = await News.find().populate("categories");
+  const news = await News.find().populate("categories author");
   res.status(200).json(news);
 });
 

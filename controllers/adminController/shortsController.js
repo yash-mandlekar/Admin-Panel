@@ -83,7 +83,6 @@ exports.SingleShorts = catchAsyncErrors(async (req, res, next) => {
   res.status(200).json(shorts);
 });
 
-
 exports.ApproveShorts = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findOne({ _id: req.user.id }).populate([
     { path: "parent", populate: { path: "requests" } },
