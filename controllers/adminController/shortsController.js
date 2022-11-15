@@ -12,7 +12,7 @@ exports.UploadShorts = catchAsyncErrors(async (req, res, next) => {
     const { title,folderId, fileType, channels,category } =
       req.body;
       const folder = await Folders.findOne({ _id: folderId });
-      
+
       function base64_encode(file) {
         var bitmap = fs.readFileSync(file);
         return Buffer.from(bitmap).toString("base64");
@@ -30,6 +30,13 @@ exports.UploadShorts = catchAsyncErrors(async (req, res, next) => {
         folderId: folder._id,
         approved: user.role.toLowerCase() === "admin" ? true : false,
       });
+
+      const categories = await Category.find({ _id: { $in: category } });
+      categories.forEach((cat) => {
+        cat.shorts.push(shorts._id);
+        cat.save();
+      });
+
       if (user.role.toLowerCase() !== "admin") {
         user.parent.requests.push(shorts._id);
         await user.parent.save();
