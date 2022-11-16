@@ -54,19 +54,24 @@ exports.UploadShorts = catchAsyncErrors(async (req, res, next) => {
 
 exports.DeleteShorts = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findById(req.user.id);
-  const { shortsId, folderId } = req.body;
-  const folder = await Folders.findOne({ _id: folderId });
-  const shorts = await Shorts.findOne({ _id: shortsId });
-  const index = folder.shorts.indexOf(shortsId);
-  folder.shorts.splice(index, 1);
-  user.shorts.splice(user.shorts.indexOf(shortsId), 1);
-  await folder.save();
+  const shorts = await Shorts.findById(req.params.id);
+  if (!shorts) {
+    return next(new ErrorHandler("Shorts not found", 404));
+  }
+  user.shorts = user.shorts.filter((item) => item.toString() !== shorts._id);
   await user.save();
-  await shorts.remove();
-  res.status(201).json({
-    success: true,
-    message: "Shorts deleted successfully",
+  const folder = await Folders.findById(shorts.folderId);
+  folder.shorts = folder.shorts.filter(
+    (item) => item.toString() !== shorts._id
+  );
+  await folder.save();
+  const categories = await Category.find({ _id: { $in: shorts.category } });
+  categories.forEach((cat) => {
+    cat.shorts = cat.shorts.filter((item) => item.toString() !== shorts._id);
+    cat.save();
   });
+  await shorts.remove();
+  res.status(200).json({ success: true });
 });
 
 exports.UpdateShorts = catchAsyncErrors(async (req, res, next) => {

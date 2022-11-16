@@ -154,7 +154,7 @@ router.post("/update/profile", isAuthUser, UpdateUser);
 // @api/upload POST upload news
 router
   .post("/shorts", upload.single("file"), isAuthUser, UploadShorts)
-  .delete("/shorts", isAuthUser, DeleteShorts)
+  .delete("/shorts/:id", isAuthUser, DeleteShorts)
   .put("/shorts/:id", upload.single("file"), isAuthUser, UpdateShorts)
   .get("/shorts/:id", SingleShorts);
 

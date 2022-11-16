@@ -120,29 +120,29 @@ exports.DeleteNews = catchAsyncErrors(async (req, res, next) => {
   if (user.role.toLowerCase() !== "admin") {
     user.parent.requests = user.parent.requests.filter(
       (item) => item.toString() !== news._id.toString()
-      );
-      await user.parent.save();
-    }
-    user.news = user.news.filter(
+    );
+    await user.parent.save();
+  }
+  user.news = user.news.filter(
+    (item) => item.toString() !== news._id.toString()
+  );
+  await user.save();
+  // find category from categories array and remove news id from category news array and save category and remove news and return news id and message news deleted successfully
+  const category = await Categories.find({ _id: { $in: news.categories } });
+  category.forEach((cat) => {
+    cat.news = cat.news.filter(
       (item) => item.toString() !== news._id.toString()
-      );
-      await user.save();
-      // find category from categories array and remove news id from category news array and save category and remove news and return news id and message news deleted successfully 
-      const category = await Categories.find({ _id: { $in: news.categories } });
-      category.forEach((cat) => {
-        cat.news = cat.news.filter(
-          (item) => item.toString() !== news._id.toString()
-          );
-          cat.save();
-        });
-        await news.remove();
-        res.status(200).json({
-          success: true,
-          message: "News deleted successfully",
-          newsId: news._id,
-        });
-      });
-      
+    );
+    cat.save();
+  });
+  await news.remove();
+  res.status(200).json({
+    success: true,
+    message: "News deleted successfully",
+    newsId: news._id,
+  });
+});
+
 exports.SingleNews = catchAsyncErrors(async (req, res, next) => {
   const news = await News.findById(req.params.id).populate("categories author");
   if (!news) {
