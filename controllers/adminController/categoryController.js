@@ -67,30 +67,16 @@ exports.GetCategory = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.UpdateCategory = catchAsyncErrors(async (req, res, next) => {
-    const category = await Category.findById(req.params.id);
-    if (!category) {
-        return next(new ErrorHandler("Category not found", 404));
-    }
-
+    const category = await Category.findOneAndUpdate({_id:req.params.id},req.body);
     function base64_encode(file) {
         var bitmap = fs.readFileSync(file);
         return Buffer.from(bitmap).toString("base64");
       }
-    
-      const icon = base64_encode(req.file.path);
-
-    category.parentCategory = req.body.parentCategory;
-    category.icon = icon;
-    category.sortOrder = req.body.sortOrder;
-    category.showInMenu = req.body.showInMenu;
-    category.showInChild = req.body.showInChild;
-    category.englishName = req.body.englishName;
-    category.hindiName = req.body.hindiName;
-    category.startingAlphabet = req.body.startingAlphabet;
-    category.categoryUrl = req.body.categoryUrl;
-    category.metaTitle = req.body.metaTitle;
-    category.metaDescription = req.body.metaDescription;
-    await category.save();
+    if(req.file){
+        const icon = base64_encode(req.file.path);
+        category.icon = icon;
+        await category.save();
+    }
     res.status(200).json({
         status: "success",
         category,
