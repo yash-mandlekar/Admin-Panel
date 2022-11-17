@@ -63,30 +63,16 @@ exports.GetNewsCategory = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.UpdateNewsCategory = catchAsyncErrors(async (req, res, next) => {
-  const newsCategory = await NewsCategory.findById(req.params.id);
-  if (!newsCategory) {
-    return next(new ErrorHandler("NewsCategory not found", 404));
-  }
-
+  const newsCategory = await NewsCategory.findOneAndUpdate({_id: req.params.id},req.body);
   function base64_encode(file) {
     var bitmap = fs.readFileSync(file);
     return Buffer.from(bitmap).toString("base64");
   }
-
-  const icon = base64_encode(req.file.path);
-  
-  newsCategory.parentCategory = req.body.parentCategory;
-  newsCategory.icon = icon;
-  newsCategory.sortOrder = req.body.sortOrder;
-  newsCategory.showInMenu = req.body.showInMenu;
-  newsCategory.showInChild = req.body.showInChild;
-  newsCategory.englishName = req.body.englishName;
-  newsCategory.hindiName = req.body.hindiName;
-  newsCategory.startingAlphabet = req.body.startingAlphabet;
-  newsCategory.categoryUrl = req.body.categoryUrl;
-  newsCategory.metaTitle = req.body.metaTitle;
-  newsCategory.metaDescription = req.body.metaDescription;
-  await newsCategory.save();
+  if (req.file) {
+    const icon = base64_encode(req.file.path);
+    newsCategory.icon = icon;
+    await newsCategory.save();
+  }
   res.status(200).json({
     status: "success",
     newsCategory,
