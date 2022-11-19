@@ -3,6 +3,7 @@ const crypto = require("crypto");
 const useToken = require("../../utils/useToken");
 const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 const User = require("../../models/adminModels/userModel");
+const AppUsers = require("../../models/userModels/appUserModel");
 const fs = require("fs"); // File System
 const ErrorHandler = require("../../utils/ErrorHandler");
 const { populate } = require("../../models/adminModels/channelModel");
@@ -183,9 +184,11 @@ exports.ChangePassword = catchAsyncErrors(async (req, res, next) => {
 
 exports.GetUsers = catchAsyncErrors(async (req, res, next) => {
   const users = await User.find();
+  const appUsers = await AppUsers.find();
   res.status(200).json({
     status: "success",
     users,
+    appUsers,
   });
 });
 
@@ -282,12 +285,15 @@ exports.RemoveUser = catchAsyncErrors(async (req, res, next) => {
 
 exports.BlockUser = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findById(req.user.id);
+  console.log(user.role);
+  // const appUsers = await AppUsers.findById(req.appUser.id);
   if (user.role.toLowerCase() !== "admin") {
     return next(
       new ErrorHandler("You are not authorized to perform this action", 401)
     );
   }
   const user2 = await User.findById(req.body.user2);
+  
   if (!user2) {
     return next(new ErrorHandler("User not found", 404));
   }
@@ -301,6 +307,23 @@ exports.BlockUser = catchAsyncErrors(async (req, res, next) => {
     status: "success",
   });
 });
+
+exports.BlockAppUser = catchAsyncErrors(async (req, res, next) => {
+  const appUser = await AppUsers.findById(req.body.user2);
+  if (!appUser) {
+    return next(new ErrorHandler("User not found", 404));
+  }
+  if (appUser.isBlocked) {
+    appUser.isBlocked = false;
+  } else {
+    appUser.isBlocked = true;
+  }
+  await appUser.save();
+  res.status(200).json({
+    status: "success",
+  });
+});
+
 
 exports.UpdateUser = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findOneAndUpdate({ _id: req.user._id }, req.body, {

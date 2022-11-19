@@ -58,10 +58,10 @@ exports.postVerifyOtp = catchAsyncErrors(async (req, res, next) => {
     if (!isMatch) {
       return next(new ErrorHandler("Invalid OTP", 401));
     }
-    // generate token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRES_IN,
-    });
+    // // generate token
+    // const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    //   expiresIn: process.env.JWT_EXPIRES_IN,
+    // });
   } else {
     // register user and generate token
     const otpData = await Otp.findOne({ phone: phone });
@@ -72,10 +72,10 @@ exports.postVerifyOtp = catchAsyncErrors(async (req, res, next) => {
     const newUser = await AppUser.create({
       phone: phone,
     });
-    // generate token
-    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRES_IN,
-    });
+    // // generate token
+    // const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+    //   expiresIn: process.env.JWT_EXPIRES_IN,
+    // });
     
   }
   useToken(user, 200, res);
