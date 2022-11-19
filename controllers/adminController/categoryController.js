@@ -18,7 +18,7 @@ exports.CreateCategory = catchAsyncErrors(async (req, res, next) => {
         metaTitle,
         metaDescription,
     } = req.body;
-
+    
     function base64_encode(file) {
         var bitmap = fs.readFileSync(file);
         return Buffer.from(bitmap).toString("base64");

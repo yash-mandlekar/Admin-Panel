@@ -6,19 +6,14 @@ const Category = require("../../models/adminModels/categoryModel");
 const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 const fs = require("fs");
 const ErrorHandler = require("../../utils/ErrorHandler");
+const { findOne } = require("../../models/adminModels/channelModel");
 
 exports.UploadShorts = catchAsyncErrors(async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id).populate("parent");
-    const { title, folderId, fileType, channels, category } = req.body;
-    const folder = await Folders.findOne({ _id: folderId });
-
-    function base64_encode(file) {
-      var bitmap = fs.readFileSync(file);
-      return Buffer.from(bitmap).toString("base64");
-    }
-
-    const file = base64_encode(req.file.path);
+const { title, folderId, fileType, channels, category } = req.body;
+const folder = await Folders.findOne({ _id: folderId });
+    const file = `./public/shorts/${user._id}/${folder.folderName}/${req.file.filename}`;
 
     const shorts = await Shorts.create({
       title,
@@ -58,23 +53,39 @@ exports.DeleteShorts = catchAsyncErrors(async (req, res, next) => {
   if (!shorts) {
     return next(new ErrorHandler("Shorts not found", 404));
   }
-  user.shorts = user.shorts.filter((item) => item.toString() !== shorts._id);
-  await user.save();
-  const folder = await Folders.findById(shorts.folderId);
-  folder.shorts = folder.shorts.filter(
-    (item) => item.toString() !== shorts._id
-  );
-  await folder.save();
-  const categories = await Category.find({ _id: { $in: shorts.category } });
-  categories.forEach((cat) => {
-    cat.shorts = cat.shorts.filter((item) => item.toString() !== shorts._id);
-    cat.save();
+  fs.unlink(`./public/shorts/${shorts.file.split("/")[shorts.file.split("/").length - 1]}`, (err) => {
+    if (err) {
+      res.send(err);
+      }
   });
-  await shorts.remove();
+  //find one and delete shorts from user shorts array 
+  await User.findOneAndUpdate(
+    { _id: user._id },
+    { $pull: { shorts: shorts._id } }
+  );
+  //find one and delete shorts from folder shorts array
+  await Folders.findOneAndUpdate(
+    { _id: shorts.folderId },
+    { $pull: { shorts: shorts._id } }
+  );
+  //find one and delete shorts from category shorts array
+  await Category.findOneAndUpdate(
+    { _id: shorts.category },
+    { $pull: { shorts: shorts._id } }
+  );
+  //find one and delete shorts from channel shorts array
+  await Channel.findOneAndUpdate(
+    { _id: shorts.channels },
+    { $pull: { shorts: shorts._id } }
+  );
+  //delete shorts from database
+  await Shorts.findByIdAndDelete(req.params.id);
   res.status(200).json({ success: true });
 });
 
+
 exports.UpdateShorts = catchAsyncErrors(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
   const shorts = await Shorts.findOne({ _id: req.params.id });
   if (!shorts) {
     return next(new ErrorHandler("Shorts not found", 404));
@@ -95,17 +106,18 @@ exports.UpdateShorts = catchAsyncErrors(async (req, res, next) => {
     folder.shorts.push(shorts._id);
     await folder.save();
   }
-
-  function base64_encode(file) {
-    var bitmap = fs.readFileSync(file);
-    return Buffer.from(bitmap).toString("base64");
+  if(req.file){
+    fs.unlink(`./public/shorts/${shorts.file.split("/")[shorts.file.split("/").length - 1]}`, (err) => {
+      if (err) {
+        res.status(500)
+        }
+    });
+    const file = `./public/shorts/${user._id}/${req.body.folderName}/${req.file.filename}`;
+    shorts.file = file;
+    shorts.fileType = req.body.fileType ? req.body.fileType : req.file.mimetype.split("/")[0];
   }
-
-  const file = base64_encode(req.file.path);
-
   const { title, channels, category } = req.body;
   shorts.title = title;
-  shorts.file = file;
   shorts.channels = channels.length > 27 ? channels.split(",") : channels;
   shorts.category = category.length > 27 ? category.split(",") : category;
   await shorts.save();

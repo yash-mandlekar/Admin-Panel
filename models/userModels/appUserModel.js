@@ -29,6 +29,10 @@ const appUserModel = mongoose.Schema({
         type: String,
         // required:true,
     },
+    businessAcc: {
+        type: String,
+        default: "no",
+    },
     password: {
         type: String,
         minlength: [6, "Password mube be at least 6 characters long."],

@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const upload = require("../middleware/adminMulter");
 const uploadDp = require("../middleware/dpMulter");
+const uploadShorts = require("../middleware/shortsMulter");
+const uploadNews = require("../middleware/newsMulter");
 
 const {
   GetHomepage,
@@ -153,9 +155,9 @@ router.post("/update/profile", isAuthUser, UpdateUser);
 
 // @api/upload POST upload news
 router
-  .post("/shorts", upload.single("file"), isAuthUser, UploadShorts)
+  .post("/shorts", uploadShorts.single("file"), isAuthUser, UploadShorts)
   .delete("/shorts/:id", isAuthUser, DeleteShorts)
-  .put("/shorts/:id", upload.single("file"), isAuthUser, UpdateShorts)
+  .put("/shorts/:id", uploadShorts.single("file"), isAuthUser, UpdateShorts)
   .get("/shorts/:id", SingleShorts);
 
 // @api/GET all Shorts
@@ -166,9 +168,9 @@ router.post("/approve-shorts/:id", isAuthUser, ApproveShorts);
 
 // @api/upload POST upload news
 router
-  .post("/news", upload.single("file"), isAuthUser, UploadNews)
+  .post("/news", uploadNews.single("file"), isAuthUser, UploadNews)
   .delete("/news/:id", isAuthUser, DeleteNews)
-  .put("/news/:id", upload.single("file"), isAuthUser, UpdateNews)
+  .put("/news/:id", uploadNews.single("file"), isAuthUser, UpdateNews)
   .get("/news/:id", SingleNews);
 
 // @api/GET all news
