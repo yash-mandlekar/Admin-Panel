@@ -17,6 +17,8 @@ const {
   UpdateAppUser,
   UpdateProfilePic,
   DeleteAppUser,
+  FollowRequestAccept,
+  FollowRequest,
   FollowUnfollow,
 } = require("../controllers/userController/appUserController");
 
@@ -75,6 +77,12 @@ router.post(
 
 // @api /user/followUnfollow POST follow user
 router.post("/followUnfollow", isLoggedin, FollowUnfollow);
+
+// @api /user/followRequest POST follow user
+router.post("/followRequest", isLoggedin, FollowRequest);
+
+// @api /user/followRequestAccept POST follow user
+router.post("/followRequestAccept", isLoggedin, FollowRequestAccept);
 
 // @api /user/post POST create post
 router

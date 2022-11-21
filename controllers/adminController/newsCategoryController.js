@@ -63,7 +63,10 @@ exports.GetNewsCategory = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.UpdateNewsCategory = catchAsyncErrors(async (req, res, next) => {
-  const newsCategory = await NewsCategory.findOneAndUpdate({_id: req.params.id},req.body);
+  const newsCategory = await NewsCategory.findOneAndUpdate(
+    { _id: req.params.id },
+    req.body
+  );
   function base64_encode(file) {
     var bitmap = fs.readFileSync(file);
     return Buffer.from(bitmap).toString("base64");

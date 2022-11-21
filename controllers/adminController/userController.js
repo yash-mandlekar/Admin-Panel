@@ -286,7 +286,6 @@ exports.RemoveUser = catchAsyncErrors(async (req, res, next) => {
 exports.BlockUser = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findById(req.user.id);
   console.log(user.role);
-  // const appUsers = await AppUsers.findById(req.appUser.id);
   if (user.role.toLowerCase() !== "admin") {
     return next(
       new ErrorHandler("You are not authorized to perform this action", 401)
@@ -309,21 +308,26 @@ exports.BlockUser = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.BlockAppUser = catchAsyncErrors(async (req, res, next) => {
-  const appUser = await AppUsers.findById(req.body.user2);
-  if (!appUser) {
+ const user = await User.findById(req.user.id);
+  if (user.role.toLowerCase() !== "admin") {
+    return next(
+      new ErrorHandler("You are not authorized to perform this action", 401)
+    );
+  }
+  const user2 = await AppUsers.findById(req.body.user2);
+  if (!user2) {
     return next(new ErrorHandler("User not found", 404));
   }
-  if (appUser.isBlocked) {
-    appUser.isBlocked = false;
+  if (user2.isBlocked) {
+    user2.isBlocked = false;
   } else {
-    appUser.isBlocked = true;
+    user2.isBlocked = true;
   }
-  await appUser.save();
+  await user2.save();
   res.status(200).json({
     status: "success",
   });
 });
-
 
 exports.UpdateUser = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findOneAndUpdate({ _id: req.user._id }, req.body, {

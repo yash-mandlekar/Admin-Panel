@@ -9,6 +9,7 @@ const AppUser = require("../../models/userModels/appUserModel");
 const Otp = require("../../models/userModels/otpModel");
 const fs = require("fs"); // File System
 const ErrorHandler = require("../../utils/ErrorHandler");
+const { populate } = require("../../models/userModels/appUserModel");
 // const { constants } = require("fs/promises");
 
 exports.GetHomepage = (req, res, next) => {
@@ -239,6 +240,50 @@ exports.UpdateProfilePic = catchAsyncErrors(async (req, res, next) => {
     user,
   });
 });
+
+
+exports.FollowRequest = catchAsyncErrors(async (req, res, next) => {
+  const { id } = req.body;
+  const user = await AppUser.findById(req.user.id);
+  const followUser = await AppUser.findById(id);  // id of user to follow
+  console.log(followUser.followRequest);
+  if (user.following.includes(id)) {
+    // return next(new ErrorHandler("You are already following this user", 400));
+    user.following.pop(id);
+    followUser.followers.pop(req.user.id);
+    await user.save();
+    await followUser.save();
+    res.status(200).json({
+      status: "success",
+      message: "Unfollowed successfully",
+    });
+  } else {
+    followUser.followRequest.push(req.user.id);
+    await user.save();
+    await followUser.save();
+    res.status(200).json({
+      status: "success",
+      message: "Follow request sent successfully",
+    });
+  }
+});
+
+
+exports.FollowRequestAccept = catchAsyncErrors(async (req, res, next) => {
+  const { id } = req.body;
+  const user = await AppUser.findById(req.user.id);
+  const followUser = await AppUser.findById(id);  // id of user to follow
+  user.followers.push(id);
+  user.followRequest.pop(id);
+  followUser.following.push(req.user.id);
+  await user.save();
+  await followUser.save();
+  res.status(200).json({
+    status: "success",
+    message: "Follow request accepted successfully",
+  });
+});
+
 
 exports.FollowUnfollow = catchAsyncErrors(async (req, res, next) => {
   const user = await AppUser.findById(req.user.id);

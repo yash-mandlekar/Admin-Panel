@@ -117,16 +117,17 @@ const userModel = new mongoose.Schema({
   categories: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Categories",
+      ref: "Category",
     },
   ],
 
   newsCategories: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "NewsCategories",
+      ref: "NewsCategory",
     },
   ],
+
   
 
   resetPasswordToken: String,

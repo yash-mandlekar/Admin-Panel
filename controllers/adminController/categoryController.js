@@ -3,6 +3,7 @@ const ErrorHandler = require("../../utils/ErrorHandler");
 const Shorts = require("../../models/adminModels/shortsModel");
 const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 const { PostLoginUser } = require("./userController");
+const fs = require("fs");
 
 
 exports.CreateCategory = catchAsyncErrors(async (req, res, next) => {
@@ -27,7 +28,8 @@ exports.CreateCategory = catchAsyncErrors(async (req, res, next) => {
       const icon = base64_encode(req.file.path);
     
     const category = await Category.create({
-          parentCategory: parentCategory.length > 0 ? parentCategory : null,
+        parentCategory:
+        parentCategory && parentCategory.length > 0 ? parentCategory : null,
           sortOrder,
           icon: icon,
           showInMenu,
