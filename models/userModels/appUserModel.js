@@ -59,7 +59,10 @@ const appUserModel = mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  
+  interest: {
+    type: String,
+    default: "",
+  },
   createdAt: {
     type: Date,
     default: Date.now,

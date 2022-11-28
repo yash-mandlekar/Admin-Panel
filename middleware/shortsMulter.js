@@ -15,11 +15,12 @@ const storage = multer.diskStorage({
   }
 });
 
-// const limits = {
-//   fileSize: 1024 * 1024 * 5
-// };
+const limits = {
+  //set file limt to 12mb
+  fileSize: 50 * 1024 * 1024
+};
 
-const UploadShorts = multer({ storage: storage, fileFilter: function (req, file, callback) {
+const UploadShorts = multer({ storage: storage, limits:limits, fileFilter: function (req, file, callback) {
   var ext = path.extname(file.originalname);
   // video only
     if (ext !== '.mp4' && ext !== '.flv' && ext !== '.m3u8' && ext !== '.wav' && ext !== '.mp3' && ext !== '.mp4' && ext !== '.m4a' && ext !== '.aac' ) {
