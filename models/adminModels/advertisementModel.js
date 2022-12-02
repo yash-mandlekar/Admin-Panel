@@ -8,12 +8,8 @@ const advertisementModel = mongoose.Schema({
     description: {
         type: String,
         required: true,
-    },  
-    image: {
-        type: String,
-        required: true,
     },
-    video: {
+    file: {
         type: String,
         required: true,
     },

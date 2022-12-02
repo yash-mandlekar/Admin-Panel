@@ -20,18 +20,11 @@ exports.CreateCategory = catchAsyncErrors(async (req, res, next) => {
         metaDescription,
     } = req.body;
     
-    function base64_encode(file) {
-        var bitmap = fs.readFileSync(file);
-        return Buffer.from(bitmap).toString("base64");
-      }
-    
-      const icon = base64_encode(req.file.path);
     
     const category = await Category.create({
         parentCategory:
         parentCategory && parentCategory.length > 0 ? parentCategory : null,
           sortOrder,
-          icon: icon,
           showInMenu,
           showInChild,
           englishName,
@@ -74,11 +67,6 @@ exports.UpdateCategory = catchAsyncErrors(async (req, res, next) => {
         var bitmap = fs.readFileSync(file);
         return Buffer.from(bitmap).toString("base64");
       }
-    if(req.file){
-        const icon = base64_encode(req.file.path);
-        category.icon = icon;
-        await category.save();
-    }
     res.status(200).json({
         status: "success",
         category,

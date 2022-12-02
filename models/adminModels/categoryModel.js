@@ -8,10 +8,6 @@ const categoryModel = mongoose.Schema({
   sortOrder: {
     type: Number,
   },
-  icon:{
-    type: String,
-    default: "",
-  },
   showInMenu: {
     type: String,
   },

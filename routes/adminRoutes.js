@@ -92,6 +92,15 @@ const {
   DeleteBreakingNews,
 } = require("../controllers/adminController/breakingNewsController");
 
+const {
+  CreateAdd,
+  AllAdds,
+  GetAdd,
+  UpdateAdd,
+  DeleteAdd,
+} = require("../controllers/adminController/advertisementController");
+const { single } = require("../middleware/adminMulter");
+
 // @api/ GET Hompage
 router.get("/", GetHomepage);
 
@@ -220,9 +229,9 @@ router.get("/open/channel/:id", GetChannel);
 
 // @api/category POST create category
 router
-  .post("/category", upload.single("icon"), isAuthUser, CreateCategory)
+  .post("/category", isAuthUser, CreateCategory)
   .get("/category", AllCategories)
-  .put("/category/:id", upload.single("icon"), isAuthUser, UpdateCategory)
+  .put("/category/:id", isAuthUser, UpdateCategory)
   .delete("/category/:id", isAuthUser, DeleteCategory);
 
 // @api/category/:id GET open category
@@ -252,5 +261,15 @@ router
 
 // @api/breaking-news/:id GET open breaking news
 router.get("/breaking-news/:id", GetBreakingNews);
+
+// @api/hashtag POST create advertisement
+router
+  .post("/add",upload.single("file"),  isAuthUser, CreateAdd)
+  .get("/add", AllAdds)
+  .put("/add/:id",upload.single("file"),isAuthUser, UpdateAdd)
+  .delete("/add/:id", isAuthUser, DeleteAdd);
+
+// @api/hashtag/:id GET open advertisement
+router.get("/add/:id", GetAdd);
 
 module.exports = router;
