@@ -21,9 +21,9 @@ const storage = multer.diskStorage({
 
 const UploadNews = multer({ storage: storage, fileFilter: function (req, file, callback) {
   var ext = path.extname(file.originalname);
- // image only
-    if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg' && ext !== '.webp') {
-    return callback(new Error('Only images are allowed'))
+ // image and videos only
+    if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg' && ext !== '.webp' && ext !== '.mp4' && ext !== '.flv' && ext !== '.m3u8' && ext !== '.wav' && ext !== '.mp3' && ext !== '.mp4' && ext !== '.m4a' && ext !== '.aac') {
+    return callback(new Error('Only images and videos are allowed'))
     }
     
   callback(null, true)

@@ -55,7 +55,7 @@ exports.AllNewsCategories = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.GetNewsCategory = catchAsyncErrors(async (req, res, next) => {
-  const newsCategory = await NewsCategory.findOne({ _id: req.params.id });
+  const newsCategory = await NewsCategory.findOne({ _id: req.params.id }).populate('news');
   if (!newsCategory) {
     return next(new ErrorHandler("NewsCategory not found", 404));
   }
