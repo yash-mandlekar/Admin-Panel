@@ -101,6 +101,15 @@ const {
 } = require("../controllers/adminController/advertisementController");
 const { single } = require("../middleware/adminMulter");
 
+const {
+  CreateENewspaper,
+  AllENewspapers,
+  GetENewspaper,
+  UpdateENewspaper,
+  DeleteENewspaper,
+
+} = require("../controllers/adminController/eNewspaperController");
+
 // @api/ GET Hompage
 router.get("/", GetHomepage);
 
@@ -271,5 +280,15 @@ router
 
 // @api/hashtag/:id GET open advertisement
 router.get("/add/:id", GetAdd);
+
+// @api/eNewspaper/:id GET open eNewspaper
+router
+  .post("/ePaper", upload.single("image"), isAuthUser, CreateENewspaper)
+  .get("/ePaper", AllENewspapers)
+  .put("/ePaper/:id", upload.single("image"), isAuthUser, UpdateENewspaper)
+  .delete("/ePaper/:id", isAuthUser, DeleteENewspaper);
+
+// @api/eNewspaper/:id GET open eNewspaper
+router.get("/ePaper/:id", GetENewspaper);
 
 module.exports = router;

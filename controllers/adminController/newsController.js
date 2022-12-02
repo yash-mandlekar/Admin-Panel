@@ -49,11 +49,12 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
       latestNewsPriority,
       aboutImage,
       imageSource,
-      newsUrl: metaTitle.split(" ").join("-"),
       categories,
+      newsUrl: metaTitle.split(" ").join("-"),
       hashTags,
       fileType: fileType ? fileType : req.file.mimetype.split("/")[0],
     });
+
     const category = await Categories.find({ _id: { $in: categories } });
     category.forEach((cat) => {
       cat.news.push(news._id);
