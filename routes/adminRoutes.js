@@ -194,7 +194,7 @@ router
 router.get("/all/shorts", AllShorts);
 
 // @api/approve-Shorts POST approve Shorts
-router.post("/approve-shorts/:id", isAuthUser, ApproveShorts);
+// router.post("/approve-shorts/:id", isAuthUser, ApproveShorts);
 
 // @api/upload POST upload news
 router
