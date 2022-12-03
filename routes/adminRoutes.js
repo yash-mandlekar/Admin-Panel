@@ -57,6 +57,7 @@ const {
   GetNewsByDate,
   GetNewsByLocation,
   GetNewsByHashTag,
+  GetNewsByCategoryName,
 } = require("../controllers/adminController/newsController");
 
 const {
@@ -107,7 +108,6 @@ const {
   GetENewspaper,
   UpdateENewspaper,
   DeleteENewspaper,
-
 } = require("../controllers/adminController/eNewspaperController");
 
 // @api/ GET Hompage
@@ -204,6 +204,9 @@ router.post("/approve-news/:id", isAuthUser, ApproveNews);
 // @api/news/category GET news by category
 router.get("/news/category/:id", GetNewsByCategory);
 
+// @api/news/category GET news by category
+router.get("/news/categoryName/:name", GetNewsByCategoryName);
+
 // @api/news/author GET news by author
 router.get("/news/author/:id", GetNewsByAuthor);
 
@@ -273,9 +276,9 @@ router.get("/breaking-news/:id", GetBreakingNews);
 
 // @api/hashtag POST create advertisement
 router
-  .post("/add",upload.single("file"),  isAuthUser, CreateAdd)
+  .post("/add", upload.single("file"), isAuthUser, CreateAdd)
   .get("/add", AllAdds)
-  .put("/add/:id",upload.single("file"),isAuthUser, UpdateAdd)
+  .put("/add/:id", upload.single("file"), isAuthUser, UpdateAdd)
   .delete("/add/:id", isAuthUser, DeleteAdd);
 
 // @api/hashtag/:id GET open advertisement

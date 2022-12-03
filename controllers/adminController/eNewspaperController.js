@@ -1,5 +1,4 @@
 const eNewspaper = require("../../models/adminModels/eNewspaperModel");
-const User = require("../../models/adminModels/userModel");
 const ErrorHandler = require("../../utils/ErrorHandler");
 const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 const fs = require("fs");

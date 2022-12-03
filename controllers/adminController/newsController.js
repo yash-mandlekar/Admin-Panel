@@ -186,21 +186,32 @@ exports.ApproveNews = catchAsyncErrors(async (req, res, next) => {
   }
 });
 
-exports.GetNewsByCategory = catchAsyncErrors(async (req, res, next) => {
-  const category = await Categories.findById({ _id: req.params.id });
+exports.GetNewsByCategoryName = catchAsyncErrors(async (req, res, next) => {
+  const category = await Categories.findOne({ name: req.params.name }).populate(
+    "news"
+  );
   if (!category) {
     return next(new ErrorHandler("Category not found", 404));
   }
-  const news = await News.find({ categories: category._id });
+  const { news } = category;
+  res.status(200).json(news);
+});
+
+exports.GetNewsByCategory = catchAsyncErrors(async (req, res, next) => {
+  const category = await Categories.findById({ _id: req.params.id }).populate("news");
+  if (!category) {
+    return next(new ErrorHandler("Category not found", 404));
+  }
+  const { news } = category;
   res.status(200).json(news);
 });
 
 exports.GetNewsByAuthor = catchAsyncErrors(async (req, res, next) => {
-  const user = await User.findById({ _id: req.params.id });
+  const user = await User.findById({ _id: req.params.id }).populate("news");
   if (!user) {
     return next(new ErrorHandler("User not found", 404));
   }
-  const news = await News.find({ author: user._id });
+  const { news } = user;
   res.status(200).json(news);
 });
 
