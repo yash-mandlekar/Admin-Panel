@@ -60,16 +60,19 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
       cat.news.push(news._id);
       cat.save();
     });
-    news.author = user._id;
-    news.save();
-    res.status(200).json({
-      success: true,
-      news,
-    });
+    if(user.role.toLowerCase() !== "admin"){
+      user.parent.requests.push(news._id);
+      await user.parent.save();
+    }
+    user.news.push(news._id);
+    await user.save();
+    res.status(201).json(news);
   } catch (err) {
+    fs.unlinkSync(req.file.path);
     next(err);
   }
 });
+
 
 exports.UpdateNews = catchAsyncErrors(async (req, res, next) => {
   const news = await News.findOne({ _id: req.params.id });

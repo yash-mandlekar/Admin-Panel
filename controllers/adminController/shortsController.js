@@ -41,11 +41,6 @@ exports.UploadShorts = catchAsyncErrors(async (req, res, next) => {
       cat.shorts.push(shorts._id);
       cat.save();
     });
-
-    if (user.role.toLowerCase() !== "admin") {
-      user.parent.requests.push(shorts._id);
-      await user.parent.save();
-    }
     folder.shorts.push(shorts._id);
     await folder.save();
     user.shorts.push(shorts._id);
@@ -63,17 +58,6 @@ exports.DeleteShorts = catchAsyncErrors(async (req, res, next) => {
   if (!shorts) {
     return next(new ErrorHandler("Shorts not found", 404));
   }
-  // fs.unlink(
-  //   `./public/shorts/${
-  //     shorts.file.split("/")[shorts.file.split("/").length - 1]
-  //   }`,
-  //   (err) => {
-  //     if (err) {
-  //       res.send(err);
-  //     }
-  //   }
-  // );
-  //find one and delete shorts from user shorts array
   await User.findOneAndUpdate(
     { _id: user._id },
     { $pull: { shorts: shorts._id } }
@@ -158,26 +142,26 @@ exports.SingleShorts = catchAsyncErrors(async (req, res, next) => {
   res.status(200).json(shorts);
 });
 
-exports.ApproveShorts = catchAsyncErrors(async (req, res, next) => {
-  const user = await User.findOne({ _id: req.user.id }).populate([
-    { path: "parent", populate: { path: "requests" } },
-    { path: "requests" },
-  ]);
-  const shorts = await Shorts.findById(req.params.id);
-  if (!shorts) return next(new ErrorHandler("Shorts not found", 404));
-  if (user.role.toLowerCase() !== "admin") {
-    user.requests.splice(user.requests.indexOf(shorts._id), 1);
-    await user.save();
-    user.parent.requests.push(shorts._id);
-    await user.parent.save();
-  } else {
-    user.requests.splice(user.requests.indexOf(shorts._id), 1);
-    await user.save();
-    shorts.approved = true;
-    await shorts.save();
-  }
-  res.status(200).json({
-    success: true,
-    message: "Shorts approved successfully",
-  });
-});
+// exports.ApproveShorts = catchAsyncErrors(async (req, res, next) => {
+//   const user = await User.findOne({ _id: req.user.id }).populate([
+//     { path: "parent", populate: { path: "requests" } },
+//     { path: "requests" },
+//   ]);
+//   const shorts = await Shorts.findById(req.params.id);
+//   if (!shorts) return next(new ErrorHandler("Shorts not found", 404));
+//   if (user.role.toLowerCase() !== "admin") {
+//     user.requests.splice(user.requests.indexOf(shorts._id), 1);
+//     await user.save();
+//     user.parent.requests.push(shorts._id);
+//     await user.parent.save();
+//   } else {
+//     user.requests.splice(user.requests.indexOf(shorts._id), 1);
+//     await user.save();
+//     shorts.approved = true;
+//     await shorts.save();
+//   }
+//   res.status(200).json({
+//     success: true,
+//     message: "Shorts approved successfully",
+//   });
+// });
