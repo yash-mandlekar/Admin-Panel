@@ -187,7 +187,7 @@ exports.ApproveNews = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.GetNewsByCategoryName = catchAsyncErrors(async (req, res, next) => {
-  const category = await Categories.findOne({ name: req.params.name }).populate(
+  const category = await Categories.findOne({ categoryUrl: req.params.name }).populate(
     "news"
   );
   if (!category) {

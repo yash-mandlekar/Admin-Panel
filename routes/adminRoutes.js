@@ -110,6 +110,14 @@ const {
   DeleteENewspaper,
 } = require("../controllers/adminController/eNewspaperController");
 
+// const {
+//   CreateENewspaperCoordinates,
+//   GetENewspaperCoordinatesById,
+//   GetENewspaperCoordinates,
+//   UpdateENewspaperCoordinates,
+//   DeleteENewspaperCoordinates,
+// } = require("../controllers/adminController/eNewspaperCoordinatesController");
+
 // @api/ GET Hompage
 router.get("/", GetHomepage);
 
@@ -284,7 +292,7 @@ router
 // @api/hashtag/:id GET open advertisement
 router.get("/add/:id", GetAdd);
 
-// @api/eNewspaper/:id GET open eNewspaper
+// @api/eNewspaper/ POST create eNewspaper
 router
   .post("/ePaper", upload.single("image"), isAuthUser, CreateENewspaper)
   .get("/ePaper", AllENewspapers)
@@ -293,5 +301,16 @@ router
 
 // @api/eNewspaper/:id GET open eNewspaper
 router.get("/ePaper/:id", GetENewspaper);
+
+// @api/eNewspaperCoordinates/ POST create eNewspaperCoordinates
+// router
+//     .post("/ePaperCoord", upload.single("image"), isAuthUser, CreateENewspaperCoordinates)
+//     .get("/ePaperCoord", GetENewspaperCoordinates)
+//     .put("/ePaperCoord/:id", upload.single("image"), isAuthUser, UpdateENewspaperCoordinates)
+//     .delete("/ePaperCoord/:id", isAuthUser, DeleteENewspaperCoordinates);
+
+// // @api/eNewspaperCoordinates/:id GET open eNewspaperCoordinates
+// router.get("/ePaperCoord/:id", GetENewspaperCoordinatesById);
+
 
 module.exports = router;
