@@ -4,19 +4,22 @@ const newsCategoryModel = mongoose.Schema({
   parentCategory: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "NewsCategory",
-  },                        
+  },
   sortOrder: {
     type: Number,
+    default: 0,
   },
-  icon:{
+  icon: {
     type: String,
     default: "",
   },
   showInMenu: {
     type: String,
+    default: "No",
   },
   showInChild: {
     type: String,
+    default: "No",
   },
   englishName: {
     type: String,

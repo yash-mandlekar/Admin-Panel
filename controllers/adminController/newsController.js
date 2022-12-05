@@ -173,23 +173,23 @@ exports.ApproveNews = catchAsyncErrors(async (req, res, next) => {
   } else if (user.role.toLowerCase() !== "admin") {
     user.parent.requests = user.parent.requests.filter(
       (item) => item.toString() !== news._id.toString()
-    );
-    user.parent.news.push(news._id);
-    await user.parent.save();
-    res.status(200).json(news);
-  } else {
-    return next(
-      new ErrorHandler(
-        "You are not authorized to approve news",
-        401,
-        "Unauthorized",
-        401
-      )
-    );
-  }
-});
-
-exports.GetNewsByCategoryName = catchAsyncErrors(async (req, res, next) => {
+      );
+      user.parent.news.push(news._id);
+      await user.parent.save();
+      res.status(200).json(news);
+    } else {
+      return next(
+        new ErrorHandler(
+          "You are not authorized to approve news",
+          401,
+          "Unauthorized",
+          401
+          )
+          );
+        }
+      });
+      
+      exports.GetNewsByCategoryName = catchAsyncErrors(async (req, res, next) => {
   const category = await Categories.findOne({
     categoryUrl: req.params.name,
   }).populate("news");
