@@ -179,7 +179,6 @@ exports.ApproveNews = catchAsyncErrors(async (req, res, next) => {
     user.parent.requests = user.parent.requests.filter(
       (item) => item.toString() !== news._id.toString()
     );
-    user.parent.news.push(news._id);
     await user.parent.save();
     res.status(200).json(news);
   } else {
