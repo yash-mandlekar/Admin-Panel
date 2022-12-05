@@ -78,41 +78,13 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.UpdateNews = catchAsyncErrors(async (req, res, next) => {
-  const news = await News.findOne({ _id: req.params.id });
-  if (!news) {
-    return next(new ErrorHandler("News not found", 404));
-  }
-  if (news.categories.toString() !== req.body.categories.toString()) {
-    const categories = await Categories.findOne({ _id: req.body.categories });
-    categories.news.push(news._id);
-    await categories.save();
-  }
+  const news = await News.findOneAndUpdate({ _id: req.params.id}, req.body);
   function base64_encode(file) {
     var bitmap = fs.readFileSync(file);
     return Buffer.from(bitmap).toString("base64");
   }
-  const file = base64_encode(req.file.path);
-
-  news.metaTitle = req.body.metaTitle;
-  news.shortDescription = req.body.shortDescription;
-  news.metaDescription = req.body.metaDescription;
-  news.description = req.body.description;
-  news.location = req.body.location;
-  news.showInSlider = req.body.showInSlider;
-  news.sliderPriority = req.body.sliderPriority;
-  news.publishDate = req.body.publishDate;
-  news.latestNews = req.body.latestNews;
-  news.latestNewsPriority = req.body.latestNewsPriority;
-  news.aboutImage = req.body.aboutImage;
-  news.imageSource = req.body.imageSource;
-  news.newsUrl = req.body.newsUrl;
-  news.categories = req.body.categories;
-  news.hashTags = req.body.hashTags;
-  news.fileType = req.body.fileType;
-  news.file = file;
-  news.save();
   res.status(200).json({
-    success: true,
+    status: "success",
     news,
   });
 });
