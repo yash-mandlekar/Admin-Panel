@@ -87,7 +87,7 @@ exports.PostRefreshToken = catchAsyncErrors(async (req, res, next) => {
     }
     const refresh_user = await User.findOne({ _id: user.id }).populate({
       path: "requests",
-      populate: [{ path: "channels" }, { path: "author" }],
+      populate: [{ path: "author" }],
     });
     useToken(refresh_user, 200, res);
   });
