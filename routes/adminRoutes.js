@@ -125,7 +125,7 @@ router.get("/", GetHomepage);
 router.post("/register", isAuthUser, PostRegisterUser);
 
 // @api/login POST login admin and adminpanel users
-// router.post("/register/admin", PostRegisterAdmin);
+router.post("/register/admin", PostRegisterAdmin);
 
 // @api/login POST login user
 router.post("/login", PostLoginUser);

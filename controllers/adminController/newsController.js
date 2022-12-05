@@ -66,7 +66,6 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
       user.parent.requests.push(news._id);
       await user.parent.save();
     }
-// publish news when news.publishDate is equal to current date and time 
     user.news.push(news._id);
     await user.save();
     res.status(201).json(news);
@@ -158,7 +157,6 @@ exports.SingleNews = catchAsyncErrors(async (req, res, next) => {
 
 exports.AllNews = catchAsyncErrors(async (req, res, next) => {
   const news = await News.find().populate("categories author");
-  console.log("lol");
   res.status(200).json(news);
 });
 
@@ -168,7 +166,6 @@ exports.ApproveNews = catchAsyncErrors(async (req, res, next) => {
   if (!news) {
     return next(new ErrorHandler("News not found", 404));
   }
-  // if user role is admin then set news.approved to true and save it and return news object to client side else if user role is not admin then remove news._id from user.parent.requests and add news._id to user.parent.news and save it and return news object to client side else return error to client side with status code 401 and message "You are not authorized to approve news" and error name "Unauthorized" and error code 401
   if (user.role.toLowerCase() === "admin") {
     news.approved = true;
     await news.save();
