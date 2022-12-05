@@ -95,6 +95,7 @@ exports.UpdateNews = catchAsyncErrors(async (req, res, next) => {
     const file = base64_encode(req.file.path);
 
     news.file = file;
+    news.fileType = req.body.fileType;
   }
 
   news.metaTitle = req.body.metaTitle;
@@ -112,7 +113,6 @@ exports.UpdateNews = catchAsyncErrors(async (req, res, next) => {
   news.newsUrl = req.body.newsUrl;
   news.categories = req.body.categories;
   news.hashTags = req.body.hashTags;
-  news.fileType = req.body.fileType;
   news.save();
   res.status(200).json({
     success: true,

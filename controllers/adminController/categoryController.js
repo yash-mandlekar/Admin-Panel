@@ -62,6 +62,7 @@ exports.GetCategory = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.UpdateCategory = catchAsyncErrors(async (req, res, next) => {
+    
     const category = await Category.findOneAndUpdate({_id:req.params.id},req.body);
     function base64_encode(file) {
         var bitmap = fs.readFileSync(file);
