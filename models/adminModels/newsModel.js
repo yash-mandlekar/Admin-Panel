@@ -41,7 +41,7 @@ const newsModel = mongoose.Schema(
       default: false,
     },
 
-    sliderPrority: {
+    sliderPriority: {
       type: Number,
       default: 0,
     },
@@ -49,6 +49,11 @@ const newsModel = mongoose.Schema(
     publishDate: {
       type: Date,
       default: Date.now,
+    },
+
+    published: {
+      type: String,
+      default: "No",
     },
 
     latestNews: {

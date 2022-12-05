@@ -17,7 +17,7 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
       description,
       location,
       showInSlider,
-      sliderPrority,
+      sliderPriority,
       publishDate,
       latestNews,
       latestNewsPriority,
@@ -42,8 +42,9 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
       description,
       location,
       showInSlider,
-      sliderPrority,
+      sliderPriority,
       publishDate,
+      published: user.role.toLowerCase() === "admin" ? true : false,
       latestNews,
       file: file,
       latestNewsPriority,
@@ -63,6 +64,7 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
       cat.save();
     });
     if (user.role.toLowerCase() !== "admin") {
+      console.log(user.parent);
       user.parent.requests.push(news._id);
       await user.parent.save();
     }
@@ -97,7 +99,7 @@ exports.UpdateNews = catchAsyncErrors(async (req, res, next) => {
   news.description = req.body.description;
   news.location = req.body.location;
   news.showInSlider = req.body.showInSlider;
-  news.sliderPrority = req.body.sliderPrority;
+  news.sliderPriority = req.body.sliderPriority;
   news.publishDate = req.body.publishDate;
   news.latestNews = req.body.latestNews;
   news.latestNewsPriority = req.body.latestNewsPriority;
@@ -166,30 +168,32 @@ exports.ApproveNews = catchAsyncErrors(async (req, res, next) => {
   if (!news) {
     return next(new ErrorHandler("News not found", 404));
   }
-  if (user.role.toLowerCase() === "admin") {
+  if (user.role.toLowerCase() === "admin"|| news.publishDate < Date.now()) {
     news.approved = true;
+    news.published = true;
     await news.save();
     res.status(200).json(news);
   } else if (user.role.toLowerCase() !== "admin") {
     user.parent.requests = user.parent.requests.filter(
       (item) => item.toString() !== news._id.toString()
-      );
-      user.parent.news.push(news._id);
-      await user.parent.save();
-      res.status(200).json(news);
-    } else {
-      return next(
-        new ErrorHandler(
-          "You are not authorized to approve news",
-          401,
-          "Unauthorized",
-          401
-          )
-          );
-        }
-      });
-      
-      exports.GetNewsByCategoryName = catchAsyncErrors(async (req, res, next) => {
+    );
+    user.parent.news.push(news._id);
+    await user.parent.save();
+    res.status(200).json(news);
+  } else {
+    return next(
+      new ErrorHandler(
+        "You are not authorized to approve news",
+        401,
+        "Unauthorized",
+        401
+      )
+    );
+  }
+
+});
+
+exports.GetNewsByCategoryName = catchAsyncErrors(async (req, res, next) => {
   const category = await Categories.findOne({
     categoryUrl: req.params.name,
   }).populate("news");
@@ -234,4 +238,3 @@ exports.GetNewsByHashTag = catchAsyncErrors(async (req, res, next) => {
   const news = await News.find({ hashtag: req.params.hashTag });
   res.status(200).json(news);
 });
-
