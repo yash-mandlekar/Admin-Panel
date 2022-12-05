@@ -66,7 +66,7 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
       user.parent.requests.push(news._id);
       await user.parent.save();
     }
-
+// publish news when news.publishDate is equal to current date and time 
     user.news.push(news._id);
     await user.save();
     res.status(201).json(news);
@@ -237,3 +237,4 @@ exports.GetNewsByHashTag = catchAsyncErrors(async (req, res, next) => {
   const news = await News.find({ hashtag: req.params.hashTag });
   res.status(200).json(news);
 });
+

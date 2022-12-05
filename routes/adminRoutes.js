@@ -272,6 +272,7 @@ router
 // @api/news-category/:id GET open news category
 router.get("/news-category/:id", GetNewsCategory);
 
+
 // @api/breaking-news POST create breaking news
 router
   .post("/breaking-news", isAuthUser, CreateBreakingNews)
