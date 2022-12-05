@@ -52,6 +52,8 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
       categories,
       newsUrl: metaTitle.split(" ").join("-"),
       hashTags,
+      author: user._id,
+      approved: user.role.toLowerCase() === "admin" ? "true" : "false",
       fileType: fileType ? fileType : req.file.mimetype.split("/")[0],
     });
 
@@ -60,10 +62,11 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
       cat.news.push(news._id);
       cat.save();
     });
-    if(user.role.toLowerCase() !== "admin"){
+    if (user.role.toLowerCase() !== "admin") {
       user.parent.requests.push(news._id);
       await user.parent.save();
     }
+
     user.news.push(news._id);
     await user.save();
     res.status(201).json(news);
@@ -72,7 +75,6 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
     next(err);
   }
 });
-
 
 exports.UpdateNews = catchAsyncErrors(async (req, res, next) => {
   const news = await News.findOne({ _id: req.params.id });
@@ -156,6 +158,7 @@ exports.SingleNews = catchAsyncErrors(async (req, res, next) => {
 
 exports.AllNews = catchAsyncErrors(async (req, res, next) => {
   const news = await News.find().populate("categories author");
+  console.log("lol");
   res.status(200).json(news);
 });
 
@@ -190,9 +193,9 @@ exports.ApproveNews = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.GetNewsByCategoryName = catchAsyncErrors(async (req, res, next) => {
-  const category = await Categories.findOne({ categoryUrl: req.params.name }).populate(
-    "news"
-  );
+  const category = await Categories.findOne({
+    categoryUrl: req.params.name,
+  }).populate("news");
   if (!category) {
     return next(new ErrorHandler("Category not found", 404));
   }
@@ -201,7 +204,9 @@ exports.GetNewsByCategoryName = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.GetNewsByCategory = catchAsyncErrors(async (req, res, next) => {
-  const category = await Categories.findById({ _id: req.params.id }).populate("news");
+  const category = await Categories.findById({ _id: req.params.id }).populate(
+    "news"
+  );
   if (!category) {
     return next(new ErrorHandler("Category not found", 404));
   }
