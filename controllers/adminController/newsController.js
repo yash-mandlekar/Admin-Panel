@@ -95,7 +95,7 @@ exports.UpdateNews = catchAsyncErrors(async (req, res, next) => {
     const file = base64_encode(req.file.path);
 
     news.file = file;
-    news.fileType = req.body.fileType;
+    news.fileType = req.file.mimetype.split("/")[0];
   }
 
   news.metaTitle = req.body.metaTitle;
