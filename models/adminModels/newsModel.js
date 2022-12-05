@@ -51,11 +51,6 @@ const newsModel = mongoose.Schema(
       default: Date.now,
     },
 
-    published: {
-      type: String,
-      default: "No",
-    },
-
     latestNews: {
       type: String,
       default: false,

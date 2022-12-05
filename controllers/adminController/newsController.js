@@ -171,9 +171,8 @@ exports.ApproveNews = catchAsyncErrors(async (req, res, next) => {
   if (!news) {
     return next(new ErrorHandler("News not found", 404));
   }
-  if (user.role.toLowerCase() === "admin" || news.publishDate < Date.now()) {
+  if (user.role.toLowerCase() === "admin") {
     news.approved = true;
-    news.published = true;
     await news.save();
     res.status(200).json(news);
   } else if (user.role.toLowerCase() !== "admin") {
