@@ -44,7 +44,7 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
       showInSlider,
       sliderPriority,
       publishDate,
-      published: user.role.toLowerCase() === "admin" ? true : false,
+      published: user.role.toLowerCase() === "admin" ? "true" : "false",
       latestNews,
       file: file,
       latestNewsPriority,
