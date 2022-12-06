@@ -209,10 +209,10 @@ router
 // @api/GET all news
 router.get("/all/news", AllNews);
 
-// @api/GET all news
+// @api/GET all approved news
 router.get("/approved/news", ApprovedNews);
 
-// @api/GET all news
+// @api/GET all pending news
 router.get("/pending/news", PendingNews);
 
 // @api/approve-news POST approve news
