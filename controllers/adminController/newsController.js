@@ -165,6 +165,20 @@ exports.AllNews = catchAsyncErrors(async (req, res, next) => {
   res.status(200).json(news);
 });
 
+exports.ApprovedNews = catchAsyncErrors(async (req, res, next) => {
+  const news = await News.find({ approved: "true" }).populate(
+    "categories author"
+  );
+  res.status(200).json(news);
+});
+
+exports.PendingNews = catchAsyncErrors(async (req, res, next) => {
+  const news = await News.find({ approved: "false" }).populate(
+    "categories author"
+  );
+  res.status(200).json(news);
+});
+
 exports.ApproveNews = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findById(req.user.id).populate("parent");
   const news = await News.findOne({ _id: req.params.id });

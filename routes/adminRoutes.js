@@ -58,6 +58,8 @@ const {
   GetNewsByLocation,
   GetNewsByHashTag,
   GetNewsByCategoryName,
+  ApprovedNews,
+  PendingNews,
 } = require("../controllers/adminController/newsController");
 
 const {
@@ -206,6 +208,12 @@ router
 
 // @api/GET all news
 router.get("/all/news", AllNews);
+
+// @api/GET all news
+router.get("/approved/news", ApprovedNews);
+
+// @api/GET all news
+router.get("/pending/news", PendingNews);
 
 // @api/approve-news POST approve news
 router.post("/approve-news/:id", isAuthUser, ApproveNews);
