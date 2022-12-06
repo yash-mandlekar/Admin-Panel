@@ -173,6 +173,9 @@ exports.ApproveNews = catchAsyncErrors(async (req, res, next) => {
   }
   if (user.role.toLowerCase() === "admin") {
     news.approved = true;
+    user.requests = user.requests.filter(
+      (item) => item.toString() !== news._id.toString()
+    );
     await news.save();
     res.status(200).json(news);
   } else if (user.role.toLowerCase() !== "admin") {
