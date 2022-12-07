@@ -18,13 +18,7 @@ exports.UploadShorts = catchAsyncErrors(async (req, res, next) => {
       var bitmap = fs.readFileSync(file);
       return Buffer.from(bitmap).toString("base64");
     }
-
-    // console.log(base64);
-
     const file = base64_encode(req.file.path);
-
-    // const file = (`./public/shorts/${user._id}/${folder.folderName}/${req.file.filename}`,base64_encode(req.file.path));
-
     const shorts = await Shorts.create({
       title,
       channels: channels.length > 27 ? channels.split(",") : channels,
@@ -83,52 +77,45 @@ exports.DeleteShorts = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.UpdateShorts = catchAsyncErrors(async (req, res, next) => {
-  const user = await User.findById(req.user.id);
   const shorts = await Shorts.findOne({ _id: req.params.id });
+  // console.log(shorts);
   if (!shorts) {
     return next(new ErrorHandler("Shorts not found", 404));
   }
 
   if (shorts.category.toString() !== req.body.category.toString()) {
-    const category = await Category.findOne({ _id: req.body.category });
+    const category = await Category.findOne
+    ({ _id
+      : req.body.category });
     category.shorts.push(shorts._id);
     await category.save();
   }
   if (shorts.channels.toString() !== req.body.channels.toString()) {
-    const channel = await Channel.findOne({ _id: req.body.channels });
+    const channel = await Channel.findOne
+    ({ _id
+      : req.body.channels });
     channel.shorts.push(shorts._id);
     await channel.save();
   }
   if (shorts.folderId.toString() !== req.body.folderId.toString()) {
-    const folder = await Folders.findOne({ _id: req.body.folderId });
+    const folder = await Folders.findOne
+    ({ _id
+      : req.body.folderId });
     folder.shorts.push(shorts._id);
     await folder.save();
   }
-  if (req.file) {
-    fs.unlink(
-      `./public/shorts/${
-        shorts.file.split("/")[shorts.file.split("/").length - 1]
-      }`,
-      (err) => {
-        if (err) {
-          res.status(500);
-        }
-      }
-    );
-    const file = `./public/shorts/${user._id}/${req.body.folderName}/${req.file.filename}`;
-    shorts.file = file;
-    shorts.fileType = req.body.fileType
-      ? req.body.fileType
-      : req.file.mimetype.split("/")[0];
-  }
-  const { title, channels, category } = req.body;
-  shorts.title = title;
-  shorts.channels = channels.length > 27 ? channels.split(",") : channels;
-  shorts.category = category.length > 27 ? category.split(",") : category;
-  await shorts.save();
-  res.status(201).json(shorts);
+  const shortsUpdated = await Shorts.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    {
+      new: true,
+      runValidators: true,
+      useFindAndModify: false,
+    }
+  );
+  res.status(200).json(shortsUpdated);
 });
-
+ 
 exports.AllShorts = catchAsyncErrors(async (req, res, next) => {
   const shorts = await Shorts.find().populate("channels author category");
   res.status(200).json(shorts);
