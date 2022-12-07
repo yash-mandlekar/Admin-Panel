@@ -94,6 +94,21 @@ const newsModel = mongoose.Schema(
       },
     ],
 
+    likes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "AppUser",
+      },
+    ],
+    comments: [
+      {
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "AppUser",
+        },
+        comment: { type: String },
+      },
+    ],
     createdat: {
       type: Date,
       default: Date.now,
