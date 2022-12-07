@@ -29,12 +29,11 @@ const shortsModel = mongoose.Schema(
         ref: "Channels",
       },
     ],
-    category: [
+    category: 
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Category",
       },
-    ],
 
     folderId: {
       type: mongoose.Schema.Types.ObjectId,

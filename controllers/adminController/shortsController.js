@@ -84,23 +84,17 @@ exports.UpdateShorts = catchAsyncErrors(async (req, res, next) => {
   }
 
   if (shorts.category.toString() !== req.body.category.toString()) {
-    const category = await Category.findOne
-    ({ _id
-      : req.body.category });
+    const category = await Category.findOne({ _id: req.body.category });
     category.shorts.push(shorts._id);
     await category.save();
   }
   if (shorts.channels.toString() !== req.body.channels.toString()) {
-    const channel = await Channel.findOne
-    ({ _id
-      : req.body.channels });
+    const channel = await Channel.findOne({ _id: req.body.channels });
     channel.shorts.push(shorts._id);
     await channel.save();
   }
   if (shorts.folderId.toString() !== req.body.folderId.toString()) {
-    const folder = await Folders.findOne
-    ({ _id
-      : req.body.folderId });
+    const folder = await Folders.findOne({ _id: req.body.folderId });
     folder.shorts.push(shorts._id);
     await folder.save();
   }
@@ -115,7 +109,7 @@ exports.UpdateShorts = catchAsyncErrors(async (req, res, next) => {
   );
   res.status(200).json(shortsUpdated);
 });
- 
+
 exports.AllShorts = catchAsyncErrors(async (req, res, next) => {
   const shorts = await Shorts.find().populate("channels author category");
   res.status(200).json(shorts);
