@@ -88,6 +88,9 @@ exports.UpdateShorts = catchAsyncErrors(async (req, res, next) => {
     category.shorts.push(shorts._id);
     await category.save();
   }
+  if(typeof req.body.channels === "string"){
+    req.body.channels = req.body.channels.split(",");
+  }
   if (shorts.channels.toString() !== req.body.channels.toString()) {
     const channel = await Channel.findOne({ _id: req.body.channels });
     channel.shorts.push(shorts._id);

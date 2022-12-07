@@ -10,12 +10,20 @@ exports.CreatePost = catchAsyncErrors(async (req, res, next) => {
     try{
 
     const user = await AppUser.findById(req.user.id);
-    const { location, title, description, file, fileType } = req.body;
+    const { location, title, description, fileType } = req.body;
+    function base64_encode(file) {
+        var bitmap = fs.readFileSync(file);
+        return Buffer.from(bitmap).toString("base64");
+      }
+  
+      const file = base64_encode(req.file.path);
+  
+
     const post = await Post.create({
         location,
         title,
         description,
-        file: `./uploads/${req.file.filename}`,
+        file: file,
         fileType: fileType ? fileType : req.file.mimetype.split("/")[0],
         name: user._id,
     });
@@ -36,10 +44,10 @@ exports.DeletePost = catchAsyncErrors(async (req, res, next) => {
     const user = await AppUser.findById(req.user.id);
     const { postId } = req.body;
     const post = await Post.findOne({ _id: postId });
-    fs.unlink(`./public/uploads/${post.file.split("/")[2]}`, (err) => {
-        if (err) {
-        }
-    });
+    // fs.unlink(`./public/uploads/${post.file.split("/")[2]}`, (err) => {
+    //     if (err) {
+    //     }
+    // });
     const index = user.posts.indexOf(postId);
     user.posts.splice(index, 1);
     await user.save();
@@ -53,15 +61,17 @@ exports.DeletePost = catchAsyncErrors(async (req, res, next) => {
 exports.UpdatePost = catchAsyncErrors(async (req, res, next) => {
     const { postId, location, title, description, file, fileType } = req.body;
     const post = await Post.findOne({ _id: postId });
-    if (post.file.split("/")[2] !== file) {
-        fs.unlink(`./public/uploads/${post.file.split("/")[2]}`, (err) => {
-            if (err) {
-            }
-        });
+    if (req.file) {
+        function base64_encode(file) {
+            var bitmap = fs.readFileSync
+            (file);
+            return Buffer.from(bitmap).toString("base64");
+        }
+        const file = base64_encode(req.file.path);
+        post.file = file;
     }
     post.location = location;
     post.title = title;
-    post.file = `/uploads/${req.file.filename}`;
     post.description = description;
     post.fileType= fileType ? fileType : req.file.mimetype.split("/")[0];
     await post.save();
@@ -89,8 +99,8 @@ exports.GetPostById = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.PostLikes = catchAsyncErrors(async (req, res, next) => {
-    console.log("user");
     const user = await AppUser.findById(req.user.id);
+    console.log("user");
     const { postId } = req.body;
     const post = await Post.findById(postId);
     if (post.likes.includes(user._id)) {

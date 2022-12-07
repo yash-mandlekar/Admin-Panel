@@ -27,16 +27,16 @@ const postModel = mongoose.Schema({
     },
     name:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'users'
+        ref:'AppUser'
     },
     likes:[{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'users'
+        ref:'AppUser'
     }],
     comments:[{
         user:{
             type:mongoose.Schema.Types.ObjectId,
-            ref:'users'
+            ref:'AppUser'
         },
         comment:{type:String}
     }]

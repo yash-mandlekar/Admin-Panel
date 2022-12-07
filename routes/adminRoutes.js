@@ -60,6 +60,9 @@ const {
   GetNewsByCategoryName,
   ApprovedNews,
   PendingNews,
+  NewsLikes,
+  NewsComments,
+  NewsCommentDelete,
 } = require("../controllers/adminController/newsController");
 
 const {
@@ -235,6 +238,16 @@ router.get("/news/location/:location", GetNewsByLocation);
 
 // @api/news/hashtag GET news by hashtag
 router.get("/news/hashtag/:hashtag", GetNewsByHashTag);
+
+// @api/news/like POST like news
+router.post("/news/like/:id", isAuthUser, NewsLikes);
+
+// @api/news/comment POST NewsComments
+router.post("/news/comment/:id", isAuthUser, NewsComments);
+
+
+// @api/news/comment/delete DELETE NewsCommentDelete
+router.delete("/news/comment/delete/:id/:commentId", isAuthUser, NewsCommentDelete);
 
 // @api/folder POST create folder
 router
