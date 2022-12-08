@@ -255,3 +255,78 @@ exports.GetNewsByHashTag = catchAsyncErrors(async (req, res, next) => {
   const news = await News.find({ hashtag: req.params.hashTag });
   res.status(200).json(news);
 });
+
+exports.NewsLikes = catchAsyncErrors(async (req, res, next) => {
+  const news = await News.findById(req.params.id);
+  if (!news) {
+    return next(new ErrorHandler("News not found", 404));
+  }
+  if (news.likes.includes(req.user.id)) {
+    news.likes = news.likes.filter((item) => item.toString() !== req.user.id);
+    await news.save();
+    res.status(200).json({
+      success: true,
+      message: "News unliked successfully",
+    });
+  } else {
+    news.likes.push(req.user.id);
+    await news.save();
+    res.status(200).json({
+      success: true,
+      message: "News liked successfully",
+    });
+  }
+});
+
+exports.NewsComments = catchAsyncErrors(async (req, res, next) => {
+  const news = await News.findById(req.params.id);
+  if (!news) {
+    return next(new ErrorHandler("News not found", 404));
+  }
+  const user = await User.findById(req.user.id);
+  if (!user) {
+    return next(new ErrorHandler("User not found", 404));
+  }
+  const comment = {
+    user: user._id,
+    name: user.name,
+    comment: req.body.comment,
+  };
+  news.comments.push(comment);
+  await news.save();
+  res.status(200).json({
+    success: true,
+    message: "Comment added successfully",
+  });
+});
+
+exports.NewsCommentDelete = catchAsyncErrors(async (req, res, next) => {
+  const news = await News.findById(req.params.id);
+  if (!news) {
+    return next(new ErrorHandler("News not found", 404));
+  }
+  const comment = news.comments.find(
+    (item) => item._id.toString() === req.params.commentId.toString()
+  );
+  if (!comment) {
+    return next(new ErrorHandler("Comment not found", 404));
+  }
+  if (comment.user.toString() !== req.user.id.toString()) {
+    return next(
+      new ErrorHandler(
+        "You are not authorized to delete this comment",
+        401,
+        "Unauthorized",
+        401
+      )
+    );
+  }
+  news.comments = news.comments.filter(
+    (item) => item._id.toString() !== req.params.commentId.toString()
+  );
+  await news.save();
+  res.status(200).json({
+    success: true,
+    message: "Comment deleted successfully",
+  });
+});
