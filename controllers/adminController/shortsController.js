@@ -7,6 +7,7 @@ const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 const fs = require("fs");
 const ErrorHandler = require("../../utils/ErrorHandler");
 const { findOne } = require("../../models/adminModels/channelModel");
+const { log } = require("console");
 
 exports.UploadShorts = catchAsyncErrors(async (req, res, next) => {
   try {
@@ -88,7 +89,7 @@ exports.UpdateShorts = catchAsyncErrors(async (req, res, next) => {
     category.shorts.push(shorts._id);
     await category.save();
   }
-  if(typeof req.body.channels === "string"){
+  if (typeof req.body.channels === "string") {
     req.body.channels = req.body.channels.split(",");
   }
   if (shorts.channels.toString() !== req.body.channels.toString()) {
@@ -114,7 +115,7 @@ exports.UpdateShorts = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.AllShorts = catchAsyncErrors(async (req, res, next) => {
-  const shorts = await Shorts.find().populate("channels author category");
+  const shorts = await Shorts.find().populate("channels category author");
   res.status(200).json(shorts);
 });
 
@@ -149,3 +150,64 @@ exports.SingleShorts = catchAsyncErrors(async (req, res, next) => {
 //     message: "Shorts approved successfully",
 //   });
 // });
+
+exports.ShortsLike = catchAsyncErrors(async (req, res, next) => {
+const shorts = await Shorts.findById(req.params.id);
+if (!shorts) return next(new ErrorHandler("Shorts not found", 404));
+if(shorts.likes.includes(req.user.id)){
+  shorts.likes= shorts.likes.filter((item)=>item.toString() !== req.user.id);
+  await shorts.save();
+  res.status(200).json({
+    success : true,
+    message:"Short unliked successfully",
+    likes: shorts.likes.length
+  })
+}else{
+  shorts.likes.push(req.user.id);
+  await shorts.save();
+  res.status(200).json({
+    success : true,
+    message:"Short liked successfully",
+    likes: shorts.likes.length
+  })
+}
+});
+
+
+exports.ShortsComment = catchAsyncErrors(async (req, res, next) => {
+  const shorts = await Shorts.findById(req.params.id);
+  if (!shorts) return next(new ErrorHandler("Shorts not found", 404));
+  const user = await User.findById(req.user.id);
+  const comment = {
+    user: user._id,
+    name: user.name,
+    comment: req.body.comment,
+  };
+  shorts.comments.push(comment);
+  await shorts.save();
+  res.status(200).json({
+    success: true,
+    message: "Comment added successfully",
+  });
+});
+
+exports.ShortsCommentDelete = catchAsyncErrors(async (req, res, next) => {
+  const shorts = await Shorts.findById(req.params.id);
+  if (!shorts) return next(new ErrorHandler("Shorts not found", 404));
+  const user = await User.findById(req.user.id);
+  const comment = shorts.comments.find(
+    (comment) => comment._id.toString() === req.params.commentId
+  );
+  if (!comment) return next(new ErrorHandler("Comment not found", 404));
+  if (comment.user.toString() !== user._id.toString()) {
+    return next(
+      new ErrorHandler("You are not allowed to delete this comment", 403)
+    );
+  }
+  shorts.comments.splice(shorts.comments.indexOf(comment), 1);
+  await shorts.save();
+  res.status(200).json({
+    success: true,
+    message: "Comment deleted successfully",
+  });
+});

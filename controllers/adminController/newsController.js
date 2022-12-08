@@ -267,6 +267,7 @@ exports.NewsLikes = catchAsyncErrors(async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "News unliked successfully",
+      likes: news.likes.length,
     });
   } else {
     news.likes.push(req.user.id);
@@ -274,6 +275,7 @@ exports.NewsLikes = catchAsyncErrors(async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "News liked successfully",
+      likes: news.likes.length,
     });
   }
 });
