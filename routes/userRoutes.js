@@ -80,10 +80,10 @@ router.post(
 router.post("/followUnfollow/:id", isLoggedin, FollowUnfollow);
 
 // @api /user/followRequest POST follow user
-router.post("/followRequest", isLoggedin, FollowRequest);
+router.post("/followRequest/:id", isLoggedin, FollowRequest);
 
 // @api /user/followRequestAccept POST follow user
-router.post("/followRequestAccept", isLoggedin, FollowRequestAccept);
+router.post("/followRequestAccept/:id", isLoggedin, FollowRequestAccept);
 
 // @api /user/post POST create post
 router

@@ -237,13 +237,11 @@ exports.UpdateProfilePic = catchAsyncErrors(async (req, res, next) => {
 
 
 exports.FollowRequest = catchAsyncErrors(async (req, res, next) => {
-  const { id } = req.body;
   const user = await AppUser.findById(req.user.id);
-  const followUser = await AppUser.findById(id);  // id of user to follow
-  console.log(followUser.followRequest);
-  if (user.following.includes(id)) {
-    // return next(new ErrorHandler("You are already following this user", 400));
-    user.following.pop(id);
+  const followUser = await AppUser.findById(req.params.id); // id of user to follow
+  // console.log(followUser);
+  if (user.following.includes(req.params.id)) {
+    user.following.pop(req.params.id);
     followUser.followers.pop(req.user.id);
     await user.save();
     await followUser.save();
@@ -251,8 +249,17 @@ exports.FollowRequest = catchAsyncErrors(async (req, res, next) => {
       status: "success",
       message: "Unfollowed successfully",
     });
+  }if (followUser.followrequest.includes(req.user.id)) {
+    followUser.followrequest.pop(req.user.id);
+    await user.save();
+    await followUser.save();
+    res.status(200).json({
+      status: "success",
+      message: "Follow request cancelled successfully",
+    });
+    
   } else {
-    followUser.followRequest.push(req.user.id);
+    followUser.followrequest.push(req.user.id);
     await user.save();
     await followUser.save();
     res.status(200).json({
@@ -262,20 +269,18 @@ exports.FollowRequest = catchAsyncErrors(async (req, res, next) => {
   }
 });
 
-
 exports.FollowRequestAccept = catchAsyncErrors(async (req, res, next) => {
-  const { id } = req.body;
-  const user = await AppUser.findById(req.user.id);
-  const followUser = await AppUser.findById(id);  // id of user to follow
-  user.followers.push(id);
-  user.followRequest.pop(id);
-  followUser.following.push(req.user.id);
-  await user.save();
-  await followUser.save();
-  res.status(200).json({
-    status: "success",
-    message: "Follow request accepted successfully",
-  });
+const user = await AppUser.findById(req.user.id);
+const followUser = await AppUser.findById(req.params.id);  // id of user to follow
+user.followers.push(req.params.id);
+user.followrequest.pop(req.params.id);
+followUser.following.push(req.user.id);
+await user.save();
+await followUser.save();
+res.status(200).json({
+  status: "success",
+  message: "Follow request accepted successfully",
+});
 });
 
 
