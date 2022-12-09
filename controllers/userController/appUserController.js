@@ -39,7 +39,6 @@ exports.PostLoginAppUser = catchAsyncErrors(async (req, res, next) => {
   const salt = await bcrypt.genSalt(10); //bcrypt is used to hash the password
   otpData.otp = await bcrypt.hash(otpData.otp, salt); //hashing the password
   otpData.save().then((result) => {
-    // console.log(result);
     res.status(200).json({
       message: "OTP sent successfully",
     });
@@ -282,24 +281,26 @@ exports.FollowRequestAccept = catchAsyncErrors(async (req, res, next) => {
 
 exports.FollowUnfollow = catchAsyncErrors(async (req, res, next) => {
   const user = await AppUser.findById(req.user.id);
-  const { followId } = req.body;
-  const followUser = await AppUser.findById(followId);
-  if (!followUser) {
-    return next(new ErrorHandler("User not found", 404));
-  }
-  if (user.following.includes(followId)) {
-    user.following = user.following.filter((item) => item != followId);
-    followUser.followers = followUser.followers.filter(
-      (item) => item != user.id
-    );
+  const followUser = await AppUser.findById(req.params.id);  // id of user to follow
+  if (user.following.includes(req.params.id)) {
+    // return next(new ErrorHandler("You are already following this user", 400));
+    user.following.pop(req.params.id);
+    followUser.followers.pop(req.user.id);
+    await user.save();
+    await followUser.save();
+    res.status(200).json({
+      status: "success",
+      message: "Unfollowed successfully",
+    });
   } else {
-    user.following.push(followId);
-    followUser.followers.push(user.id);
+    user.following.push(req.params.id);
+    followUser.followers.push(req.user.id);
+    await user.save();
+    await followUser.save();
+    res.status(200).json({
+      status: "success",
+      message: "Followed successfully",
+    });
   }
-  await user.save();
-  await followUser.save();
-  res.status(200).json({
-    status: "success",
-    user,
-  });
 });
+

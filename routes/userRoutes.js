@@ -66,7 +66,7 @@ router.post("/change", isLoggedin, ChangePasswordApp);
 router
 .put("/profile", isLoggedin, UpdateAppUser)
 .delete("/profile", isLoggedin, DeleteAppUser)
-.get("/profile/:id", isLoggedin, GetAppUser)
+.get("/profile/:id", GetAppUser)
 
 // @api /user/profile/pic POST user profile pic
 router.post(
@@ -77,7 +77,7 @@ router.post(
 );
 
 // @api /user/followUnfollow POST follow user
-router.post("/followUnfollow", isLoggedin, FollowUnfollow);
+router.post("/followUnfollow/:id", isLoggedin, FollowUnfollow);
 
 // @api /user/followRequest POST follow user
 router.post("/followRequest", isLoggedin, FollowRequest);

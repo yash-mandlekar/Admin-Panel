@@ -7,29 +7,24 @@ const appUserModel = mongoose.Schema({
   name: {
     type: String,
     default: "",
-    // required: [true, "Name field can not empty."],
   },
   email: {
     type: String,
-    // required: [true, "Email field can not empty."],
     default: "",
   },
 
   dateOfBirth: {
     type: Date,
     default: Date.now,
-    // required: [true, "Date of birth field must not be empty"],
   },
   phone: {
     type: String,
     unique: true,
     minlength: [10, "Phone number must be at least 10 characters long."],
-    // required: [true, "Phone field must not be empty"],
   },
   gender: {
     type: String,
     default: "Male",
-    // required:true,
   },
   businessAcc: {
     type: String,
