@@ -6,17 +6,18 @@ const crypto = require("crypto");
 const appUserModel = mongoose.Schema({
   name: {
     type: String,
-    minlength: [3, "Name mube be at least 4 characters long."],
+    default: "",
     // required: [true, "Name field can not empty."],
   },
   email: {
     type: String,
     // required: [true, "Email field can not empty."],
-    validate: [validator.isEmail, "Invalid email"],
+    default: "",
   },
 
   dateOfBirth: {
     type: Date,
+    default: Date.now,
     // required: [true, "Date of birth field must not be empty"],
   },
   phone: {
@@ -27,25 +28,16 @@ const appUserModel = mongoose.Schema({
   },
   gender: {
     type: String,
+    default: "Male",
     // required:true,
   },
   businessAcc: {
     type: String,
     default: "no",
   },
-  password: {
-    type: String,
-    minlength: [6, "Password mube be at least 6 characters long."],
-    // required: [true, "Password field can not empty."],
-    select: false,
-  },
   profileImage: {
     type: String,
     default: "/images/avtar.jpg",
-  },
-  fileType: {
-    type: String,
-    default: "",
   },
   isBlocked: {
     type: Boolean,
@@ -97,16 +89,16 @@ const appUserModel = mongoose.Schema({
   resetPasswordExpire: Date,
   refreshToken: String,
 });
-appUserModel.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
+// appUserModel.pre("save", async function (next) {
+//   if (!this.isModified("password")) return next();
 
-  this.password = await bcrypt.hash(this.password, 10);
-  next();
-});
+//   this.password = await bcrypt.hash(this.password, 10);
+//   next();
+// });
 
-appUserModel.methods.comparePassword = async function (candidatePassword) {
-  return await bcrypt.compare(candidatePassword, this.password);
-};
+// appUserModel.methods.comparePassword = async function (candidatePassword) {
+//   return await bcrypt.compare(candidatePassword, this.password);
+// };
 
 appUserModel.methods.generateToken = function () {
   const access_token = jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
@@ -114,24 +106,24 @@ appUserModel.methods.generateToken = function () {
   });
 
   const refresh_token = jwt.sign({ id: this._id }, process.env.REFRESH_SECRET, {
-    expiresIn: "24h",
+    // expiresIn: "24h",
   });
   this.refreshToken = refresh_token;
 
   return access_token;
 };
 
-appUserModel.methods.createPasswordToken = function () {
-  const resetToken = crypto.randomBytes(20).toString("hex");
+// appUserModel.methods.createPasswordToken = function () {
+//   const resetToken = crypto.randomBytes(20).toString("hex");
 
-  this.resetPasswordToken = crypto
-    .createHash("sha256")
-    .update(resetToken)
-    .digest("hex");
+//   this.resetPasswordToken = crypto
+//     .createHash("sha256")
+//     .update(resetToken)
+//     .digest("hex");
 
-  this.resetPasswordExpire = Date.now() * 86400000;
+//   this.resetPasswordExpire = Date.now() * 86400000;
 
-  return resetToken;
-};
+//   return resetToken;
+// };
 
 module.exports = mongoose.model("AppUser", appUserModel);

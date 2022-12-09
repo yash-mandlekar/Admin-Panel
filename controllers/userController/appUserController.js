@@ -47,39 +47,34 @@ exports.PostLoginAppUser = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.postVerifyOtp = catchAsyncErrors(async (req, res, next) => {
-  // verify otp and register user if user does not exist in database else login user and generate token
-
+//verify otp and login user if otp is correct and save user to database if user does not exist in database already and login user if user exists in database already and otp is correct and send error if otp is incorrect 
   const phone = req.body.phone;
   const otp = req.body.otp;
-  const user = await AppUser.findOne({ phone: phone });
-  if (user) {
-    // compare otp with otp in database and login user
-    const otpData = await Otp.findOne({ phone: phone });
+  const user = await AppUser.findOne ({phone: phone });
+  if (!user) {
+    const otpData = await Otp.findOne
+    ({phone : phone});
+    if (!otpData) {
+      return next(new ErrorHandler("OTP does not exist", 400));
+    }
     const isMatch = await bcrypt.compare(otp, otpData.otp);
     if (!isMatch) {
-      return next(new ErrorHandler("Invalid OTP", 401));
+      return next(new ErrorHandler("OTP is incorrect", 400));
     }
-    // // generate token
-    // const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-    //   expiresIn: process.env.JWT_EXPIRES_IN,
-    // });
+    const newUser = await AppUser.create(req.body);
+    useToken(newUser, 200, res);
   } else {
-    // register user and generate token
-    const otpData = await Otp.findOne({ phone: phone });
+    const otpData = await Otp.findOne
+    ({phone: phone});
+    if (!otpData) {
+      return next(new ErrorHandler("OTP does not exist", 400));
+    }
     const isMatch = await bcrypt.compare(otp, otpData.otp);
     if (!isMatch) {
-      return next(new ErrorHandler("Invalid OTP", 401));
+      return next(new ErrorHandler("OTP is incorrect", 400));
     }
-    const newUser = await AppUser.create({
-      phone: phone,
-    });
-    // // generate token
-    // const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
-    //   expiresIn: process.env.JWT_EXPIRES_IN,
-    // });
-    
+    useToken(user, 200, res);
   }
-  useToken(user, 200, res);
 });
 
 exports.PostRefreshAppToken = catchAsyncErrors(async (req, res, next) => {
@@ -189,7 +184,7 @@ exports.ChangePasswordApp = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.GetAppUser = catchAsyncErrors(async (req, res, next) => {
-  const user = await AppUser.findById(req.body.id);
+  const user = await AppUser.findById(req.params.id);
   res.status(200).json({
     status: "success",
     user,

@@ -64,9 +64,9 @@ router.post("/change", isLoggedin, ChangePasswordApp);
 
 // @api /user/profile GET user profile
 router
-  .get("/profile", isLoggedin, GetAppUser)
-  .put("/profile", isLoggedin, UpdateAppUser)
-  .delete("/profile", isLoggedin, DeleteAppUser);
+.put("/profile", isLoggedin, UpdateAppUser)
+.delete("/profile", isLoggedin, DeleteAppUser)
+.get("/profile/:id", isLoggedin, GetAppUser)
 
 // @api /user/profile/pic POST user profile pic
 router.post(

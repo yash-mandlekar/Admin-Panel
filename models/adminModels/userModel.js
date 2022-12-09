@@ -152,7 +152,7 @@ userModel.methods.generateToken = function () {
   });
 
   const refresh_token = jwt.sign({ id: this._id }, process.env.REFRESH_SECRET, {
-    expiresIn: "24h",
+    // expiresIn: "24h",
   });
   this.refreshToken = refresh_token;
 
