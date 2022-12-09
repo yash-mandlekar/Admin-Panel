@@ -42,56 +42,77 @@ exports.CreatePost = catchAsyncErrors(async (req, res, next) => {
 
 exports.DeletePost = catchAsyncErrors(async (req, res, next) => {
     const user = await AppUser.findById(req.user.id);
-    const { postId } = req.body;
-    const post = await Post.findOne({ _id: postId });
-    // fs.unlink(`./public/uploads/${post.file.split("/")[2]}`, (err) => {
-    //     if (err) {
-    //     }
-    // });
-    const index = user.posts.indexOf(postId);
-    user.posts.splice(index, 1);
-    await user.save();
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+        return next(new ErrorHandler("Post not found", 404));
+    }
+    // delete post from user posts if it is the author of the post 
+    if (post.name.toString() === user._id.toString()) {
+        user.posts.pop(post._id);
+        await user.save();
+    }
     await post.remove();
-    res.status(201).json({
-        success: true,
-        message: "post deleted successfully",
+    res.status(200).json({
+        status: "success",
+        message: "Post deleted successfully",
     });
 });
 
 exports.UpdatePost = catchAsyncErrors(async (req, res, next) => {
-    const { postId, location, title, description, file, fileType } = req.body;
-    const post = await Post.findOne({ _id: postId });
-    if (req.file) {
+    const {location, title, description, fileType } = req.body;
+    const post = await Post.findById(req.params.id);
+    const user = await AppUser.findById(req.user.id);
+    if (!post) {
+        return next(new ErrorHandler("Post not found", 404));
+    }
+    if (post.name.toString() !== user._id.toString()) {
+        return next(new ErrorHandler("You are not authorized to update this post", 401));
+    }
+    if(req.file){
         function base64_encode(file) {
-            var bitmap = fs.readFileSync
-            (file);
+            var bitmap = fs.readFileSync(file);
             return Buffer.from(bitmap).toString("base64");
-        }
-        const file = base64_encode(req.file.path);
-        post.file = file;
+            }
+            const file = base64_encode(req.file.path);
+            post.file = file;
+            post.fileType = fileType ? fileType : req.file.mimetype.split("/")[0];
     }
     post.location = location;
     post.title = title;
     post.description = description;
-    post.fileType= fileType ? fileType : req.file.mimetype.split("/")[0];
     await post.save();
-    res.status(201).json({
-    success: true,
-    message: "post updated successfully",
-    post
-});
-});
-
-exports.GetPost = catchAsyncErrors(async (req, res, next) => {
-    const post = await Post.find();
     res.status(200).json({
         status: "success",
         post,
     });
 });
 
+
+exports.GetPost = catchAsyncErrors(async (req, res, next) => {
+   //get post of logged in user 
+    const user = await AppUser.findById(req.user.id);
+    const post = await Post.find({ name: user._id });
+    res.status(200).json({
+        status: "success",
+        post,
+    });
+});
+
+//GET post if following 
+exports.GetPostFollowing = catchAsyncErrors(async (req, res, next) => {
+//get post to user and following user 
+    const user = await AppUser.findById(req.user.id).populate("following");
+    const following = user.following.map((user) => user._id);
+    const post = await Post.find({ name: { $in: following } });
+    res.status(200).json({
+        status: "success",
+        post,
+    });
+});
+
+
 exports.GetPostById = catchAsyncErrors(async (req, res, next) => {
-    const post = await Post.findById(req.body.id);
+    const post = await Post.findById(req.params.id);
     res.status(200).json({
         status: "success",
         post,
@@ -100,7 +121,6 @@ exports.GetPostById = catchAsyncErrors(async (req, res, next) => {
 
 exports.PostLikes = catchAsyncErrors(async (req, res, next) => {
     const user = await AppUser.findById(req.user.id);
-    console.log("user");
     const { postId } = req.body;
     const post = await Post.findById(postId);
     if (post.likes.includes(user._id)) {

@@ -71,25 +71,25 @@ const appUserModel = mongoose.Schema({
   posts: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "postModel",
+      ref: "Post",
     },
   ],
   followers: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "appUserModel",
+      ref: "AppUser",
     },
   ],
   following: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "appUserModel",
+      ref: "AppUser",
     },
   ],
   followrequest: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "appUserModel",
+      ref: "AppUser",
     },
   ],
 

@@ -25,6 +25,7 @@ const {
 const {
   CreatePost,
   GetPost,
+  GetPostFollowing,
   GetPostById,
   DeletePost,
   UpdatePost,
@@ -38,7 +39,7 @@ const { isLoggedin } = require("../middleware/login");
 router.get("/", GetHomepage);
 
 // @api /user/register POST register admin and adminpanel users
-router.post("/register", PostRegisterAppUser);
+router.post("/register", isLoggedin, PostRegisterAppUser);
 
 // @api /user/login POST login user
 router.post("/login", PostLoginAppUser);
@@ -87,17 +88,20 @@ router.post("/followRequestAccept", isLoggedin, FollowRequestAccept);
 // @api /user/post POST create post
 router
   .post("/post", isLoggedin, upload.single("file"), CreatePost)
-  .get("/post",  GetPost)
-  .delete("/post", isLoggedin, DeletePost)
-  .put("/post", isLoggedin, upload.single("file"), UpdatePost);
+  .get("/post",isLoggedin, GetPost)
+  .put("/post/:id", isLoggedin, upload.single("file"), UpdatePost)
+  .delete("/post/:id", isLoggedin, DeletePost)
 
-// @api /user/post/:id GET post by id
-router.get("/all/post", GetPostById);
+// @api /user/post/following GET post
+router.get("/post/following",isLoggedin, GetPostFollowing);
 
 // @api /user/post/likes
 router.post("/post/likes", isLoggedin, PostLikes);
 
 // @api /user/post/comment
 router.post("/post/comment", isLoggedin, PostComments);
+
+// @api /user/post/:id GET post by id
+router.get("/post/:id", GetPostById);
 
 module.exports = router;
