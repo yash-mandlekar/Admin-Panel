@@ -25,11 +25,15 @@ exports.PostLoginAppUser = catchAsyncErrors(async (req, res, next) => {
   const apiKey = process.env.API_Key;
   const phone = req.body.phone;
   const message = "Your One Time Password (OTP) for online class is ";
-  var val = Math.floor(1000 + Math.random() * 900000);
-  if (val.length < 6) {
-    val = val + 100000;
-  } 
-  const otp = val.toString(); 
+  var val;
+  const rand = () => {
+    val = Math.floor(1000 + Math.random() * 900000);
+    if (val.length < 6) {
+      rand();
+    }
+  };
+  rand();
+  const otp = val.toString();
   const oldOtp = await Otp.findOne({
     phone: phone,
   });
@@ -56,13 +60,12 @@ exports.PostLoginAppUser = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.postVerifyOtp = catchAsyncErrors(async (req, res, next) => {
-//verify otp and login user if otp is correct and save user to database if user does not exist in database already and login user if user exists in database already and otp is correct and send error if otp is incorrect 
+  //verify otp and login user if otp is correct and save user to database if user does not exist in database already and login user if user exists in database already and otp is correct and send error if otp is incorrect
   const phone = req.body.phone;
   const otp = req.body.otp;
-  const user = await AppUser.findOne ({phone: phone });
+  const user = await AppUser.findOne({ phone: phone });
   if (!user) {
-    const otpData = await Otp.findOne
-    ({phone : phone});
+    const otpData = await Otp.findOne({ phone: phone });
     if (!otpData) {
       return next(new ErrorHandler("OTP does not exist", 400));
     }
@@ -73,8 +76,7 @@ exports.postVerifyOtp = catchAsyncErrors(async (req, res, next) => {
     const newUser = await AppUser.create(req.body);
     useToken(newUser, 200, res);
   } else {
-    const otpData = await Otp.findOne
-    ({phone: phone});
+    const otpData = await Otp.findOne({ phone: phone });
     if (!otpData) {
       return next(new ErrorHandler("OTP does not exist", 400));
     }
@@ -245,7 +247,6 @@ exports.UpdateProfilePic = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-
 exports.FollowRequest = catchAsyncErrors(async (req, res, next) => {
   const user = await AppUser.findById(req.user.id);
   const followUser = await AppUser.findById(req.params.id); // id of user to follow
@@ -259,7 +260,8 @@ exports.FollowRequest = catchAsyncErrors(async (req, res, next) => {
       status: "success",
       message: "Unfollowed successfully",
     });
-  }if (followUser.followrequest.includes(req.user.id)) {
+  }
+  if (followUser.followrequest.includes(req.user.id)) {
     followUser.followrequest.pop(req.user.id);
     await user.save();
     await followUser.save();
@@ -267,7 +269,6 @@ exports.FollowRequest = catchAsyncErrors(async (req, res, next) => {
       status: "success",
       message: "Follow request cancelled successfully",
     });
-    
   } else {
     followUser.followrequest.push(req.user.id);
     await user.save();
@@ -280,23 +281,22 @@ exports.FollowRequest = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.FollowRequestAccept = catchAsyncErrors(async (req, res, next) => {
-const user = await AppUser.findById(req.user.id);
-const followUser = await AppUser.findById(req.params.id);  // id of user to follow
-user.followers.push(req.params.id);
-user.followrequest.pop(req.params.id);
-followUser.following.push(req.user.id);
-await user.save();
-await followUser.save();
-res.status(200).json({
-  status: "success",
-  message: "Follow request accepted successfully",
+  const user = await AppUser.findById(req.user.id);
+  const followUser = await AppUser.findById(req.params.id); // id of user to follow
+  user.followers.push(req.params.id);
+  user.followrequest.pop(req.params.id);
+  followUser.following.push(req.user.id);
+  await user.save();
+  await followUser.save();
+  res.status(200).json({
+    status: "success",
+    message: "Follow request accepted successfully",
+  });
 });
-});
-
 
 exports.FollowUnfollow = catchAsyncErrors(async (req, res, next) => {
   const user = await AppUser.findById(req.user.id);
-  const followUser = await AppUser.findById(req.params.id);  // id of user to follow
+  const followUser = await AppUser.findById(req.params.id); // id of user to follow
   if (user.following.includes(req.params.id)) {
     // return next(new ErrorHandler("You are already following this user", 400));
     user.following.pop(req.params.id);
@@ -319,7 +319,7 @@ exports.FollowUnfollow = catchAsyncErrors(async (req, res, next) => {
   }
 });
 
-// appUser intrests 
+// appUser intrests
 exports.AddInterest = catchAsyncErrors(async (req, res, next) => {
   const user = await AppUser.findById(req.user.id);
   const { interest } = req.body;
