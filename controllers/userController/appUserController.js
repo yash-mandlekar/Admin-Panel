@@ -26,6 +26,9 @@ exports.PostLoginAppUser = catchAsyncErrors(async (req, res, next) => {
   const phone = req.body.phone;
   const message = "Your One Time Password (OTP) for online class is ";
   var val = Math.floor(1000 + Math.random() * 900000);
+  if (val.length < 6) {
+    val = val + 100000;
+  } 
   const otp = val.toString();
   const otpData = new Otp({
     phone: phone,
@@ -309,3 +312,15 @@ exports.FollowUnfollow = catchAsyncErrors(async (req, res, next) => {
   }
 });
 
+// appUser intrests 
+exports.AddInterest = catchAsyncErrors(async (req, res, next) => {
+  const user = await AppUser.findById(req.user.id);
+  const { interest } = req.body;
+  user.interest = interest;
+  await user.save();
+  res.status(201).json({
+    success: true,
+    message: "Interest added successfully",
+    user,
+  });
+});

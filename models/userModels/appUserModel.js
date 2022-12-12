@@ -46,10 +46,12 @@ const appUserModel = mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  interest: {
-    type: String,
-    default: "",
-  },
+  interest: [
+    {
+      type: String,
+      default: "",
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now,
@@ -77,6 +79,12 @@ const appUserModel = mongoose.Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "AppUser",
+    },
+  ],
+  messages: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Message",
     },
   ],
 

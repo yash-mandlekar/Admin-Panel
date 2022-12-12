@@ -14,6 +14,7 @@ const {
   ResetPasswordApp,
   ChangePasswordApp,
   GetAppUser,
+  AddInterest,
   UpdateAppUser,
   UpdateProfilePic,
   DeleteAppUser,
@@ -25,6 +26,7 @@ const {
 const {
   CreatePost,
   GetPost,
+  GetPostByUserIntrest,
   GetPostFollowing,
   GetPostById,
   DeletePost,
@@ -62,6 +64,9 @@ router.post("/reset/:resetToken", isLoggedin, ResetPasswordApp);
 // @api /user/change password POST login user
 router.post("/change", isLoggedin, ChangePasswordApp);
 
+// @api /user/post POST AddIntrests user 
+router.post("/interest", isLoggedin, AddInterest);
+
 // @api /user/profile GET user profile
 router
 .put("/profile", isLoggedin, UpdateAppUser)
@@ -94,6 +99,9 @@ router
 
 // @api /user/post/following GET post
 router.get("/post/following",isLoggedin, GetPostFollowing);
+
+// @api /user/post/interest GET post
+router.get("/post/interest",isLoggedin, GetPostByUserIntrest);
 
 // @api /user/post/likes
 router.post("/post/likes", isLoggedin, PostLikes);

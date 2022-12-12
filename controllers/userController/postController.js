@@ -2,9 +2,7 @@ const AppUser = require("../../models/userModels/appUserModel");
 const Post = require("../../models/userModels/postModel");
 const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 const ErrorHandler = require("../../utils/ErrorHandler");
-const { post } = require("../../routes/userRoutes");
 const fs = require("fs");
-const { log } = require("console");
 
 exports.CreatePost = catchAsyncErrors(async (req, res, next) => {
   try {
@@ -115,6 +113,16 @@ exports.GetPostById = catchAsyncErrors(async (req, res, next) => {
     post,
   });
 });
+
+exports.GetPostByUserIntrest = catchAsyncErrors(async (req, res, next) => {
+  const user = await AppUser.findById(req.user.id);
+  const post = await Post.find({ intrest: { $in: user.intrest } });
+  res.status(200).json({
+    status: "success",
+    post,
+  });
+});
+
 
 exports.PostLikes = catchAsyncErrors(async (req, res, next) => {
   const user = await AppUser.findById(req.user.id);
