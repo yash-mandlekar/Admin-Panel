@@ -29,7 +29,14 @@ exports.PostLoginAppUser = catchAsyncErrors(async (req, res, next) => {
   if (val.length < 6) {
     val = val + 100000;
   } 
-  const otp = val.toString();
+  const otp = val.toString(); 
+  const oldOtp = await Otp.findOne({
+    phone: phone,
+  });
+  if (oldOtp) {
+    await Otp.findByIdAndDelete(oldOtp._id);
+  }
+  // save otp to database
   const otpData = new Otp({
     phone: phone,
     otp: otp,
