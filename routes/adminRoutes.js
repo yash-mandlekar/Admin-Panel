@@ -61,6 +61,7 @@ const {
   GetNewsByLocation,
   GetNewsByHashTag,
   GetNewsByCategoryName,
+  RandomNews,
   ApprovedNews,
   PendingNews,
   NewsLikes,
@@ -223,6 +224,9 @@ router
 
 // @api/GET all news
 router.get("/all/news", AllNews);
+
+// @api/random/news GET RandomNews
+router.get("/random/news",isAuthUser, RandomNews);
 
 // @api/GET all approved news
 router.get("/approved/news", ApprovedNews);

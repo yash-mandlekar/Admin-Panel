@@ -123,6 +123,22 @@ exports.GetPostByUserIntrest = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
+//GET post randomly for home page of user and following user and intrest user 
+exports.GetPostRandom = catchAsyncErrors(async (req, res, next) => {
+  const user = await AppUser.findById(req.user.id).populate("following"); 
+  const following = user.following.map((user) => user._id);
+  const post = await Post.find({ name: { $in: following } });
+  const post1 = await Post.find({ intrest: { $in: user.intrest } });
+  const post2 = post.concat(post1);
+  const post3 = post2.filter((post) => post.name.toString() !== user._id.toString());
+  const post4 = post3.sort(() => Math.random() - 0.5);
+  res.status(200).json({
+    status: "success",
+    post: post4,
+  });
+});
+
+  
 
 exports.PostLikes = catchAsyncErrors(async (req, res, next) => {
   const user = await AppUser.findById(req.user.id);

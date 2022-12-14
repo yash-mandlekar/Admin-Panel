@@ -136,7 +136,6 @@ exports.DeleteNews = catchAsyncErrors(async (req, res, next) => {
     (item) => item.toString() !== news._id.toString()
   );
   await user.save();
-  // find category from categories array and remove news id from category news array and save category and remove news and return news id and message news deleted successfully
   const category = await Categories.find({ _id: { $in: news.categories } });
   category.forEach((cat) => {
     cat.news = cat.news.filter(
@@ -157,6 +156,15 @@ exports.SingleNews = catchAsyncErrors(async (req, res, next) => {
   if (!news) {
     return next(new ErrorHandler("News not found", 404));
   }
+  res.status(200).json(news);
+});
+
+// get news news randomly for home on load and on scroll down 
+exports.RandomNews = catchAsyncErrors(async (req, res, next) => {
+  const news = await News.find({ published: "true" })
+    .populate("categories author")
+    .sort({ publishDate: -1 })
+    .limit(10);
   res.status(200).json(news);
 });
 
