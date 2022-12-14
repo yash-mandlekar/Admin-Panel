@@ -41,11 +41,7 @@ const {
   DeleteShorts,
   UpdateShorts,
   AllShorts,
-  SingleShorts,
-  ApproveShorts,
-  ShortsLike,
-  ShortsComment,
-  ShortsCommentDelete,
+  SingleShorts
 } = require("../controllers/adminController/shortsController");
 
 const {
@@ -205,15 +201,6 @@ router.get("/all/shorts", AllShorts);
 
 // @api/approve-Shorts POST approve Shorts
 // router.post("/approve-shorts/:id", isAuthUser, ApproveShorts);
-
-// @api/POST ShortsLike
-router.post("/shorts/like/:id", isAuthUser, ShortsLike);
-
-// @api/POST ShortsComment
-router.post("/shorts/comment/:id", isAuthUser, ShortsComment);
-
-// @api/POST ShortsCommentDelete
-router.delete("/shorts/comment/delete/:id/:commentId", isAuthUser, ShortsCommentDelete);
 
 // @api/upload POST upload news
 router

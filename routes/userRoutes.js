@@ -36,6 +36,7 @@ const {
 } = require("../controllers/userController/postController");
 
 const { isLoggedin } = require("../middleware/login");
+const { ShortsLike, ShortsComment, ShortsCommentDelete } = require("../controllers/adminController/shortsController");
 
 // @api /user/ GET Hompage
 router.get("/", GetHomepage);
@@ -80,6 +81,17 @@ router.post(
   uploadDp.single("profilePic"),
   UpdateProfilePic
 );
+
+
+// @api/POST ShortsLike
+router.post("/shorts/like/:id", isLoggedin, ShortsLike);
+
+// @api/POST ShortsComment
+router.post("/shorts/comment/:id", isLoggedin, ShortsComment);
+
+// @api/POST ShortsCommentDelete
+router.delete("/shorts/comment/delete/:id/:commentId", isLoggedin, ShortsCommentDelete);
+
 
 // @api /user/followUnfollow POST follow user
 router.post("/followUnfollow/:id", isLoggedin, FollowUnfollow);
