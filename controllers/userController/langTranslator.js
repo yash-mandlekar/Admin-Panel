@@ -10,17 +10,6 @@ const translate=new Translate({
     projectId:CREDENTIALS.project_id
 });
 
-//detect language
-const detectLanguage=async(text)=>{
- try{
-     const [detection]=await translate.detect(text);
-     console.log(detection);
-     return detection.language;
-  }catch(err){
-      console.log(err);
-  }
-}
-
 //translate text
 const translateText=async(text,target)=>{
   try{
@@ -34,7 +23,6 @@ const translateText=async(text,target)=>{
 // detect language and translate text 
 exports.translate=async(req,res)=>{
   const {text,target}=req.body;
-  const language=await detectLanguage(text);
   const translation=await translateText(text,target);
   res.send({translation});
 }
