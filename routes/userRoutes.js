@@ -37,6 +37,7 @@ const {
 
 const { isLoggedin } = require("../middleware/login");
 const { ShortsLike, ShortsComment, ShortsCommentDelete } = require("../controllers/adminController/shortsController");
+const { translate } = require("../controllers/userController/langTranslator");
 
 // @api /user/ GET Hompage
 router.get("/", GetHomepage);
@@ -124,4 +125,6 @@ router.post("/post/comment", isLoggedin, PostComments);
 // @api /user/post/:id GET post by id
 router.get("/post/:id", GetPostById);
 
+// @api /user/post translate POST translate post 
+router.post("/translate",translate);
 module.exports = router;
