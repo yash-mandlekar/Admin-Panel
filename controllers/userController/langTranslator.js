@@ -21,8 +21,18 @@ const translateText=async(text,target)=>{
 }
 
 // detect language and translate text 
-exports.translate=async(req,res)=>{
-  const {text,target}=req.body;
-  const translation=await translateText(text,target);
-  res.send({translation});
-}
+exports.translate = async (req, res) => {
+  const { text, text2, text3, target } = req.body;
+  const translation = await translateText(text, target);
+  if (text2) {
+    var translation2 = await translateText(text2, target);
+  }
+  if (text3) {
+    var translation3 = await translateText(text3, target);
+  }
+  res.send({
+    translation: translation,
+    translation2: translation2 && translation2,
+    translation3: translation3 && translation3,
+  });
+};
