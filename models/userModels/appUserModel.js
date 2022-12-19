@@ -46,6 +46,10 @@ const appUserModel = mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  language:{  
+    type: String,
+    default: "hi",
+  },
   interest: [
     {
       type: String,
