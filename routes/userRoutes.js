@@ -35,6 +35,11 @@ const {
   PostComments,
 } = require("../controllers/userController/postController");
 
+const {
+  SaveNews,
+  GetSavedNews,
+} = require("../controllers/adminController/newsController");
+
 const { isLoggedin } = require("../middleware/login");
 const { ShortsLike, ShortsComment, ShortsCommentDelete } = require("../controllers/adminController/shortsController");
 const { translate } = require("../controllers/userController/langTranslator");
@@ -85,7 +90,7 @@ router.post(
 
 
 // @api/POST ShortsLike
-router.post("/shorts/like/:id", isLoggedin, ShortsLike);
+router.get("/shorts/like/:id", isLoggedin, ShortsLike);
 
 // @api/POST ShortsComment
 router.post("/shorts/comment/:id", isLoggedin, ShortsComment);
@@ -127,4 +132,11 @@ router.get("/post/:id", GetPostById);
 
 // @api /user/post translate POST translate post 
 router.post("/translate",translate);
+
+// @api /user/savednews GET save news
+router.get("/savednews/:id", isLoggedin, SaveNews);
+
+// @api /user/savednews GET save news
+router.get("/savednews", isLoggedin, GetSavedNews);
+
 module.exports = router;

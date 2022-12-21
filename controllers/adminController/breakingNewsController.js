@@ -17,7 +17,6 @@ exports.AllBreakingNews = catchAsyncErrors(async (req, res, next) => {
 
 exports.GetBreakingNews = catchAsyncErrors(async (req, res, next) => {
     const breakingNews = await BreakingNews.findOne({_id:req.params.id});
-    console.log(breakingNews);
     if (!breakingNews) {
         return next(new ErrorHandler("Breaking News not found", 404));
     }   

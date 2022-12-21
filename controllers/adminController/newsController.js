@@ -1,4 +1,5 @@
 const User = require("../../models/adminModels/userModel");
+const AppUser = require("../../models/userModels/appUserModel");
 const News = require("../../models/adminModels/newsModel");
 const Categories = require("../../models/adminModels/newsCategoryModel");
 const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
@@ -64,7 +65,6 @@ exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
       cat.save();
     });
     if (user.role.toLowerCase() !== "admin") {
-      console.log(user.parent);
       user.parent.requests.push(news._id);
       await user.parent.save();
     }
@@ -339,4 +339,41 @@ exports.NewsCommentDelete = catchAsyncErrors(async (req, res, next) => {
     success: true,
     message: "Comment deleted successfully",
   });
+});
+
+exports.SaveNews = catchAsyncErrors(async (req, res, next) => {
+  const news = await News.findById(req.params.id);
+  if (!news) {
+    return next(new ErrorHandler("News not found", 404));
+  }
+  const user = await AppUser.findById(req.user.id);
+  if (!user) {
+    return next(new ErrorHandler("User not found", 404));
+  }
+  if (user.savedNews.includes(req.params.id)) {
+    user.savedNews = user.savedNews.filter(
+      (item) => item.toString() !== req.params.id.toString()
+    );
+    await user.save();
+    res.status(200).json({
+      success: true,
+      message: "News unsaved successfully",
+    });
+  } else {
+    user.savedNews.push(req.params.id);
+    await user.save();
+    res.status(200).json({
+      success: true,
+      message: "News saved successfully",
+    });
+  }
+});
+
+exports.GetSavedNews = catchAsyncErrors(async (req, res, next) => {
+  const user = await AppUser.findById(req.user.id).populate("savedNews");
+  if (!user) {
+    return next(new ErrorHandler("User not found", 404));
+  }
+  const { savedNews } = user;
+  res.status(200).json(savedNews);
 });

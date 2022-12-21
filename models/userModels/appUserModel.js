@@ -56,6 +56,12 @@ const appUserModel = mongoose.Schema({
       default: "",
     },
   ],
+  savedNews: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "News",
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now,

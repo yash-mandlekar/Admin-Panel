@@ -160,7 +160,7 @@ if(shorts.likes.includes(req.user.id)){
   res.status(200).json({
     success : true,
     message:"Short unliked successfully",
-    likes: shorts.likes.length
+    likes: shorts.likes
   })
 }else{
   shorts.likes.push(req.user.id);
@@ -168,7 +168,7 @@ if(shorts.likes.includes(req.user.id)){
   res.status(200).json({
     success : true,
     message:"Short liked successfully",
-    likes: shorts.likes.length
+    likes: shorts.likes
   })
 }
 });

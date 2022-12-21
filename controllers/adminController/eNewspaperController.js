@@ -17,7 +17,6 @@ exports.CreateENewspaper = catchAsyncErrors(async (req, res, next) => {
     image: image,
     date,
   });
-  console.log(ewspaper);
   res.status(201).json({
     status: "success",
     ewspaper,

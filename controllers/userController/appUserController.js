@@ -230,7 +230,6 @@ exports.UpdateProfilePic = catchAsyncErrors(async (req, res, next) => {
     );
   }
   user.profileImage = `/profilePics/${req.file.filename}`;
-  console.log(`/profilePics/${req.file.filename}`);
   user.fileType = fileType ? fileType : req.file.mimetype.split("/")[0];
   await user.save();
   res.status(201).json({

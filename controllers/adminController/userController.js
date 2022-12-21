@@ -285,7 +285,6 @@ exports.RemoveUser = catchAsyncErrors(async (req, res, next) => {
 
 exports.BlockUser = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findById(req.user.id);
-  console.log(user.role);
   if (user.role.toLowerCase() !== "admin") {
     return next(
       new ErrorHandler("You are not authorized to perform this action", 401)
