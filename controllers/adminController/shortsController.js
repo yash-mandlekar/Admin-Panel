@@ -183,6 +183,7 @@ exports.ShortsComment = catchAsyncErrors(async (req, res, next) => {
   const user = await AppUser.findById(req.user.id);
   const comment = {
     user: user._id,
+    name: user.name,
     comment: req.body.comment,
   };
   shorts.comments.push(comment);

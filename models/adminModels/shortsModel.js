@@ -52,6 +52,7 @@ const shortsModel = mongoose.Schema(
           type: mongoose.Schema.Types.ObjectId,
           ref: "AppUser",
         },
+        name: { type: String },
         comment: { type: String },
       },
     ],
