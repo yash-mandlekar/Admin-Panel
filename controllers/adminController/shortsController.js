@@ -121,9 +121,11 @@ exports.AllShorts = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.SingleShorts = catchAsyncErrors(async (req, res, next) => {
-  const shorts = await Shorts.findById(req.params.id).populate(
-    "channels category author"
-  );
+// get single shorts by id and populate channels, category ,author and comments and comments author 
+  const shorts = await Shorts.findById(req.params.id).populate([
+    { path: "channels category author" },
+    { path: "comments", populate: { path: "user" } },
+  ]);
   if (!shorts) return next(new ErrorHandler("Shorts not found", 404));
   res.status(200).json(shorts);
 });
@@ -181,7 +183,6 @@ exports.ShortsComment = catchAsyncErrors(async (req, res, next) => {
   const user = await AppUser.findById(req.user.id);
   const comment = {
     user: user._id,
-    name: user.name,
     comment: req.body.comment,
   };
   shorts.comments.push(comment);
