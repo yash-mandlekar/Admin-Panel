@@ -1,4 +1,5 @@
 const User = require("../../models/adminModels/userModel");
+const AppUser = require("../../models/userModels/appUserModel");
 const Shorts = require("../../models/adminModels/shortsModel");
 const Folders = require("../../models/adminModels/folderModel");
 const Channel = require("../../models/adminModels/channelModel");
@@ -177,7 +178,7 @@ if(shorts.likes.includes(req.user.id)){
 exports.ShortsComment = catchAsyncErrors(async (req, res, next) => {
   const shorts = await Shorts.findById(req.params.id);
   if (!shorts) return next(new ErrorHandler("Shorts not found", 404));
-  const user = await User.findById(req.user.id);
+  const user = await AppUser.findById(req.user.id);
   const comment = {
     user: user._id,
     name: user.name,
@@ -194,7 +195,7 @@ exports.ShortsComment = catchAsyncErrors(async (req, res, next) => {
 exports.ShortsCommentDelete = catchAsyncErrors(async (req, res, next) => {
   const shorts = await Shorts.findById(req.params.id);
   if (!shorts) return next(new ErrorHandler("Shorts not found", 404));
-  const user = await User.findById(req.user.id);
+  const user = await AppUser.findById(req.user.id);
   const comment = shorts.comments.find(
     (comment) => comment._id.toString() === req.params.commentId
   );
