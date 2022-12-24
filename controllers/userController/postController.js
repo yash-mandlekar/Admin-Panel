@@ -170,6 +170,7 @@ exports.PostComments = catchAsyncErrors(async (req, res, next) => {
   await post.save();
   res.status(200).json({
     status: "success",
-    post,
+    message: "Comment added successfully",
+    comments: post.comments,
   });
 });

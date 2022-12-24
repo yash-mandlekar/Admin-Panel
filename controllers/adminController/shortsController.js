@@ -191,6 +191,7 @@ exports.ShortsComment = catchAsyncErrors(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: "Comment added successfully",
+    comments: shorts.comments,
   });
 });
 
