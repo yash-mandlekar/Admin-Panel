@@ -138,8 +138,6 @@ exports.GetPostRandom = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-  
-
 exports.PostLikes = catchAsyncErrors(async (req, res, next) => {
   const user = await AppUser.findById(req.user.id);
   const { postId } = req.body;

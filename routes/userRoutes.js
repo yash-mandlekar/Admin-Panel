@@ -84,7 +84,7 @@ router
 router.post(
   "/profile/pic",
   isLoggedin,
-  uploadDp.single("profilePic"),
+  uploadDp.single("profileImage"),
   UpdateProfilePic
 );
 
