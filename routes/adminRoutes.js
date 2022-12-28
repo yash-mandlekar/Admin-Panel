@@ -182,7 +182,7 @@ router.post("/block-appuser", isAuthUser, BlockAppUser);
 router.post(
   "/profile/pic",
   isAuthUser,
-  uploadDp.single("profilePic"),
+  uploadDp.single("profileImage"),
   UpdateProfilePic
 );
 
