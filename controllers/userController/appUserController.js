@@ -219,23 +219,17 @@ exports.DeleteAppUser = catchAsyncErrors(async (req, res, next) => {
 
 exports.UpdateProfilePic = catchAsyncErrors(async (req, res, next) => {
   const user = await AppUser.findById(req.user.id);
-  const { profileImage, fileType } = req.body;
-  if (user.profileImage.split("/")[2] !== profileImage) {
-    fs.unlink(
-      `./public/profilePics/${user.profileImage.split("/")[2]}`,
-      (err) => {
-        if (err) {
-        }
-      }
-    );
+  function base64_encode(file) {
+    var bitmap = fs.readFileSync(file);
+    return Buffer.from(bitmap).toString("base64");
   }
-  user.profileImage = `/profilePics/${req.file.filename}`;
-  user.fileType = fileType ? fileType : req.file.mimetype.split("/")[0];
+
+  const file = base64_encode(req.file.path);
+  user.profileImage = file;
   await user.save();
-  res.status(201).json({
-    success: true,
-    message: "Image updated successfully",
-    user,
+  res.status(200).json({
+    status: "success",
+    message: "Profile picture updated successfully",
   });
 });
 
