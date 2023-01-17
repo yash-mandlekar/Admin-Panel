@@ -121,7 +121,7 @@ exports.AllShorts = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.SingleShorts = catchAsyncErrors(async (req, res, next) => {
-// get single shorts by id and populate channels, category ,author and comments and comments author 
+  // get single shorts by id and populate channels, category ,author and comments and comments author
   const shorts = await Shorts.findById(req.params.id).populate([
     { path: "channels category author" },
     { path: "comments", populate: { path: "user" } },
@@ -155,27 +155,28 @@ exports.SingleShorts = catchAsyncErrors(async (req, res, next) => {
 // });
 
 exports.ShortsLike = catchAsyncErrors(async (req, res, next) => {
-const shorts = await Shorts.findById(req.params.id);
-if (!shorts) return next(new ErrorHandler("Shorts not found", 404));
-if(shorts.likes.includes(req.user.id)){
-  shorts.likes= shorts.likes.filter((item)=>item.toString() !== req.user.id);
-  await shorts.save();
-  res.status(200).json({
-    success : true,
-    message:"Short unliked successfully",
-    likes: shorts.likes
-  })
-}else{
-  shorts.likes.push(req.user.id);
-  await shorts.save();
-  res.status(200).json({
-    success : true,
-    message:"Short liked successfully",
-    likes: shorts.likes
-  })
-}
+  const shorts = await Shorts.findById(req.params.id);
+  if (!shorts) return next(new ErrorHandler("Shorts not found", 404));
+  if (shorts.likes.includes(req.user.id)) {
+    shorts.likes = shorts.likes.filter(
+      (item) => item.toString() !== req.user.id
+    );
+    await shorts.save();
+    res.status(200).json({
+      success: true,
+      message: "Short unliked successfully",
+      short: shorts,
+    });
+  } else {
+    shorts.likes.push(req.user.id);
+    await shorts.save();
+    res.status(200).json({
+      success: true,
+      message: "Short liked successfully",
+      short: shorts,
+    });
+  }
 });
-
 
 exports.ShortsComment = catchAsyncErrors(async (req, res, next) => {
   const shorts = await Shorts.findById(req.params.id);
