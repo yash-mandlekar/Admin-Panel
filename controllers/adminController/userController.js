@@ -248,7 +248,6 @@ exports.UpdateProfilePic = catchAsyncErrors(async (req, res, next) => {
     var bitmap = fs.readFileSync(file);
     return Buffer.from(bitmap).toString("base64");
   }
-
   const file = base64_encode(req.file.path);
   user.profileImage = file;
   await user.save();

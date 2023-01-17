@@ -3,35 +3,35 @@ const mongoose = require('mongoose');
 const advertisementModel = mongoose.Schema({
     title: {
         type: String,
-        required: true,
+        required: false,
     },
     description: {
         type: String,
-        required: true,
+        required: false,
     },
     file: {
         type: String,
-        required: true,
+        required: false,
     },
     link: {
         type: String,
-        required: true,
+        required: false,
     },
     targetAudience: {
         type: String,
-        required: true,
+        required: false,
     },
     advertisementLocation: {
         type: String,
-        required: true,
+        required: false,
     },
     status: {
         type: String,
-        required: true,
+        required: false,
     },
     sortOrder: {
         type: Number,
-        required: true,
+        required: false,
     },
     createdAt: {
         type: Date,
