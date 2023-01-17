@@ -41,7 +41,7 @@ const {
   DeleteShorts,
   UpdateShorts,
   AllShorts,
-  SingleShorts
+  SingleShorts,
 } = require("../controllers/adminController/shortsController");
 
 const {
@@ -213,7 +213,7 @@ router
 router.get("/all/news", AllNews);
 
 // @api/random/news GET RandomNews
-router.get("/random/news",isAuthUser, RandomNews);
+router.get("/random/news", isAuthUser, RandomNews);
 
 // @api/GET all approved news
 router.get("/approved/news", ApprovedNews);
@@ -248,9 +248,12 @@ router.post("/news/like/:id", isAuthUser, NewsLikes);
 // @api/news/comment POST NewsComments
 router.post("/news/comment/:id", isAuthUser, NewsComments);
 
-
 // @api/news/comment/delete DELETE NewsCommentDelete
-router.delete("/news/comment/delete/:id/:commentId", isAuthUser, NewsCommentDelete);
+router.delete(
+  "/news/comment/delete/:id/:commentId",
+  isAuthUser,
+  NewsCommentDelete
+);
 
 // @api/folder POST create folder
 router
