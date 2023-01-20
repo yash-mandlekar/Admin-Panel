@@ -5,13 +5,9 @@ const postModel = mongoose.Schema({
     location: {
         type: String,
     },
-    title: {
+    caption: {
         type: String,
-        required: true,
-    },
-    description: {
-        type: String,
-        required: true,
+        default: "",
     },
     file: {
         type: String,

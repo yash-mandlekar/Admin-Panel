@@ -7,7 +7,7 @@ const fs = require("fs");
 exports.CreatePost = catchAsyncErrors(async (req, res, next) => {
   try {
     const user = await AppUser.findById(req.user.id);
-    const { location, title, description, fileType } = req.body;
+    const { location, caption, fileType } = req.body;
     function base64_encode(file) {
       var bitmap = fs.readFileSync(file);
       return Buffer.from(bitmap).toString("base64");
@@ -17,8 +17,7 @@ exports.CreatePost = catchAsyncErrors(async (req, res, next) => {
 
     const post = await Post.create({
       location,
-      title,
-      description,
+      caption,
       file: file,
       fileType: fileType ? fileType : req.file.mimetype.split("/")[0],
       name: user._id,
@@ -54,7 +53,7 @@ exports.DeletePost = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.UpdatePost = catchAsyncErrors(async (req, res, next) => {
-  const { location, title, description, fileType } = req.body;
+  const { location,caption, fileType } = req.body;
   const post = await Post.findById(req.params.id);
   const user = await AppUser.findById(req.user.id);
   if (!post) {
@@ -75,8 +74,7 @@ exports.UpdatePost = catchAsyncErrors(async (req, res, next) => {
     post.fileType = fileType ? fileType : req.file.mimetype.split("/")[0];
   }
   post.location = location;
-  post.title = title;
-  post.description = description;
+  post.caption = caption;
   await post.save();
   res.status(200).json({
     status: "success",
