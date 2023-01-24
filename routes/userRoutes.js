@@ -33,6 +33,8 @@ const {
   UpdatePost,
   PostLikes,
   PostComments,
+  PostCommentDelete,
+  SavePost,
 } = require("../controllers/userController/postController");
 
 const {
@@ -127,6 +129,9 @@ router.post("/post/likes", isLoggedin, PostLikes);
 // @api /user/post/comment
 router.post("/post/comment", isLoggedin, PostComments);
 
+// @api /user/post/comment/delete
+router.delete("/post/comment/delete/:id/:commentId", isLoggedin, PostCommentDelete);
+
 // @api /user/post/:id GET post by id
 router.get("/post/:id", GetPostById);
 
@@ -134,9 +139,13 @@ router.get("/post/:id", GetPostById);
 router.post("/translate",translate);
 
 // @api /user/savednews GET save news
-router.get("/savednews/:id", isLoggedin, SaveNews);
+router.post("/savednews/:id", isLoggedin, SaveNews);
+
+// @api /user/savepost POST save news
+router.post("/savepost/:id", isLoggedin, SavePost);
 
 // @api /user/savednews GET save news
 router.get("/savednews", isLoggedin, GetSavedNews);
+
 
 module.exports = router;

@@ -7,7 +7,7 @@ const fs = require("fs");
 exports.CreatePost = catchAsyncErrors(async (req, res, next) => {
   try {
     const user = await AppUser.findById(req.user.id);
-    const { location, title, description, fileType } = req.body;
+    const { location, caption, fileType } = req.body;
     function base64_encode(file) {
       var bitmap = fs.readFileSync(file);
       return Buffer.from(bitmap).toString("base64");
@@ -17,8 +17,7 @@ exports.CreatePost = catchAsyncErrors(async (req, res, next) => {
 
     const post = await Post.create({
       location,
-      title,
-      description,
+      caption,
       file: file,
       fileType: fileType ? fileType : req.file.mimetype.split("/")[0],
       name: user._id,
@@ -54,7 +53,7 @@ exports.DeletePost = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.UpdatePost = catchAsyncErrors(async (req, res, next) => {
-  const { location, title, description, fileType } = req.body;
+  const { location,caption, fileType } = req.body;
   const post = await Post.findById(req.params.id);
   const user = await AppUser.findById(req.user.id);
   if (!post) {
@@ -75,8 +74,7 @@ exports.UpdatePost = catchAsyncErrors(async (req, res, next) => {
     post.fileType = fileType ? fileType : req.file.mimetype.split("/")[0];
   }
   post.location = location;
-  post.title = title;
-  post.description = description;
+  post.caption = caption;
   await post.save();
   res.status(200).json({
     status: "success",
@@ -123,14 +121,16 @@ exports.GetPostByUserIntrest = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-//GET post randomly for home page of user and following user and intrest user 
+//GET post randomly for home page of user and following user and intrest user
 exports.GetPostRandom = catchAsyncErrors(async (req, res, next) => {
-  const user = await AppUser.findById(req.user.id).populate("following"); 
+  const user = await AppUser.findById(req.user.id).populate("following");
   const following = user.following.map((user) => user._id);
   const post = await Post.find({ name: { $in: following } });
   const post1 = await Post.find({ intrest: { $in: user.intrest } });
   const post2 = post.concat(post1);
-  const post3 = post2.filter((post) => post.name.toString() !== user._id.toString());
+  const post3 = post2.filter(
+    (post) => post.name.toString() !== user._id.toString()
+  );
   const post4 = post3.sort(() => Math.random() - 0.5);
   res.status(200).json({
     status: "success",
@@ -171,4 +171,49 @@ exports.PostComments = catchAsyncErrors(async (req, res, next) => {
     message: "Comment added successfully",
     comments: post.comments,
   });
+});
+
+exports.PostCommentDelete = catchAsyncErrors(async (req, res, next) => {
+  const user = await AppUser.findById(req.user.id);
+  const post = await Post.findById(req.params.id);
+  const comment = post.comments.find(
+    (comment) => comment._id.toString() === req.params.commentId
+  );
+  if (!comment) {
+    return next(new ErrorHandler("Comment not found", 404));
+  }
+  if (comment.name.toString() !== user._id.toString()) {
+    return next(
+      new ErrorHandler("You are not authorized to delete this comment", 401)
+    );
+  }
+  const index = post.comments.indexOf(comment);
+  post.comments.splice(index, 1);
+  await post.save();
+  res.status(200).json({
+    status: "success",
+    message: "Comment deleted successfully",
+    comments: post.comments,
+  });
+});
+
+exports.SavePost = catchAsyncErrors(async (req, res, next) => {
+  const PostId = await Post.findById(req.params.id);
+  const user = await AppUser.findById(req.user.id);
+  if (user.savedNews.includes(PostId._id)) {
+    const index = user.savedNews.indexOf(PostId._id);
+    user.savedNews.splice(index, 1);
+    await user.save();
+    res.status(200).json({
+      status: "success",
+      message: "Post removed from saved",
+    });
+  } else {
+    user.savedNews.push(PostId._id);
+    await user.save();
+    res.status(200).json({
+      status: "success",
+      message: "Post saved successfully",
+    });
+  }
 });

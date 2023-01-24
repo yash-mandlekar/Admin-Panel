@@ -5,13 +5,9 @@ const postModel = mongoose.Schema({
     location: {
         type: String,
     },
-    title: {
+    caption: {
         type: String,
-        required: true,
-    },
-    description: {
-        type: String,
-        required: true,
+        default: "",
     },
     file: {
         type: String,
@@ -20,10 +16,6 @@ const postModel = mongoose.Schema({
     fileType: {
         type: String,
         default: "",
-    },
-    live: {
-        type: Boolean,
-        default: false,
     },
     name:{
         type:mongoose.Schema.Types.ObjectId,
