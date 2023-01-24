@@ -89,7 +89,11 @@ exports.PostRefreshToken = catchAsyncErrors(async (req, res, next) => {
       path: "requests",
       populate: [{ path: "author" }],
     });
-    useToken(refresh_user, 200, res);
+    if (refresh_user) {
+      useToken(refresh_user, 200, res);
+    }else{
+      return next(new ErrorHandler("Your are not authenticated", 401));
+    }
   });
 });
 
