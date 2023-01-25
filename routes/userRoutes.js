@@ -42,6 +42,10 @@ const {
   GetSavedNews,
 } = require("../controllers/adminController/newsController");
 
+const {
+  CreateUserNews,
+} = require("../controllers/userController/userNewsController");
+
 const { isLoggedin } = require("../middleware/login");
 const { ShortsLike, ShortsComment, ShortsCommentDelete } = require("../controllers/adminController/shortsController");
 const { translate } = require("../controllers/userController/langTranslator");
@@ -146,6 +150,9 @@ router.post("/savepost/:id", isLoggedin, SavePost);
 
 // @api /user/savednews GET save news
 router.get("/savednews", isLoggedin, GetSavedNews);
+
+// @api /user/usernews POST save news
+router.post("/usernews", upload.single("file"), isLoggedin, CreateUserNews);
 
 
 module.exports = router;

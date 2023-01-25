@@ -124,6 +124,13 @@ const {
   DeleteENewspaperCoordinates,
 } = require("../controllers/adminController/eNewspaperCoordinatesController");
 
+const {
+  GetUserNews,
+  GetUserNewsById,
+  UpdateUserNews,
+  DeleteUserNews,
+} = require("../controllers/userController/userNewsController");
+
 // @api/ GET Hompage
 router.get("/", GetHomepage);
 
@@ -352,5 +359,14 @@ router
 
 // @api/eNewspaperCoordinates/:id GET open eNewspaperCoordinates
 router.get("/ePaperCoord/:id", GetENewspaperCoordinatesById);
+
+// @api/userNews read update delete userNews
+router
+  .get("/userNews", isAuthUser, GetUserNews)
+  .put("/userNews/:id", upload.single("file"), isAuthUser, UpdateUserNews)
+  .delete("/userNews/:id", isAuthUser, DeleteUserNews);
+
+// @api/userNews/:id GET open userNews
+router.get("/userNews/:id", GetUserNewsById);
 
 module.exports = router;
