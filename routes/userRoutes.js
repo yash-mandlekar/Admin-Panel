@@ -82,7 +82,7 @@ router.post("/interest", isLoggedin, AddInterest);
 
 // @api /user/profile GET user profile
 router
-.put("/profile", isLoggedin, UpdateAppUser)
+.put("/profile/:id", isLoggedin, UpdateAppUser)
 .delete("/profile", isLoggedin, DeleteAppUser)
 .get("/profile/:id", GetAppUser)
 

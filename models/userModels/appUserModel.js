@@ -11,6 +11,10 @@ const appUserModel = mongoose.Schema({
     type: String,
     unique: true,
   },
+  bio: {
+    type: String,
+    default: "",
+  },
   email: {
     type: String,
     default: "",
@@ -52,6 +56,10 @@ const appUserModel = mongoose.Schema({
   language:{  
     type: String,
     default: "hi",
+  },
+  District: {
+    type: String,
+    default: "",
   },
   interest: [
     {
