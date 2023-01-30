@@ -84,8 +84,7 @@ exports.UpdatePost = catchAsyncErrors(async (req, res, next) => {
 
 exports.GetPost = catchAsyncErrors(async (req, res, next) => {
   //get post of logged in user
-  const user = await AppUser.findById(req.user.id);
-  const post = await Post.find({ name: user._id });
+  const post = await AppUser.findById(req.user.id).populate("posts")
   res.status(200).json({
     status: "success",
     post,
