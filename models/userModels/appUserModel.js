@@ -57,7 +57,7 @@ const appUserModel = mongoose.Schema({
     type: String,
     default: "hi",
   },
-  District: {
+  district: {
     type: String,
     default: "",
   },
