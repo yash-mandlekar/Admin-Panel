@@ -362,7 +362,7 @@ router.get("/ePaperCoord/:id", GetENewspaperCoordinatesById);
 
 // @api/userNews read update delete userNews
 router
-  .get("/userNews", isAuthUser, GetUserNews)
+  .get("/userNews",  GetUserNews)
   .put("/userNews/:id", upload.single("file"), isAuthUser, UpdateUserNews)
   .delete("/userNews/:id", isAuthUser, DeleteUserNews);
 
