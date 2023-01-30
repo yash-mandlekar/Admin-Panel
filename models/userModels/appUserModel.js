@@ -7,6 +7,10 @@ const appUserModel = mongoose.Schema({
     type: String,
     default: "",
   },
+  userName: {
+    type: String,
+    unique: true,
+  },
   email: {
     type: String,
     default: "",

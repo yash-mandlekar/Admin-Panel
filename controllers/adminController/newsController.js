@@ -8,7 +8,7 @@ const { file } = require("googleapis/build/src/apis/file");
 const fs = require("fs");
 
 // upload news and find category with array of category id and push news id in category news array and save category and news and return news
-exports.UploadNews = catchAsyncErrors(async (req, res, next) => {
+exports.UploadNews = catchAsyncErrors(async (req, res, next) => { 
   try {
     const user = await User.findById(req.user.id).populate("parent");
     const {
