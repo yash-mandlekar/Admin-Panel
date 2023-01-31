@@ -14,6 +14,7 @@ const {
   ResetPasswordApp,
   ChangePasswordApp,
   GetAppUser,
+  GetUserByUserName,
   AddInterest,
   UpdateAppUser,
   UpdateProfilePic,
@@ -35,6 +36,7 @@ const {
   PostComments,
   PostCommentDelete,
   SavePost,
+  UserFeeds,
 } = require("../controllers/userController/postController");
 
 const {
@@ -86,6 +88,10 @@ router
 .delete("/profile", isLoggedin, DeleteAppUser)
 .get("/profile/:id", GetAppUser)
 
+
+// @api /user/profile GET user profile
+router.get("/profile/user/:username", GetUserByUserName);
+
 // @api /user/profile/pic POST user profile pic
 router.post(
   "/profile/pic",
@@ -135,6 +141,9 @@ router.post("/post/comment", isLoggedin, PostComments);
 
 // @api /user/post/comment/delete
 router.delete("/post/comment/delete/:id/:commentId", isLoggedin, PostCommentDelete);
+
+// @api /user/post/GetPostRandom
+router.get("/feed", isLoggedin, UserFeeds);
 
 // @api /user/post/:id GET post by id
 router.get("/post/:id", GetPostById);

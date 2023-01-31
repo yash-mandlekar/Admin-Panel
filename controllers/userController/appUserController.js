@@ -195,6 +195,14 @@ exports.GetAppUser = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
+exports.GetUserByUserName = catchAsyncErrors(async (req, res, next) => {
+  const user = await AppUser.findOne({ username: req.params.username });
+  res.status(200).json({
+    status: "success",
+    user,
+  });
+});
+
 exports.UpdateAppUser = catchAsyncErrors(async (req, res, next) => {
   const user = await AppUser.findByIdAndUpdate(req.user.id, req.body, {
     new: true,

@@ -20,7 +20,7 @@ exports.CreatePost = catchAsyncErrors(async (req, res, next) => {
       caption,
       file: file,
       fileType: fileType ? fileType : req.file.mimetype.split("/")[0],
-      name: user._id,
+      author: user._id,
     });
     user.posts.push(post._id);
     await user.save();
@@ -53,7 +53,7 @@ exports.DeletePost = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.UpdatePost = catchAsyncErrors(async (req, res, next) => {
-  const { location,caption, fileType } = req.body;
+  const { location, caption, fileType } = req.body;
   const post = await Post.findById(req.params.id);
   const user = await AppUser.findById(req.user.id);
   if (!post) {
@@ -84,7 +84,7 @@ exports.UpdatePost = catchAsyncErrors(async (req, res, next) => {
 
 exports.GetPost = catchAsyncErrors(async (req, res, next) => {
   //get post of logged in user
-  const post = await AppUser.findById(req.user.id).populate("posts")
+  const post = await AppUser.findById(req.user.id).populate("posts");
   res.status(200).json({
     status: "success",
     post,
@@ -120,21 +120,31 @@ exports.GetPostByUserIntrest = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-//GET post randomly for home page of user and following user and intrest user
-exports.GetPostRandom = catchAsyncErrors(async (req, res, next) => {
-  const user = await AppUser.findById(req.user.id).populate("following");
-  const following = user.following.map((user) => user._id);
-  const post = await Post.find({ name: { $in: following } });
-  const post1 = await Post.find({ intrest: { $in: user.intrest } });
-  const post2 = post.concat(post1);
-  const post3 = post2.filter(
-    (post) => post.name.toString() !== user._id.toString()
+//GET post user feeds for home page of user and following user
+exports.UserFeeds = catchAsyncErrors(async (req, res, next) => {
+  const user = await AppUser.findById(req.user.id).populate(
+    "following",
+    "posts"
   );
-  const post4 = post3.sort(() => Math.random() - 0.5);
-  res.status(200).json({
-    status: "success",
-    post: post4,
-  });
+  const following = user.following.map((user) => user._id);
+  // console.log(following);
+  if (following.length === 0) {
+    // get post of logged in user
+    const post = await Post.find({ author: req.user.id }).populate("author");
+    res.status(200).json({
+      status: "success",
+      post,
+    });
+  } else {
+    //get post of logged in user and following user
+    const post = await Post.find({ author: { $in: following } }).populate(
+      "author"
+    );
+    res.status(200).json({
+      status: "success",
+      post,
+    });
+  }
 });
 
 exports.PostLikes = catchAsyncErrors(async (req, res, next) => {

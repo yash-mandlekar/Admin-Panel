@@ -17,7 +17,7 @@ const postModel = mongoose.Schema({
         type: String,
         default: "",
     },
-    name:{
+    author:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'AppUser'
     },
