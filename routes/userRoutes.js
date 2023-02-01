@@ -134,7 +134,7 @@ router.get("/post/following",isLoggedin, GetPostFollowing);
 router.get("/post/interest",isLoggedin, GetPostByUserIntrest);
 
 // @api /user/post/likes
-router.post("/post/likes", isLoggedin, PostLikes);
+router.get("/post/likes/:id", isLoggedin, PostLikes);
 
 // @api /user/post/comment
 router.post("/post/comment", isLoggedin, PostComments);

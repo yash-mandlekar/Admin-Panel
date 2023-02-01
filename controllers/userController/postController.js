@@ -149,8 +149,7 @@ exports.UserFeeds = catchAsyncErrors(async (req, res, next) => {
 
 exports.PostLikes = catchAsyncErrors(async (req, res, next) => {
   const user = await AppUser.findById(req.user.id);
-  const { postId } = req.body;
-  const post = await Post.findById(postId);
+  const post = await Post.findById(req.params.id);
   if (post.likes.includes(user._id)) {
     const index = post.likes.indexOf(user._id);
     post.likes.splice(index, 1);
