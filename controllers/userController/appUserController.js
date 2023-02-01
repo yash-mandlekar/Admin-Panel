@@ -93,6 +93,9 @@ exports.PostRefreshAppToken = catchAsyncErrors(async (req, res, next) => {
       return next(new ErrorHandler("Your are not authenticated", 401));
     }
     const refresh_user = await AppUser.findById(user.id);
+    if (!refresh_user) {
+      return next(new ErrorHandler("User does not exist", 400));
+    }
     useToken(refresh_user, 200, res);
   });
 });
