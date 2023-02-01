@@ -1,37 +1,40 @@
-const mongoose = require('mongoose')
-
+const mongoose = require("mongoose");
 
 const postModel = mongoose.Schema({
-    location: {
-        type: String,
+  location: {
+    type: String,
+  },
+  caption: {
+    type: String,
+    default: "",
+  },
+  file: {
+    type: String,
+    default: "",
+  },
+  fileType: {
+    type: String,
+    default: "",
+  },
+  author: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "AppUser",
+  },
+  likes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "AppUser",
     },
-    caption: {
-        type: String,
-        default: "",
+  ],
+  comments: [
+    {
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "AppUser",
+      },
+      comment: { type: String },
     },
-    file: {
-        type: String,
-        default: "",
-    },
-    fileType: {
-        type: String,
-        default: "",
-    },
-    author:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'AppUser'
-    },
-    likes:[{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'AppUser'
-    }],
-    comments:[{
-        user:{
-            type:mongoose.Schema.Types.ObjectId,
-            ref:'AppUser'
-        },
-        comment:{type:String}
-    }]
-    })
+  ],
+});
 
-module.exports = mongoose.model('Post', postModel);
+module.exports = mongoose.model("Post", postModel);
