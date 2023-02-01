@@ -207,7 +207,6 @@ exports.GetUserByUserName = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.UpdateAppUser = catchAsyncErrors(async (req, res, next) => {
-  console.log(req.body);
   const user = await AppUser.findByIdAndUpdate(req.user.id, req.body, {
     new: true,
     runValidators: true,
@@ -247,8 +246,7 @@ exports.UpdateProfilePic = catchAsyncErrors(async (req, res, next) => {
 
 exports.FollowRequest = catchAsyncErrors(async (req, res, next) => {
   const user = await AppUser.findById(req.user.id);
-  const followUser = await AppUser.findById(req.params.id); // id of user to follow
-  // console.log(followUser);
+  const followUser = await AppUser.findById(req.params.id); 
   if (user.following.includes(req.params.id)) {
     user.following.pop(req.params.id);
     followUser.followers.pop(req.user.id);

@@ -80,7 +80,6 @@ exports.DeleteShorts = catchAsyncErrors(async (req, res, next) => {
 
 exports.UpdateShorts = catchAsyncErrors(async (req, res, next) => {
   const shorts = await Shorts.findOne({ _id: req.params.id });
-  // console.log(shorts);
   if (!shorts) {
     return next(new ErrorHandler("Shorts not found", 404));
   }

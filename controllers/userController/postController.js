@@ -107,11 +107,10 @@ exports.GetPostById = catchAsyncErrors(async (req, res, next) => {
   const post = await Post.findOne({ _id: req.params.id }).populate({
     path: "comments",
     populate: {
-      path: "user"
+      path: "user",
     },
   });
 
-  console.log(post);
   res.status(200).json({
     status: "success",
     post,
@@ -134,7 +133,6 @@ exports.UserFeeds = catchAsyncErrors(async (req, res, next) => {
     "posts"
   );
   const following = user.following.map((user) => user._id);
-  // console.log(following);
   if (following.length === 0) {
     // get post of logged in user
     const post = await Post.find({ author: req.user.id }).populate("author");
@@ -181,10 +179,17 @@ exports.PostComments = catchAsyncErrors(async (req, res, next) => {
   const post = await Post.findById(postId);
   post.comments.push({ comment, user: user._id });
   await post.save();
+  const newComment = await Post.findById(postId).populate({
+    path: "comments",
+    populate: {
+      path: "user",
+    },
+  });
+
   res.status(200).json({
     status: "success",
     message: "Comment added successfully",
-    comments: post.comments,
+    comments: newComment,
   });
 });
 

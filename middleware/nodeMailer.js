@@ -42,7 +42,3 @@ exports.mailer = async (user) => {
     return err;
   }
 };
-
-// mailer().then(res => {
-//     console.log("sent mail !", res);
-// })

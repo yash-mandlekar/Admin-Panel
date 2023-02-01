@@ -65,7 +65,6 @@ exports.GetUserNewsById = catchAsyncErrors(async (req, res, next) => {
 // @desc    Update User News
 exports.UpdateUserNews = catchAsyncErrors(async (req, res, next) => {
   const userNews = await UserNews.findOne({_id:req.params.id});
-  console.log(req.body);
 if(!userNews){
     return next(new ErrorHandler("User News Not Found", 404));
 }
@@ -81,7 +80,6 @@ if(req.file){
 }
 
 userNews.message = req.body.message;
-console.log(req.body);
 await userNews.save();
 res.status(200).json({
     success: true,
