@@ -179,6 +179,7 @@ exports.ShortsLike = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.ShortsComment = catchAsyncErrors(async (req, res, next) => {
+  // populate comments and comments user
   const shorts = await Shorts.findById(req.params.id);
   if (!shorts) return next(new ErrorHandler("Shorts not found", 404));
   const user = await AppUser.findById(req.user.id);
@@ -188,11 +189,15 @@ exports.ShortsComment = catchAsyncErrors(async (req, res, next) => {
     comment: req.body.comment,
   };
   shorts.comments.push(comment);
+  
   await shorts.save();
+  const newshorts = await Shorts.findById(req.params.id)
+  .populate("comments")
+    .populate("comments.user");
   res.status(200).json({
     success: true,
     message: "Comment added successfully",
-    comments: shorts.comments,
+    comments: newshorts.comments,
   });
 });
 

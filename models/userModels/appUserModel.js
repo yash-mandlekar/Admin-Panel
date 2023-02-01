@@ -10,6 +10,7 @@ const appUserModel = mongoose.Schema({
   userName: {
     type: String,
     unique: true,
+    default: "",
   },
   bio: {
     type: String,
