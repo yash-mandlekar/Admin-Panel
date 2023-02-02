@@ -41,7 +41,7 @@ exports.DeletePost = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("Post not found", 404));
   }
   // delete post from user posts if it is the author of the post
-  if (post.name.toString() === user._id.toString()) {
+  if (post._id.toString() === user._id.toString()) {
     user.posts.pop(post._id);
     await user.save();
   }
