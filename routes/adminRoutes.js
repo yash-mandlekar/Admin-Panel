@@ -4,6 +4,7 @@ const upload = require("../middleware/adminMulter");
 const uploadDp = require("../middleware/dpMulter");
 const uploadShorts = require("../middleware/shortsMulter");
 const uploadNews = require("../middleware/newsMulter");
+const { isAuthUser } = require("../middleware/auth");
 
 const {
   GetHomepage,
@@ -72,7 +73,6 @@ const {
   UpdateChannel,
   DeleteChannel,
 } = require("../controllers/adminController/channelController");
-const { isAuthUser } = require("../middleware/auth");
 
 const {
   CreateCategory,
