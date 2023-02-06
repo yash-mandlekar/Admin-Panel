@@ -22,6 +22,9 @@ const {
   FollowRequestAccept,
   FollowRequest,
   FollowUnfollow,
+  DeleteProfilePic,
+  UpdateCoverPic,
+  DeleteCoverPic,
 } = require("../controllers/userController/appUserController");
 
 const {
@@ -96,13 +99,19 @@ router
 router.get("/profile/user/:username", GetUserByUserName);
 
 // @api /user/profile/pic POST user profile pic
-router.post(
-  "/profile/pic",
-  isLoggedin,
-  uploadDp.single("profileImage"),
-  UpdateProfilePic
-);
+router
+  .post(
+    "/profile/pic",
+    isLoggedin,
+    uploadDp.single("profileImage"),
+    UpdateProfilePic
+  )
+  .delete("/profile/pic", isLoggedin, DeleteProfilePic);
 
+// @api /user/post POST UpdateCoverPic user
+router
+  .post("/cover/pic", isLoggedin, upload.single("coverImage"), UpdateCoverPic)
+  .delete("/cover/pic", isLoggedin, DeleteCoverPic);
 
 // @api/POST ShortsLike
 router.get("/shorts/like/:id", isLoggedin, ShortsLike);
