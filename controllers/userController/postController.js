@@ -45,7 +45,7 @@ exports.DeletePost = catchAsyncErrors(async (req, res, next) => {
     user.posts.pop(post._id);
     await user.save();
   }
-  // await post.remove();
+  await post.remove();
   res.status(200).json({
     status: "success",
     message: "Post deleted successfully",
