@@ -244,6 +244,22 @@ exports.UpdateProfilePic = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
+exports.UpdateCoverImage = catchAsyncErrors(async (req, res, next) => {
+  const user = await AppUser.findById(req.user.id);
+  function base64_encode(file) {
+    var bitmap = fs.readFileSync(file);
+    return Buffer.from(bitmap).toString("base64");
+  }
+
+  const file = base64_encode(req.file.path);
+  user.coverImage = file;
+  await user.save();
+  res.status(200).json({
+    status: "success",
+    message: "Cover picture updated successfully",
+  });
+});
+
 exports.FollowRequest = catchAsyncErrors(async (req, res, next) => {
   const user = await AppUser.findById(req.user.id);
   const followUser = await AppUser.findById(req.params.id); 

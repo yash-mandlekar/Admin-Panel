@@ -42,6 +42,10 @@ const appUserModel = mongoose.Schema({
     type: String,
     default: "/images/avtar.jpg",
   },
+  coverImage: {
+    type: String,
+    default: "",
+  },
   isBlocked: {
     type: Boolean,
     default: false,

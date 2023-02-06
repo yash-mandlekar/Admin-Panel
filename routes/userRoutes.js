@@ -100,6 +100,13 @@ router.post(
   UpdateProfilePic
 );
 
+// @api /user/post POST UpdateCoverImage user 
+router.post(
+  "/profile/cover",
+  isLoggedin,
+  uploadDp.single("coverImage"),
+  UpdateCoverImage
+);
 
 // @api/POST ShortsLike
 router.get("/shorts/like/:id", isLoggedin, ShortsLike);
