@@ -199,7 +199,13 @@ exports.GetAppUser = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.GetUserByUserName = catchAsyncErrors(async (req, res, next) => {
-  const user = await AppUser.findOne({ username: req.params.username });
+  // find users from username and return users
+  if (req.params.username === "")
+    return res.status(200).json({ status: "success", user: [] });
+  const user = await AppUser.find({
+    userName: { $regex: req.params.username, $options: "i" },
+    name: { $regex: req.params.username, $options: "i" },
+  });
   res.status(200).json({
     status: "success",
     user,
