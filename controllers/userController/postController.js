@@ -45,14 +45,14 @@ exports.DeletePost = catchAsyncErrors(async (req, res, next) => {
     user.posts.pop(post._id);
     await user.save();
   }
-  // await post.remove();
+  await post.remove();
   res.status(200).json({
     status: "success",
     message: "Post deleted successfully",
   });
 });
 
-exports.UpdatePost = catchAsyncErrors(async (req, res, next) => {
+exports.UpdatePost = catchAsyncErrors(async (req, res, next) => {x
   const { location, caption, fileType } = req.body;
   const post = await Post.findById(req.params.id);
   const user = await AppUser.findById(req.user.id);
