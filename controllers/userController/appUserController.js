@@ -243,10 +243,9 @@ exports.UpdateProfilePic = catchAsyncErrors(async (req, res, next) => {
     message: "Profile picture updated successfully",
   });
 });
-
 exports.FollowRequest = catchAsyncErrors(async (req, res, next) => {
   const user = await AppUser.findById(req.user.id);
-  const followUser = await AppUser.findById(req.params.id); 
+  const followUser = await AppUser.findById(req.params.id);
   if (user.following.includes(req.params.id)) {
     user.following.pop(req.params.id);
     followUser.followers.pop(req.user.id);
