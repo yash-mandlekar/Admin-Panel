@@ -100,12 +100,7 @@ router.get("/profile/user/:username", GetUserByUserName);
 
 // @api /user/profile/pic POST user profile pic
 router
-  .post(
-    "/profile/pic",
-    isLoggedin,
-    uploadDp.single("profileImage"),
-    UpdateProfilePic
-  )
+  .post("/profile/pic",isLoggedin,uploadDp.single("profileImage"),UpdateProfilePic)
   .delete("/profile/pic", isLoggedin, DeleteProfilePic);
 
 // @api /user/post POST UpdateCoverPic user
@@ -120,11 +115,7 @@ router.get("/shorts/like/:id", isLoggedin, ShortsLike);
 router.post("/shorts/comment/:id", isLoggedin, ShortsComment);
 
 // @api/POST ShortsCommentDelete
-router.delete(
-  "/shorts/comment/delete/:id/:commentId",
-  isLoggedin,
-  ShortsCommentDelete
-);
+router.delete("/shorts/comment/delete/:id/:commentId",isLoggedin,ShortsCommentDelete);
 
 // @api /user/followUnfollow POST follow user
 router.post("/followUnfollow/:id", isLoggedin, FollowUnfollow);
@@ -155,11 +146,7 @@ router.get("/post/likes/:id", isLoggedin, PostLikes);
 router.post("/post/comment", isLoggedin, PostComments);
 
 // @api /user/post/comment/delete
-router.delete(
-  "/post/comment/delete/:id/:commentId",
-  isLoggedin,
-  PostCommentDelete
-);
+router.delete("/post/comment/delete/:id/:commentId",isLoggedin,PostCommentDelete);
 
 // @api /user/post/GetPostRandom
 router.get("/feed", isLoggedin, UserFeeds);
