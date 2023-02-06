@@ -49,7 +49,11 @@ const {
 } = require("../controllers/userController/userNewsController");
 
 const { isLoggedin } = require("../middleware/login");
-const { ShortsLike, ShortsComment, ShortsCommentDelete } = require("../controllers/adminController/shortsController");
+const {
+  ShortsLike,
+  ShortsComment,
+  ShortsCommentDelete,
+} = require("../controllers/adminController/shortsController");
 const { translate } = require("../controllers/userController/langTranslator");
 
 // @api /user/ GET Hompage
@@ -79,15 +83,14 @@ router.post("/reset/:resetToken", isLoggedin, ResetPasswordApp);
 // @api /user/change password POST login user
 router.post("/change", isLoggedin, ChangePasswordApp);
 
-// @api /user/post POST AddIntrests user 
+// @api /user/post POST AddIntrests user
 router.post("/interest", isLoggedin, AddInterest);
 
 // @api /user/profile GET user profile
 router
-.put("/profile", isLoggedin, UpdateAppUser)
-.delete("/profile", isLoggedin, DeleteAppUser)
-.get("/profile/:id", GetAppUser)
-
+  .put("/profile", isLoggedin, UpdateAppUser)
+  .delete("/profile", isLoggedin, DeleteAppUser)
+  .get("/profile/:id", GetAppUser);
 
 // @api /user/profile GET user profile
 router.get("/profile/user/:username", GetUserByUserName);
@@ -100,13 +103,6 @@ router.post(
   UpdateProfilePic
 );
 
-// @api /user/post POST UpdateCoverImage user 
-router.post(
-  "/profile/cover",
-  isLoggedin,
-  uploadDp.single("coverImage"),
-  UpdateCoverImage
-);
 
 // @api/POST ShortsLike
 router.get("/shorts/like/:id", isLoggedin, ShortsLike);
@@ -115,8 +111,11 @@ router.get("/shorts/like/:id", isLoggedin, ShortsLike);
 router.post("/shorts/comment/:id", isLoggedin, ShortsComment);
 
 // @api/POST ShortsCommentDelete
-router.delete("/shorts/comment/delete/:id/:commentId", isLoggedin, ShortsCommentDelete);
-
+router.delete(
+  "/shorts/comment/delete/:id/:commentId",
+  isLoggedin,
+  ShortsCommentDelete
+);
 
 // @api /user/followUnfollow POST follow user
 router.post("/followUnfollow/:id", isLoggedin, FollowUnfollow);
@@ -130,15 +129,15 @@ router.post("/followRequestAccept/:id", isLoggedin, FollowRequestAccept);
 // @api /user/post POST create post
 router
   .post("/post", isLoggedin, upload.single("file"), CreatePost)
-  .get("/post",isLoggedin, GetPost)
+  .get("/post", isLoggedin, GetPost)
   .put("/post/:id", isLoggedin, upload.single("file"), UpdatePost)
-  .delete("/post/:id", isLoggedin, DeletePost)
+  .delete("/post/:id", isLoggedin, DeletePost);
 
 // @api /user/post/following GET post
-router.get("/post/following",isLoggedin, GetPostFollowing);
+router.get("/post/following", isLoggedin, GetPostFollowing);
 
 // @api /user/post/interest GET post
-router.get("/post/interest",isLoggedin, GetPostByUserIntrest);
+router.get("/post/interest", isLoggedin, GetPostByUserIntrest);
 
 // @api /user/post/likes
 router.get("/post/likes/:id", isLoggedin, PostLikes);
@@ -147,7 +146,11 @@ router.get("/post/likes/:id", isLoggedin, PostLikes);
 router.post("/post/comment", isLoggedin, PostComments);
 
 // @api /user/post/comment/delete
-router.delete("/post/comment/delete/:id/:commentId", isLoggedin, PostCommentDelete);
+router.delete(
+  "/post/comment/delete/:id/:commentId",
+  isLoggedin,
+  PostCommentDelete
+);
 
 // @api /user/post/GetPostRandom
 router.get("/feed", isLoggedin, UserFeeds);
@@ -155,8 +158,8 @@ router.get("/feed", isLoggedin, UserFeeds);
 // @api /user/post/:id GET post by id
 router.get("/post/:id", GetPostById);
 
-// @api /user/post translate POST translate post 
-router.post("/translate",translate);
+// @api /user/post translate POST translate post
+router.post("/translate", translate);
 
 // @api /user/savednews GET save news
 router.post("/savednews/:id", isLoggedin, SaveNews);
@@ -169,6 +172,5 @@ router.get("/savednews", isLoggedin, GetSavedNews);
 
 // @api /user/usernews POST save news
 router.post("/usernews", upload.single("file"), isLoggedin, CreateUserNews);
-
 
 module.exports = router;
