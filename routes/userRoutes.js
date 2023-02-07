@@ -25,6 +25,7 @@ const {
   DeleteProfilePic,
   UpdateCoverPic,
   DeleteCoverPic,
+  GetSingleUserByUserName,
 } = require("../controllers/userController/appUserController");
 
 const {
@@ -97,6 +98,9 @@ router
 
 // @api /user/profile GET user profile
 router.get("/profile/user/:username", GetUserByUserName);
+
+// @api /user/profile GET user profile
+router.get("/profile/singleUser/:username", GetSingleUserByUserName);
 
 // @api /user/profile/pic POST user profile pic
 router

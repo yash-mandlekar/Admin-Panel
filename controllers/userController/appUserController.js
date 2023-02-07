@@ -204,8 +204,21 @@ exports.GetUserByUserName = catchAsyncErrors(async (req, res, next) => {
     return res.status(200).json({ status: "success", user: [] });
   const user = await AppUser.find({
     userName: { $regex: req.params.username, $options: "i" },
-    name: { $regex: req.params.username, $options: "i" },
+  }).populate("posts");
+  res.status(200).json({
+    status: "success",
+    user,
   });
+});
+
+exports.GetSingleUserByUserName = catchAsyncErrors(async (req, res, next) => {
+  // find user from username and return user
+  if (req.params.username === "")
+    return res.status(200).json({ status: "success", user: {} });
+
+  const user = await AppUser.findOne({
+    userName: { $regex: req.params.username, $options: "i" },
+  }).populate("posts");
   res.status(200).json({
     status: "success",
     user,
@@ -285,7 +298,6 @@ exports.DeleteCoverPic = catchAsyncErrors(async (req, res, next) => {
     message: "Cover picture deleted successfully",
   });
 });
-
 
 exports.FollowRequest = catchAsyncErrors(async (req, res, next) => {
   const user = await AppUser.findById(req.user.id);
