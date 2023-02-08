@@ -52,7 +52,8 @@ exports.DeletePost = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-exports.UpdatePost = catchAsyncErrors(async (req, res, next) => {x
+exports.UpdatePost = catchAsyncErrors(async (req, res, next) => {
+  x;
   const { location, caption, fileType } = req.body;
   const post = await Post.findById(req.params.id);
   const user = await AppUser.findById(req.user.id);
@@ -148,7 +149,22 @@ exports.UserFeeds = catchAsyncErrors(async (req, res, next) => {
   } else {
     //get post of logged in user and following user
     const post = await Post.find({ author: { $in: following } }).populate(
-      "author"
+      // "author",
+      // "likes",
+      [
+        {
+          path: "comments",
+          populate: {
+            path: "user",
+          },
+        },
+        {
+          path: "author",
+        },
+        {
+          path: "likes",
+        },
+      ]
     );
     res.status(200).json({
       status: "success",
