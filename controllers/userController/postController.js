@@ -175,23 +175,32 @@ exports.UserFeeds = catchAsyncErrors(async (req, res, next) => {
 
 exports.PostLikes = catchAsyncErrors(async (req, res, next) => {
   const user = await AppUser.findById(req.user.id);
-  const post = await Post.findById(req.params.id);
+  var post = await Post.findById(req.params.id);
   if (post.likes.includes(user._id)) {
     const index = post.likes.indexOf(user._id);
     post.likes.splice(index, 1);
-    await post.save();
-    res.status(200).json({
-      status: "success",
-      post,
-    });
   } else {
     post.likes.push(user._id);
-    await post.save();
-    res.status(200).json({
-      status: "success",
-      post,
-    });
   }
+  await post.save();
+  post = await Post.findById(req.params.id).populate([
+    {
+      path: "comments",
+      populate: {
+        path: "user",
+      },
+    },
+    {
+      path: "author",
+    },
+    {
+      path: "likes",
+    },
+  ]);
+  res.status(200).json({
+    status: "success",
+    post,
+  });
 });
 
 exports.PostComments = catchAsyncErrors(async (req, res, next) => {
