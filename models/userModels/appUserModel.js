@@ -131,16 +131,7 @@ const appUserModel = mongoose.Schema({
   resetPasswordExpire: Date,
   refreshToken: String,
 });
-// appUserModel.pre("save", async function (next) {
-//   if (!this.isModified("password")) return next();
 
-//   this.password = await bcrypt.hash(this.password, 10);
-//   next();
-// });
-
-// appUserModel.methods.comparePassword = async function (candidatePassword) {
-//   return await bcrypt.compare(candidatePassword, this.password);
-// };
 
 appUserModel.methods.generateToken = function () {
   const access_token = jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
@@ -154,6 +145,19 @@ appUserModel.methods.generateToken = function () {
 
   return access_token;
 };
+
+
+// appUserModel.pre("save", async function (next) {
+//   if (!this.isModified("password")) return next();
+
+//   this.password = await bcrypt.hash(this.password, 10);
+//   next();
+// });
+
+// appUserModel.methods.comparePassword = async function (candidatePassword) {
+//   return await bcrypt.compare(candidatePassword, this.password);
+// };
+
 
 // appUserModel.methods.createPasswordToken = function () {
 //   const resetToken = crypto.randomBytes(20).toString("hex");
