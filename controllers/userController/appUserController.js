@@ -384,3 +384,43 @@ exports.AddInterest = catchAsyncErrors(async (req, res, next) => {
     user,
   });
 });
+
+// PostGoLive
+exports.PostGoLive = catchAsyncErrors(async (req, res, next) => {
+  const user = await AppUser.findById(req.user.id);
+  user.live = req.body.url;
+  await user.save();
+  res.status(201).json({
+    success: true,
+    message: "Live url added successfully",
+  });
+});
+// GetIsLive
+exports.GetIsLive = catchAsyncErrors(async (req, res, next) => {
+  // find with username
+  const user = await AppUser.findOne({ userName: req.params.username });
+  if (user.live.length > 2) {
+    res.status(201).json({
+      success: true,
+      message: "Live url added successfully",
+      live: true,
+    });
+  } else {
+    res.status(201).json({
+      success: true,
+      message: "Live url added successfully",
+      live: false,
+    });
+  }
+});
+
+// GetRemoveLive
+exports.GetRemoveLive = catchAsyncErrors(async (req, res, next) => {
+  const user = await AppUser.findById(req.user.id);
+  user.live = "";
+  await user.save();
+  res.status(201).json({
+    success: true,
+    message: "Live url removed successfully",
+  });
+});

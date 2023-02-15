@@ -26,6 +26,9 @@ const {
   UpdateCoverPic,
   DeleteCoverPic,
   GetSingleUserByUserName,
+  PostGoLive,
+  GetRemoveLive,
+  GetIsLive,
 } = require("../controllers/userController/appUserController");
 
 const {
@@ -169,6 +172,15 @@ router.post("/savepost/:id", isLoggedin, SavePost);
 
 // @api /user/savednews GET save news
 router.get("/savednews", isLoggedin, GetSavedNews);
+
+// @api /user/golive GET save news
+router.post("/golive", isLoggedin, PostGoLive);
+
+// @api /user/golive GET save news
+router.get("/islive/:username", GetIsLive);
+
+// @api /user/golive GET save news
+router.get("/removeLive", isLoggedin, GetRemoveLive);
 
 // @api /user/usernews POST save news
 router.post("/usernews", upload.single("file"), isLoggedin, CreateUserNews);

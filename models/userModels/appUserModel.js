@@ -79,6 +79,10 @@ const appUserModel = mongoose.Schema({
     type: String,
     default: "",
   },
+  live: {
+    type: String,
+    default: "",
+  },
   interest: [
     {
       type: String,
@@ -132,7 +136,6 @@ const appUserModel = mongoose.Schema({
   refreshToken: String,
 });
 
-
 appUserModel.methods.generateToken = function () {
   const access_token = jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
     // expiresIn: Math.floor(Date.now() / 1000) + (60 * 60),
@@ -146,7 +149,6 @@ appUserModel.methods.generateToken = function () {
   return access_token;
 };
 
-
 // appUserModel.pre("save", async function (next) {
 //   if (!this.isModified("password")) return next();
 
@@ -157,7 +159,6 @@ appUserModel.methods.generateToken = function () {
 // appUserModel.methods.comparePassword = async function (candidatePassword) {
 //   return await bcrypt.compare(candidatePassword, this.password);
 // };
-
 
 // appUserModel.methods.createPasswordToken = function () {
 //   const resetToken = crypto.randomBytes(20).toString("hex");
