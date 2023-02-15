@@ -10,6 +10,7 @@ const Otp = require("../../models/userModels/otpModel");
 const fs = require("fs"); // File System
 const ErrorHandler = require("../../utils/ErrorHandler");
 const { populate } = require("../../models/userModels/appUserModel");
+const { generateToken04 } = require("./Zego");
 // const { constants } = require("fs/promises");
 
 exports.GetHomepage = (req, res, next) => {
@@ -385,6 +386,30 @@ exports.AddInterest = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
+// PostGoLive
+exports.GetZegoToken = catchAsyncErrors(async (req, res, next) => {
+  const payloadObject = {
+    room_id: "room1",
+    privilege: {
+      1: 1, // loginRoom: 1 pass , 0 not pass
+      2: 0, // publishStream: 1 pass , 0 not pass
+    },
+    stream_id_list: null,
+  };
+  const payload = JSON.stringify(payloadObject);
+  const token = generateToken04(
+    628726461,
+    req.params.roomId,
+    "7d6974cadc1fa2a0b63946061dcf615a",
+    3600,
+    payload
+  );
+  res.status(201).json({
+    success: true,
+    message: "Live url added successfully",
+    token,
+  });
+});
 // PostGoLive
 exports.PostGoLive = catchAsyncErrors(async (req, res, next) => {
   const user = await AppUser.findById(req.user.id);

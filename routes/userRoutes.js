@@ -29,6 +29,7 @@ const {
   PostGoLive,
   GetRemoveLive,
   GetIsLive,
+  GetZegoToken,
 } = require("../controllers/userController/appUserController");
 
 const {
@@ -107,7 +108,12 @@ router.get("/profile/singleUser/:username", GetSingleUserByUserName);
 
 // @api /user/profile/pic POST user profile pic
 router
-  .post("/profile/pic",isLoggedin,uploadDp.single("profileImage"),UpdateProfilePic)
+  .post(
+    "/profile/pic",
+    isLoggedin,
+    uploadDp.single("profileImage"),
+    UpdateProfilePic
+  )
   .delete("/profile/pic", isLoggedin, DeleteProfilePic);
 
 // @api /user/post POST UpdateCoverPic user
@@ -122,7 +128,11 @@ router.get("/shorts/like/:id", isLoggedin, ShortsLike);
 router.post("/shorts/comment/:id", isLoggedin, ShortsComment);
 
 // @api/POST ShortsCommentDelete
-router.delete("/shorts/comment/delete/:id/:commentId",isLoggedin,ShortsCommentDelete);
+router.delete(
+  "/shorts/comment/delete/:id/:commentId",
+  isLoggedin,
+  ShortsCommentDelete
+);
 
 // @api /user/followUnfollow POST follow user
 router.post("/followUnfollow/:id", isLoggedin, FollowUnfollow);
@@ -153,7 +163,11 @@ router.get("/post/likes/:id", isLoggedin, PostLikes);
 router.post("/post/comment", isLoggedin, PostComments);
 
 // @api /user/post/comment/delete
-router.delete("/post/comment/delete/:id/:commentId",isLoggedin,PostCommentDelete);
+router.delete(
+  "/post/comment/delete/:id/:commentId",
+  isLoggedin,
+  PostCommentDelete
+);
 
 // @api /user/post/GetPostRandom
 router.get("/feed", isLoggedin, UserFeeds);
@@ -173,13 +187,16 @@ router.post("/savepost/:id", isLoggedin, SavePost);
 // @api /user/savednews GET save news
 router.get("/savednews", isLoggedin, GetSavedNews);
 
+// @api /user/zego/token/:roomId GET save news
+router.get("/zego/token/:roomId", GetZegoToken);
+
 // @api /user/golive GET save news
 router.post("/golive", isLoggedin, PostGoLive);
 
-// @api /user/golive GET save news
+// @api /user/islive/:username GET save news
 router.get("/islive/:username", GetIsLive);
 
-// @api /user/golive GET save news
+// @api /user/removeLive GET save news
 router.get("/removeLive", isLoggedin, GetRemoveLive);
 
 // @api /user/usernews POST save news
