@@ -219,7 +219,17 @@ exports.GetSingleUserByUserName = catchAsyncErrors(async (req, res, next) => {
 
   const user = await AppUser.findOne({
     userName: { $regex: req.params.username, $options: "i" },
-  }).populate("posts following");
+  }).populate([
+    {
+      path: "posts",
+      populate: {
+        path: "likes",
+      },
+    },
+    {
+      path: "following",
+    },
+  ]);
   res.status(200).json({
     status: "success",
     user,
