@@ -6,6 +6,8 @@ const axios = require("axios");
 const useToken = require("../../utils/useToken");
 const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 const AppUser = require("../../models/userModels/appUserModel");
+const AdminUser = require("../../models/adminModels/userModel");
+const LiveStreaming = require("../../models/userModels/liveStreamingModel");
 const Otp = require("../../models/userModels/otpModel");
 const fs = require("fs"); // File System
 const ErrorHandler = require("../../utils/ErrorHandler");
@@ -423,39 +425,72 @@ exports.GetZegoToken = catchAsyncErrors(async (req, res, next) => {
 // PostGoLive
 exports.PostGoLive = catchAsyncErrors(async (req, res, next) => {
   const user = await AppUser.findById(req.user.id);
-  user.live = req.body.url;
+  const { url } = req.body;
+  user.live = url;
   await user.save();
+  await LiveStreaming.create({
+    liveUrl: url,
+    user: req.user.id,
+  });
   res.status(201).json({
     success: true,
     message: "Live url added successfully",
+    url,
   });
 });
+
 // GetIsLive
 exports.GetIsLive = catchAsyncErrors(async (req, res, next) => {
-  // find with username
-  const user = await AppUser.findOne({ userName: req.params.username });
-  if (user.live.length > 2) {
-    res.status(201).json({
-      success: true,
-      message: "Live url added successfully",
-      live: true,
-    });
-  } else {
-    res.status(201).json({
-      success: true,
-      message: "Live url added successfully",
-      live: false,
-    });
+  const user = await AppUser.findOne({ username: req.params.username });
+  if (!user) {
+    return next(new ErrorHandler("User not found", 404));
   }
+  const live = await LiveStreaming.findOne({ user: user._id });
+  res.status(200).json({
+    success: true,
+    message: "Live url added successfully",
+    live: live ? true : false,
+  });
 });
 
 // GetRemoveLive
 exports.GetRemoveLive = catchAsyncErrors(async (req, res, next) => {
   const user = await AppUser.findById(req.user.id);
+  const live = await LiveStreaming.findOne({ _id: req.params.id });
+  const admin = await AdminUser.findOne({ role: "admin" });
+  
+  if(live.requested==="true"){
+    console.log(admin.liveRequests);
+    admin.liveRequests.pop(live._id);
+    await admin.save();
+    await live.remove();
+  }
+  
+  await live.remove();
   user.live = "";
   await user.save();
-  res.status(201).json({
+  res.status(200).json({
     success: true,
     message: "Live url removed successfully",
+  });
+});
+
+
+
+
+// request to go live to admin for approval or rejection of live stream url of live stream
+exports.RequestToGoLive = catchAsyncErrors(async (req, res, next) => {
+  const user = await AppUser.findById(req.user.id);
+  const admin = await AdminUser.findOne({ role: "admin" });
+  const { live_id } = req.body;
+  const live = await LiveStreaming.findById(live_id);
+  if (live.requested === "true") {
+    return next(new ErrorHandler("You have already requested to go live", 400));
+  }
+  await live.updateOne({ requested: true });
+  await admin.updateOne({ $push: { liveRequests: live._id } });
+  res.status(201).json({
+    success: true,
+    message: "Live request sent successfully",
   });
 });

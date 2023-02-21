@@ -4,6 +4,7 @@ const useToken = require("../../utils/useToken");
 const catchAsyncErrors = require("../../middleware/catchAsyncErrors");
 const User = require("../../models/adminModels/userModel");
 const AppUsers = require("../../models/userModels/appUserModel");
+const LiveStreaming = require("../../models/userModels/liveStreamingModel");
 const fs = require("fs"); // File System
 const ErrorHandler = require("../../utils/ErrorHandler");
 const { populate } = require("../../models/adminModels/channelModel");
@@ -91,7 +92,7 @@ exports.PostRefreshToken = catchAsyncErrors(async (req, res, next) => {
     });
     if (refresh_user) {
       useToken(refresh_user, 200, res);
-    }else{
+    } else {
       return next(new ErrorHandler("Your are not authenticated", 401));
     }
   });
@@ -344,3 +345,65 @@ exports.GetLive = catchAsyncErrors(async (req, res, next) => {
     live,
   });
 });
+
+// get live request for admin and populating the user
+exports.GetLiveRequest = catchAsyncErrors(async (req, res, next) => {
+  const user = await User.findById(req.user.id).populate({
+    path: "liveRequests",
+  });
+  console.log(user);
+  if (user.role.toLowerCase() !== "admin") {
+    return next(
+      new ErrorHandler("You are not authorized to perform this action", 401)
+    );
+  }
+  res.status(200).json({
+    status: "success",
+    liveRequests: user.liveRequests,
+  });
+});
+
+exports.ApproveLive = catchAsyncErrors(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+
+  const live = await LiveStreaming.findOne({ _id: req.params.id });
+  if (!live) {
+    return next(new ErrorHandler("Live not found", 404));
+  }
+  if (user.role.toLowerCase() !== "admin") {
+    return next(
+      new ErrorHandler("You are not authorized to perform this action", 401)
+    );
+  }
+  live.approved = true;
+  await user.liveRequests.pop(live);
+  await user.save();
+  await live.save();
+  res.status(200).json({
+    status: "success",
+    message: "Live approved successfully",
+  });
+});
+
+exports.RejectLive = catchAsyncErrors(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+  console.log(user);
+  const live = await LiveStreaming.findOne({ _id: req.params.id });
+  if (!live) {
+    return next(new ErrorHandler("Live not found", 404));
+  }
+  if (user.role.toLowerCase() !== "admin") {
+    return next(
+      new ErrorHandler("You are not authorized to perform this action", 401)
+    );
+  }
+  live.approved = false;
+  await user.liveRequests.pop(live);
+  await user.save();
+  await live.save();
+  res.status(200).json({
+    status: "success",
+    message: "Live rjected successfully",
+  });
+});
+

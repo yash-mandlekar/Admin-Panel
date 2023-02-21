@@ -27,6 +27,9 @@ const {
   BlockAppUser,
   UpdateUser,
   SingleUser,
+  GetLiveRequest,
+  ApproveLive,
+  RejectLive,
 } = require("../controllers/adminController/userController");
 
 const {
@@ -368,5 +371,17 @@ router
 
 // @api/userNews/:id GET open userNews
 router.get("/userNews/:id", GetUserNewsById);
+
+// @api/live/request GET GetLiveRequest
+router.get("/live/request", isAuthUser,GetLiveRequest);
+
+// @api/live/approve POST ApproveLive
+router.post("/live/approve/:id", isAuthUser, ApproveLive);
+
+// @api/live/reject POST RejectLive
+router.post("/live/reject/:id", isAuthUser, RejectLive);
+
+
+
 
 module.exports = router;

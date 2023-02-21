@@ -54,6 +54,14 @@ const userModel = new mongoose.Schema({
       ref: "News",
     },
   ],
+
+  liveRequests: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "LiveStreaming",
+    },
+  ],
+
   password: {
     type: String,
     required: [true, "Password is required"],

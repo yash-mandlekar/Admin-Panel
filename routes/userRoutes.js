@@ -30,6 +30,7 @@ const {
   GetRemoveLive,
   GetIsLive,
   GetZegoToken,
+  RequestToGoLive,
 } = require("../controllers/userController/appUserController");
 
 const {
@@ -187,6 +188,9 @@ router.post("/savepost/:id", isLoggedin, SavePost);
 // @api /user/savednews GET save news
 router.get("/savednews", isLoggedin, GetSavedNews);
 
+// @api /user/usernews POST save news
+router.post("/usernews", upload.single("file"), isLoggedin, CreateUserNews);
+
 // @api /user/zego/token/:roomId GET save news
 router.get("/zego/token/:roomId", GetZegoToken);
 
@@ -197,9 +201,10 @@ router.post("/golive", isLoggedin, PostGoLive);
 router.get("/islive/:username", GetIsLive);
 
 // @api /user/removeLive GET save news
-router.get("/removeLive", isLoggedin, GetRemoveLive);
+router.delete("/removelive/:id", isLoggedin, GetRemoveLive);
 
-// @api /user/usernews POST save news
-router.post("/usernews", upload.single("file"), isLoggedin, CreateUserNews);
+
+// @api /user/requestlive POST save live
+router.post("/requestlive", isLoggedin, RequestToGoLive);
 
 module.exports = router;
